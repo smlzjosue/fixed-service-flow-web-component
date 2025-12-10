@@ -44,6 +44,7 @@ graph TD;
   fixed-service-flow --> step-contract
   fixed-service-flow --> step-form
   fixed-service-flow --> step-confirmation
+  step-plans --> ui-carousel
   style fixed-service-flow fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

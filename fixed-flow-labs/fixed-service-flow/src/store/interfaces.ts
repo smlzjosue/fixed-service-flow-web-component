@@ -65,6 +65,8 @@ export interface Plan {
   decSalePrice?: number;
   bitPromotion: boolean;
   features?: string[];
+  suggestedPlan?: boolean; // Added for carousel - marks recommended plan
+  broadband?: boolean; // For banda ancha (fixed internet)
 }
 
 export interface RequestResponse {

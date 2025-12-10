@@ -1,6 +1,7 @@
 // ============================================
 // STEP PLANS - Plan Selection Step Component
 // Fixed Service Flow Web Component
+// Design based on docs/capturas/4.png + Carousel
 // ============================================
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
@@ -30,6 +31,7 @@ export class StepPlans {
   @State() selectedPlan: Plan | null = null;
   @State() isLoading: boolean = true;
   @State() error: string | null = null;
+  @State() isAddingToCart: boolean = false;
 
   // ------------------------------------------
   // LIFECYCLE
@@ -37,6 +39,16 @@ export class StepPlans {
 
   async componentWillLoad() {
     await this.loadPlans();
+
+    // Check if there's a previously selected plan in session
+    const storedPlanId = plansService.getStoredPlanId();
+    if (storedPlanId > 0) {
+      const storedPlan = this.plans.find(p => p.planId === storedPlanId);
+      if (storedPlan) {
+        this.selectedPlan = storedPlan;
+        flowActions.selectPlan(storedPlan);
+      }
+    }
   }
 
   // ------------------------------------------
@@ -59,23 +71,138 @@ export class StepPlans {
     }
   }
 
-  private handleSelectPlan = (plan: Plan) => {
-    this.selectedPlan = plan;
-    flowActions.selectPlan(plan);
+  /**
+   * Handles plan selection - following TEL's flow:
+   * 1. Check if there's an existing different plan -> delete it
+   * 2. Store plan in session
+   * 3. Call addToCart API
+   */
+  private handleSelectPlan = async (plan: Plan) => {
+    // If clicking the same plan, do nothing
+    if (this.selectedPlan?.planId === plan.planId) {
+      return;
+    }
+
+    this.isAddingToCart = true;
+    this.error = null;
+
+    try {
+      // Step 1: If there's a different plan already in cart, delete it first (TEL pattern)
+      const currentPlanId = plansService.getStoredPlanId();
+      const currentCartId = plansService.getCartId();
+
+      if (currentPlanId > 0 && currentPlanId !== plan.planId && currentCartId > 0) {
+        console.log('[StepPlans] Removing previous plan from cart:', currentPlanId);
+        await plansService.deleteFromCart(currentCartId);
+      }
+
+      // Step 2: Add new plan to cart
+      console.log('[StepPlans] Adding plan to cart:', plan.planId, plan.planName);
+      await plansService.addToCart(plan);
+
+      // Step 3: Update local state
+      this.selectedPlan = plan;
+      flowActions.selectPlan(plan);
+
+      console.log('[StepPlans] Plan added successfully');
+    } catch (err) {
+      console.error('[StepPlans] Error adding plan to cart:', err);
+      this.error = 'Error al agregar el plan. Por favor intente de nuevo.';
+
+      // Still allow selection locally even if cart API fails
+      // This way the user can continue the flow
+      this.selectedPlan = plan;
+      flowActions.selectPlan(plan);
+    } finally {
+      this.isAddingToCart = false;
+    }
   };
 
   private handleContinue = () => {
-    if (this.selectedPlan) {
+    if (this.selectedPlan && !this.isAddingToCart) {
       this.onNext?.();
     }
   };
+
+  // ------------------------------------------
+  // RENDER HELPERS
+  // ------------------------------------------
+
+  private renderPlanCard(plan: Plan) {
+    const isSelected = this.selectedPlan?.planId === plan.planId;
+    const isProcessing = this.isAddingToCart && isSelected;
+    const features = plansService.parsePlanFeatures(plan.planDesc || '');
+
+    // Default features if none parsed
+    const displayFeatures = features.length > 0 ? features : [
+      'Internet fibra 1',
+      'Internet 2',
+      'Internet 3'
+    ];
+
+    return (
+      <div
+        class={{
+          'plan-card': true,
+          'plan-card--selected': isSelected,
+          'plan-card--processing': isProcessing,
+        }}
+        onClick={() => !this.isAddingToCart && this.handleSelectPlan(plan)}
+      >
+        {/* Card Header - Cyan bar with plan name */}
+        <div class="plan-card__header">
+          <span class="plan-card__name">{plan.planName}</span>
+        </div>
+
+        {/* Card Body */}
+        <div class="plan-card__body">
+          {/* Plan includes label */}
+          <p class="plan-card__includes-label">Plan incluye</p>
+
+          {/* Features list */}
+          <ul class="plan-card__features">
+            {displayFeatures.slice(0, 4).map((feature) => (
+              <li class="plan-card__feature">{feature}</li>
+            ))}
+          </ul>
+
+          {/* Price */}
+          <p class="plan-card__price">{formatPrice(plan.decPrice)}</p>
+        </div>
+
+        {/* Card Footer with button */}
+        <div class="plan-card__footer">
+          <button
+            class={{
+              'plan-card__btn': true,
+              'plan-card__btn--selected': isSelected,
+              'plan-card__btn--loading': isProcessing,
+            }}
+            disabled={this.isAddingToCart}
+          >
+            {isProcessing ? (
+              <span class="plan-card__btn-loading">
+                <span class="plan-card__btn-spinner"></span>
+                Agregando...
+              </span>
+            ) : isSelected ? (
+              'Plan seleccionado'
+            ) : (
+              'Solicitar plan'
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // ------------------------------------------
   // RENDER
   // ------------------------------------------
 
   render() {
-    const totalToday = this.selectedPlan ? 0 : 0;
+    const monthlyPayment = this.selectedPlan ? this.selectedPlan.decPrice : 0;
+    const totalToday = 0;
 
     return (
       <Host>
@@ -104,44 +231,30 @@ export class StepPlans {
             </div>
           )}
 
-          {/* Plans Grid */}
-          {!this.isLoading && !this.error && (
-            <div class="step-plans__grid">
-              {this.plans.map((plan) => (
-                <div
-                  class={{
-                    'step-plans__card': true,
-                    'step-plans__card--selected': this.selectedPlan?.planId === plan.planId,
-                  }}
-                  onClick={() => this.handleSelectPlan(plan)}
-                >
-                  <h3 class="step-plans__card-title">{plan.planName}</h3>
-                  <p class="step-plans__card-subtitle">Plan incluye</p>
-                  <ul class="step-plans__card-features">
-                    {plansService.parsePlanFeatures(plan.planDesc || '').map((feature) => (
-                      <li>{feature}</li>
-                    ))}
-                    {!plan.planDesc && (
-                      <>
-                        <li>Internet fibra 1</li>
-                        <li>Internet 2</li>
-                        <li>Internet 3</li>
-                      </>
-                    )}
-                  </ul>
-                  <p class="step-plans__card-price">{formatPrice(plan.decPrice)}</p>
-                  <button class="step-plans__card-btn">
-                    Solicitar plan
-                  </button>
-                </div>
-              ))}
+          {/* Plans Carousel - Single row with navigation */}
+          {!this.isLoading && !this.error && this.plans.length > 0 && (
+            <div class="step-plans__carousel-container">
+              <ui-carousel
+                totalItems={this.plans.length}
+                gap={24}
+                showNavigation={true}
+                showPagination={true}
+                breakpoints={[
+                  { minWidth: 0, slidesPerView: 1 },
+                  { minWidth: 500, slidesPerView: 2 },
+                  { minWidth: 800, slidesPerView: 3 },
+                  { minWidth: 1100, slidesPerView: 4 },
+                ]}
+              >
+                {this.plans.map((plan) => this.renderPlanCard(plan))}
+              </ui-carousel>
+            </div>
+          )}
 
-              {/* Empty state if no plans */}
-              {this.plans.length === 0 && (
-                <div class="step-plans__empty">
-                  <p>No hay planes disponibles para tu área.</p>
-                </div>
-              )}
+          {/* Empty state if no plans */}
+          {!this.isLoading && !this.error && this.plans.length === 0 && (
+            <div class="step-plans__empty">
+              <p>No hay planes disponibles para tu área.</p>
             </div>
           )}
 
@@ -150,21 +263,24 @@ export class StepPlans {
             <div class="step-plans__footer-info">
               <div class="step-plans__footer-item">
                 <span class="step-plans__footer-label">Pago mensual</span>
-                <span class="step-plans__footer-value">
-                  {this.selectedPlan ? formatPrice(this.selectedPlan.decPrice) : '$0.00'}
-                </span>
+                <span class="step-plans__footer-value">{formatPrice(monthlyPayment)}</span>
               </div>
               <div class="step-plans__footer-item">
                 <span class="step-plans__footer-label">Paga hoy</span>
-                <span class="step-plans__footer-value">{formatPrice(totalToday)}</span>
+                <span class="step-plans__footer-value step-plans__footer-value--highlight">
+                  {formatPrice(totalToday)}
+                </span>
               </div>
             </div>
+            <p class="step-plans__footer-note">
+              Precio mensual aproximado no incluye cargos estatales, federales, ni otros impuestos.
+            </p>
             <button
               class="step-plans__footer-btn"
               onClick={this.handleContinue}
-              disabled={!this.selectedPlan}
+              disabled={!this.selectedPlan || this.isAddingToCart}
             >
-              Continuar
+              {this.isAddingToCart ? 'Procesando...' : 'Continuar'}
             </button>
           </footer>
         </div>

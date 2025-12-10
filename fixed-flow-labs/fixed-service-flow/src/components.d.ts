@@ -7,10 +7,12 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
 import { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
+import { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 import { InputType } from "./components/ui/ui-input/ui-input";
 import { SelectOption } from "./components/ui/ui-select/ui-select";
 export { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
 export { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
+export { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 export { InputType } from "./components/ui/ui-input/ui-input";
 export { SelectOption } from "./components/ui/ui-select/ui-select";
 export namespace Components {
@@ -91,6 +93,48 @@ export namespace Components {
           * @default 'primary'
          */
         "variant": ButtonVariant;
+    }
+    interface UiCarousel {
+        /**
+          * Auto-play interval in milliseconds (0 = disabled)
+          * @default 0
+         */
+        "autoplay": number;
+        /**
+          * Responsive breakpoints Default: mobile=1, tablet=2, desktop=3, large=4
+          * @default [     { minWidth: 0, slidesPerView: 1 },     { minWidth: 600, slidesPerView: 2 },     { minWidth: 900, slidesPerView: 3 },     { minWidth: 1200, slidesPerView: 4 },   ]
+         */
+        "breakpoints": CarouselBreakpoint[];
+        /**
+          * Gap between slides in pixels
+          * @default 16
+         */
+        "gap": number;
+        /**
+          * Enable loop/circular mode
+          * @default false
+         */
+        "loop": boolean;
+        /**
+          * Show navigation arrows
+          * @default true
+         */
+        "showNavigation": boolean;
+        /**
+          * Show pagination dots
+          * @default true
+         */
+        "showPagination": boolean;
+        /**
+          * Default number of slides per view
+          * @default 1
+         */
+        "slidesPerView": number;
+        /**
+          * Total number of items in the carousel
+          * @default 0
+         */
+        "totalItems": number;
     }
     interface UiCheckbox {
         /**
@@ -442,6 +486,12 @@ declare global {
         prototype: HTMLUiButtonElement;
         new (): HTMLUiButtonElement;
     };
+    interface HTMLUiCarouselElement extends Components.UiCarousel, HTMLStencilElement {
+    }
+    var HTMLUiCarouselElement: {
+        prototype: HTMLUiCarouselElement;
+        new (): HTMLUiCarouselElement;
+    };
     interface HTMLUiCheckboxElementEventMap {
         "checkboxChange": boolean;
     }
@@ -559,6 +609,7 @@ declare global {
         "step-location": HTMLStepLocationElement;
         "step-plans": HTMLStepPlansElement;
         "ui-button": HTMLUiButtonElement;
+        "ui-carousel": HTMLUiCarouselElement;
         "ui-checkbox": HTMLUiCheckboxElement;
         "ui-date-picker": HTMLUiDatePickerElement;
         "ui-input": HTMLUiInputElement;
@@ -665,6 +716,48 @@ declare namespace LocalJSX {
           * @default 'primary'
          */
         "variant"?: ButtonVariant;
+    }
+    interface UiCarousel {
+        /**
+          * Auto-play interval in milliseconds (0 = disabled)
+          * @default 0
+         */
+        "autoplay"?: number;
+        /**
+          * Responsive breakpoints Default: mobile=1, tablet=2, desktop=3, large=4
+          * @default [     { minWidth: 0, slidesPerView: 1 },     { minWidth: 600, slidesPerView: 2 },     { minWidth: 900, slidesPerView: 3 },     { minWidth: 1200, slidesPerView: 4 },   ]
+         */
+        "breakpoints"?: CarouselBreakpoint[];
+        /**
+          * Gap between slides in pixels
+          * @default 16
+         */
+        "gap"?: number;
+        /**
+          * Enable loop/circular mode
+          * @default false
+         */
+        "loop"?: boolean;
+        /**
+          * Show navigation arrows
+          * @default true
+         */
+        "showNavigation"?: boolean;
+        /**
+          * Show pagination dots
+          * @default true
+         */
+        "showPagination"?: boolean;
+        /**
+          * Default number of slides per view
+          * @default 1
+         */
+        "slidesPerView"?: number;
+        /**
+          * Total number of items in the carousel
+          * @default 0
+         */
+        "totalItems"?: number;
     }
     interface UiCheckbox {
         /**
@@ -975,6 +1068,7 @@ declare namespace LocalJSX {
         "step-location": StepLocation;
         "step-plans": StepPlans;
         "ui-button": UiButton;
+        "ui-carousel": UiCarousel;
         "ui-checkbox": UiCheckbox;
         "ui-date-picker": UiDatePicker;
         "ui-input": UiInput;
@@ -994,6 +1088,7 @@ declare module "@stencil/core" {
             "step-location": LocalJSX.StepLocation & JSXBase.HTMLAttributes<HTMLStepLocationElement>;
             "step-plans": LocalJSX.StepPlans & JSXBase.HTMLAttributes<HTMLStepPlansElement>;
             "ui-button": LocalJSX.UiButton & JSXBase.HTMLAttributes<HTMLUiButtonElement>;
+            "ui-carousel": LocalJSX.UiCarousel & JSXBase.HTMLAttributes<HTMLUiCarouselElement>;
             "ui-checkbox": LocalJSX.UiCheckbox & JSXBase.HTMLAttributes<HTMLUiCheckboxElement>;
             "ui-date-picker": LocalJSX.UiDatePicker & JSXBase.HTMLAttributes<HTMLUiDatePickerElement>;
             "ui-input": LocalJSX.UiInput & JSXBase.HTMLAttributes<HTMLUiInputElement>;
