@@ -1,0 +1,169 @@
+// ============================================
+// STEP CONTRACT - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.step-contract {
+  width: 100%;
+
+  // ------------------------------------------
+  // HEADER
+  // ------------------------------------------
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+  }
+
+  &__title {
+    @include font-heading-2;
+    color: $color-text-primary;
+  }
+
+  &__btn-back {
+    @include button-outline;
+    height: $button-height-md;
+  }
+
+  // ------------------------------------------
+  // TABS
+  // ------------------------------------------
+
+  &__tabs {
+    display: flex;
+    border-bottom: 2px solid $color-gray-200;
+    margin-bottom: $spacing-6;
+  }
+
+  &__tab {
+    flex: 1;
+    padding: $spacing-4;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+    transition: all $transition-fast;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background-color $transition-fast;
+    }
+
+    &--active {
+      &::after {
+        background: $color-secondary;
+      }
+
+      .step-contract__tab-title {
+        color: $color-secondary;
+      }
+    }
+
+    &:hover:not(&--active) {
+      background: $color-gray-50;
+    }
+  }
+
+  &__tab-title {
+    display: block;
+    @include font-heading-4;
+    color: $color-text-primary;
+    margin-bottom: $spacing-1;
+  }
+
+  &__tab-subtitle {
+    display: block;
+    @include font-caption;
+    color: $color-text-secondary;
+  }
+
+  // ------------------------------------------
+  // OPTIONS
+  // ------------------------------------------
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-4;
+
+    @include breakpoint-up(md) {
+      flex-direction: row;
+    }
+  }
+
+  &__option {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    padding: $spacing-4;
+    border: 2px solid $color-border-default;
+    border-radius: $border-radius-lg;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    input[type="radio"] {
+      margin-right: $spacing-3;
+      margin-top: $spacing-1;
+      accent-color: $color-secondary;
+    }
+
+    &:hover {
+      border-color: $color-secondary;
+      background: rgba($color-secondary, 0.02);
+    }
+
+    &--selected {
+      border-color: $color-secondary;
+      background: rgba($color-secondary, 0.05);
+    }
+  }
+
+  &__option-content {
+    flex: 1;
+  }
+
+  &__option-title {
+    display: block;
+    @include font-heading-4;
+    color: $color-text-primary;
+    margin-bottom: $spacing-2;
+  }
+
+  &__option-details {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+
+    span {
+      @include font-body-small;
+      color: $color-text-secondary;
+    }
+  }
+
+  // ------------------------------------------
+  // ACTIONS
+  // ------------------------------------------
+
+  &__actions {
+    margin-top: $spacing-8;
+    text-align: center;
+  }
+
+  &__btn-continue {
+    @include button-primary;
+    min-width: 200px;
+  }
+}

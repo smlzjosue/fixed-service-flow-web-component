@@ -1,0 +1,102 @@
+// ============================================
+// GLOBAL STYLES
+// Fixed Service Flow Web Component
+// ============================================
+
+@import 'reset';
+@import 'variables';
+@import 'mixins';
+
+// ------------------------------------------
+// CSS CUSTOM PROPERTIES (Theming)
+// ------------------------------------------
+// These can be overridden from the parent application
+
+:root {
+  // Colors
+  --fsf-color-primary: #{$color-primary};
+  --fsf-color-secondary: #{$color-secondary};
+  --fsf-color-success: #{$color-success};
+  --fsf-color-error: #{$color-error};
+  --fsf-color-warning: #{$color-warning};
+
+  // Text colors
+  --fsf-color-text-primary: #{$color-text-primary};
+  --fsf-color-text-secondary: #{$color-text-secondary};
+  --fsf-color-text-placeholder: #{$color-text-placeholder};
+
+  // Background colors
+  --fsf-color-bg-primary: #{$color-bg-primary};
+  --fsf-color-bg-secondary: #{$color-bg-secondary};
+
+  // Border colors
+  --fsf-color-border: #{$color-border-default};
+  --fsf-color-border-focus: #{$color-border-focus};
+  --fsf-color-border-error: #{$color-border-error};
+
+  // Typography
+  --fsf-font-family: #{$font-family-primary};
+  --fsf-font-size-base: #{$font-size-base};
+
+  // Spacing
+  --fsf-spacing-unit: #{$spacing-4};
+
+  // Border radius
+  --fsf-border-radius: #{$border-radius-md};
+  --fsf-border-radius-lg: #{$border-radius-lg};
+
+  // Shadows
+  --fsf-shadow-card: #{$shadow-card};
+  --fsf-shadow-modal: #{$shadow-xl};
+}
+
+// ------------------------------------------
+// BASE TYPOGRAPHY
+// ------------------------------------------
+
+fixed-service-flow {
+  display: block;
+  width: 100%;
+  font-family: var(--fsf-font-family);
+  font-size: var(--fsf-font-size-base);
+  color: var(--fsf-color-text-primary);
+  line-height: $line-height-normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ------------------------------------------
+// UTILITY CLASSES
+// ------------------------------------------
+
+.fsf-sr-only {
+  @include visually-hidden;
+}
+
+.fsf-text-primary {
+  color: var(--fsf-color-primary);
+}
+
+.fsf-text-secondary {
+  color: var(--fsf-color-secondary);
+}
+
+.fsf-text-success {
+  color: var(--fsf-color-success);
+}
+
+.fsf-text-error {
+  color: var(--fsf-color-error);
+}
+
+.fsf-text-center {
+  text-align: center;
+}
+
+.fsf-text-left {
+  text-align: left;
+}
+
+.fsf-text-right {
+  text-align: right;
+}

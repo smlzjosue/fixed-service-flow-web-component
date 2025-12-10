@@ -1,0 +1,138 @@
+// ============================================
+// UI-INPUT - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-input {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  // ------------------------------------------
+  // LABEL
+  // ------------------------------------------
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-2;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &__required {
+    color: $color-error;
+    margin-left: $spacing-1;
+  }
+
+  // ------------------------------------------
+  // INPUT WRAPPER
+  // ------------------------------------------
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  // ------------------------------------------
+  // INPUT FIELD
+  // ------------------------------------------
+
+  &__field {
+    width: 100%;
+    height: $input-height-md;
+    padding: 0 $spacing-4;
+    font-family: $font-family-primary;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    background-color: $color-white;
+    border: $border-width-thin solid $color-border-default;
+    border-radius: $border-radius-md;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+    appearance: none;
+
+    &::placeholder {
+      color: $color-text-placeholder;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-border-focus;
+      box-shadow: 0 0 0 3px rgba($color-secondary, 0.15);
+    }
+
+    &:disabled {
+      background-color: $color-gray-100;
+      color: $color-text-secondary;
+      cursor: not-allowed;
+    }
+
+    &:read-only {
+      background-color: $color-gray-50;
+    }
+
+    // Date input specific
+    &[type="date"] {
+      &::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity $transition-fast;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // MESSAGE (Error / Helper)
+  // ------------------------------------------
+
+  &__message {
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+
+    &--error {
+      color: $color-error;
+    }
+  }
+
+  // ------------------------------------------
+  // STATES
+  // ------------------------------------------
+
+  &--focused {
+    .ui-input__label {
+      color: $color-secondary;
+    }
+  }
+
+  &--error {
+    .ui-input__field {
+      border-color: $color-error;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.15);
+      }
+    }
+
+    .ui-input__label {
+      color: $color-error;
+    }
+  }
+
+  &--disabled {
+    .ui-input__label {
+      color: $color-text-secondary;
+    }
+  }
+}

@@ -1,0 +1,135 @@
+// ============================================
+// STEP CONFIRMATION - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.step-confirmation {
+  width: 100%;
+
+  // ------------------------------------------
+  // HEADER
+  // ------------------------------------------
+
+  &__header {
+    margin-bottom: $spacing-8;
+  }
+
+  &__header-title {
+    @include font-heading-2;
+    color: $color-text-primary;
+  }
+
+  // ------------------------------------------
+  // CONTENT
+  // ------------------------------------------
+
+  &__content {
+    @include card;
+    padding: $spacing-12 $spacing-8;
+    text-align: center;
+    min-height: 300px;
+    @include flex-column-center;
+  }
+
+  // ------------------------------------------
+  // LOADING
+  // ------------------------------------------
+
+  &__loading {
+    @include flex-column-center;
+
+    p {
+      margin-top: $spacing-4;
+      @include font-body;
+      color: $color-text-secondary;
+    }
+  }
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $color-gray-200;
+    border-top-color: $color-secondary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  // ------------------------------------------
+  // RESULT
+  // ------------------------------------------
+
+  &__result {
+    @include flex-column-center;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  &__icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    @include flex-center;
+    margin-bottom: $spacing-6;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    &--success {
+      background: rgba($color-success, 0.1);
+      color: $color-success;
+    }
+
+    &--error {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+  }
+
+  &__title {
+    @include font-heading-3;
+    color: $color-text-primary;
+    margin-bottom: $spacing-2;
+
+    &--error {
+      color: $color-error;
+    }
+  }
+
+  &__message {
+    @include font-body;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-6;
+  }
+
+  &__order-id {
+    @include font-body-small;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-6;
+    padding: $spacing-2 $spacing-4;
+    background: $color-gray-50;
+    border-radius: $border-radius-md;
+  }
+
+  &__btn {
+    @include button-secondary;
+    min-width: 180px;
+
+    &--error {
+      @include button-primary;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

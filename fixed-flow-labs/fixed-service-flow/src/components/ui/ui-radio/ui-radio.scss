@@ -1,0 +1,100 @@
+// ============================================
+// UI-RADIO - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: inline-block;
+}
+
+.ui-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  cursor: pointer;
+  user-select: none;
+
+  // ------------------------------------------
+  // HIDDEN INPUT
+  // ------------------------------------------
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  // ------------------------------------------
+  // CUSTOM INDICATOR
+  // ------------------------------------------
+
+  &__indicator {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: $border-width-medium solid $color-border-default;
+    border-radius: 50%;
+    background-color: $color-white;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      background-color: $color-secondary;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform $transition-fast;
+    }
+  }
+
+  // ------------------------------------------
+  // LABEL
+  // ------------------------------------------
+
+  &__label {
+    font-size: $font-size-base;
+    color: $color-text-primary;
+  }
+
+  // ------------------------------------------
+  // STATES
+  // ------------------------------------------
+
+  &:hover:not(.ui-radio--disabled) {
+    .ui-radio__indicator {
+      border-color: $color-secondary;
+    }
+  }
+
+  &--checked {
+    .ui-radio__indicator {
+      border-color: $color-secondary;
+
+      &::after {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    .ui-radio__indicator {
+      background-color: $color-gray-100;
+    }
+  }
+
+  // Focus state
+  .ui-radio__input:focus + .ui-radio__indicator {
+    box-shadow: 0 0 0 3px rgba($color-secondary, 0.2);
+  }
+}

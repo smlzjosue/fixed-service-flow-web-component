@@ -1,0 +1,195 @@
+// ============================================
+// STEP PLANS - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.step-plans {
+  width: 100%;
+  padding-bottom: 100px; // Space for sticky footer
+
+  // ------------------------------------------
+  // HEADER
+  // ------------------------------------------
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-6;
+  }
+
+  &__title {
+    @include font-heading-2;
+    color: $color-text-primary;
+  }
+
+  &__btn-back {
+    @include button-outline;
+    height: $button-height-md;
+    padding: 0 $spacing-6;
+  }
+
+  // ------------------------------------------
+  // LOADING
+  // ------------------------------------------
+
+  &__loading {
+    @include flex-column-center;
+    padding: $spacing-12;
+    color: $color-text-secondary;
+  }
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $color-gray-200;
+    border-top-color: $color-secondary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: $spacing-4;
+  }
+
+  // ------------------------------------------
+  // ERROR
+  // ------------------------------------------
+
+  &__error {
+    @include flex-column-center;
+    padding: $spacing-8;
+    text-align: center;
+    color: $color-error;
+
+    button {
+      @include button-outline;
+      margin-top: $spacing-4;
+    }
+  }
+
+  // ------------------------------------------
+  // GRID
+  // ------------------------------------------
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
+
+    @include breakpoint-up(md) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: $spacing-6;
+    }
+  }
+
+  // ------------------------------------------
+  // CARD
+  // ------------------------------------------
+
+  &__card {
+    @include card-interactive;
+    padding: $spacing-6;
+    text-align: center;
+    cursor: pointer;
+
+    &--selected {
+      @include card-selected;
+    }
+  }
+
+  &__card-title {
+    @include font-heading-4;
+    color: $color-text-primary;
+    margin-bottom: $spacing-4;
+  }
+
+  &__card-subtitle {
+    @include font-body-small;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-2;
+  }
+
+  &__card-features {
+    text-align: left;
+    margin-bottom: $spacing-4;
+    padding-left: $spacing-4;
+
+    li {
+      @include font-body-small;
+      color: $color-text-secondary;
+      margin-bottom: $spacing-1;
+      list-style: disc;
+    }
+  }
+
+  &__card-price {
+    @include font-heading-3;
+    color: $color-secondary;
+    margin-bottom: $spacing-4;
+  }
+
+  &__card-btn {
+    @include button-outline;
+    width: 100%;
+  }
+
+  // ------------------------------------------
+  // EMPTY STATE
+  // ------------------------------------------
+
+  &__empty {
+    grid-column: 1 / -1;
+    @include flex-center;
+    padding: $spacing-12;
+    color: $color-text-secondary;
+  }
+
+  // ------------------------------------------
+  // FOOTER (STICKY)
+  // ------------------------------------------
+
+  &__footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $color-white;
+    border-top: 1px solid $color-border-light;
+    padding: $spacing-4 $spacing-6;
+    @include flex-between;
+    z-index: $z-index-sticky;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &__footer-info {
+    display: flex;
+    gap: $spacing-8;
+  }
+
+  &__footer-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__footer-label {
+    @include font-caption;
+    color: $color-text-secondary;
+  }
+
+  &__footer-value {
+    @include font-heading-4;
+    color: $color-text-primary;
+  }
+
+  &__footer-btn {
+    @include button-primary;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

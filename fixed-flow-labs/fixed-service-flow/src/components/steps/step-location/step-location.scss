@@ -1,0 +1,324 @@
+// ============================================
+// STEP LOCATION - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.step-location {
+  width: 100%;
+
+  // ------------------------------------------
+  // HEADER
+  // ------------------------------------------
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-4;
+  }
+
+  &__title {
+    @include font-heading-3;
+    color: $color-text-primary;
+    font-weight: $font-weight-regular;
+
+    &--highlight {
+      color: $color-primary;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  // ------------------------------------------
+  // MAP CONTAINER
+  // ------------------------------------------
+
+  &__map-container {
+    position: relative;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-card;
+  }
+
+  // ------------------------------------------
+  // CONTROLS
+  // ------------------------------------------
+
+  &__controls {
+    position: absolute;
+    top: 10px;
+    left: 120px; // Leave space for Map/Satellite buttons on the left
+    right: 50px; // Leave space for zoom controls on the right
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    @include breakpoint-up(md) {
+      top: 12px;
+      left: 130px;
+      right: 60px;
+    }
+  }
+
+  &__input-group {
+    display: flex;
+    align-items: center;
+    background: $color-white;
+    border-radius: $border-radius-sm;
+    box-shadow: $shadow-md;
+    overflow: hidden;
+    border: 1px solid $color-gray-200;
+  }
+
+  &__input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: $spacing-3;
+    color: $color-gray-400;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    padding: $spacing-3 $spacing-3;
+    border: none;
+    font-size: $font-size-sm;
+    outline: none;
+    background: transparent;
+    min-width: 0;
+
+    &::placeholder {
+      color: $color-text-placeholder;
+    }
+  }
+
+  &__btn-validate {
+    padding: $spacing-3 $spacing-5;
+    background: $color-primary;
+    color: $color-white;
+    border: none;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      background: darken($color-primary, 8%);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__btn-location {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    padding: $spacing-2 $spacing-3;
+    background: $color-secondary;
+    color: $color-white;
+    border: none;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    box-shadow: $shadow-sm;
+    transition: background-color $transition-fast;
+    white-space: nowrap;
+    align-self: flex-start;
+
+    &:hover:not(:disabled) {
+      background: darken($color-secondary, 8%);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // ------------------------------------------
+  // MAP
+  // ------------------------------------------
+
+  &__map {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: $color-gray-200;
+
+    @include breakpoint-up(md) {
+      height: 500px;
+    }
+  }
+
+  &__map-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__map-loading {
+    @include flex-column-center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $color-gray-100;
+    color: $color-text-secondary;
+    z-index: 5;
+
+    p {
+      @include font-body;
+      margin-top: $spacing-4;
+    }
+  }
+
+  &__map-error {
+    @include flex-column-center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $color-gray-100;
+    color: $color-text-secondary;
+    z-index: 5;
+    padding: $spacing-4;
+    text-align: center;
+
+    p {
+      @include font-body;
+      color: $color-error;
+    }
+
+    small {
+      margin-top: $spacing-2;
+      font-size: $font-size-xs;
+    }
+  }
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $color-gray-300;
+    border-top-color: $color-secondary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__map-placeholder {
+    @include flex-column-center;
+    width: 100%;
+    height: 100%;
+    color: $color-text-secondary;
+
+    p {
+      @include font-body;
+    }
+
+    small {
+      margin-top: $spacing-2;
+      font-size: $font-size-xs;
+    }
+  }
+
+  // ------------------------------------------
+  // MODAL
+  // ------------------------------------------
+
+  &__modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: $z-index-modal-backdrop;
+    @include flex-center;
+  }
+
+  &__modal {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    background: $color-white;
+    border-radius: $border-radius-lg;
+    padding: $spacing-8 $spacing-6;
+    text-align: center;
+    box-shadow: $shadow-xl;
+
+    &--error {
+      .step-location__modal-error-bar {
+        display: block;
+      }
+    }
+  }
+
+  &__modal-close {
+    position: absolute;
+    top: $spacing-3;
+    right: $spacing-3;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    font-size: $font-size-xl;
+    color: $color-text-secondary;
+    cursor: pointer;
+    line-height: 1;
+
+    &:hover {
+      color: $color-text-primary;
+    }
+  }
+
+  &__modal-error-bar {
+    display: none;
+    background: $color-error;
+    color: $color-white;
+    padding: $spacing-2 $spacing-4;
+    margin: -$spacing-8 (-$spacing-6) $spacing-4;
+    font-weight: $font-weight-semibold;
+  }
+
+  &__modal-success-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto $spacing-4;
+    color: $color-success;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__modal-message {
+    @include font-body;
+    color: $color-text-primary;
+    margin-bottom: $spacing-6;
+  }
+
+  &__modal-btn {
+    @include button-secondary;
+    min-width: 150px;
+  }
+}

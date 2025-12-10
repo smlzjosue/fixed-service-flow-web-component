@@ -1,0 +1,166 @@
+// ============================================
+// UI-BUTTON - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: inline-block;
+}
+
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  font-family: $font-family-primary;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  text-decoration: none;
+  border: $border-width-medium solid transparent;
+  border-radius: $border-radius-full;
+  cursor: pointer;
+  transition: all $transition-fast;
+  white-space: nowrap;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($color-secondary, 0.3);
+  }
+
+  // ------------------------------------------
+  // SIZES
+  // ------------------------------------------
+
+  &--sm {
+    height: $button-height-sm;
+    padding: 0 $spacing-4;
+    font-size: $font-size-sm;
+  }
+
+  &--md {
+    height: $button-height-md;
+    padding: 0 $spacing-6;
+    font-size: $font-size-base;
+  }
+
+  &--lg {
+    height: $button-height-lg;
+    padding: 0 $spacing-8;
+    font-size: $font-size-base;
+  }
+
+  // ------------------------------------------
+  // VARIANTS
+  // ------------------------------------------
+
+  &--primary {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    color: $color-white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-primary, 8%);
+      border-color: darken($color-primary, 8%);
+    }
+
+    &:active:not(:disabled) {
+      background-color: darken($color-primary, 12%);
+      border-color: darken($color-primary, 12%);
+    }
+  }
+
+  &--secondary {
+    background-color: $color-secondary;
+    border-color: $color-secondary;
+    color: $color-white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-secondary, 8%);
+      border-color: darken($color-secondary, 8%);
+    }
+
+    &:active:not(:disabled) {
+      background-color: darken($color-secondary, 12%);
+      border-color: darken($color-secondary, 12%);
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border-color: $color-secondary;
+    color: $color-secondary;
+
+    &:hover:not(:disabled) {
+      background-color: rgba($color-secondary, 0.08);
+    }
+
+    &:active:not(:disabled) {
+      background-color: rgba($color-secondary, 0.15);
+    }
+  }
+
+  &--text {
+    background-color: transparent;
+    border-color: transparent;
+    color: $color-secondary;
+    padding-left: $spacing-2;
+    padding-right: $spacing-2;
+
+    &:hover:not(:disabled) {
+      background-color: rgba($color-secondary, 0.08);
+    }
+
+    &:active:not(:disabled) {
+      background-color: rgba($color-secondary, 0.15);
+    }
+  }
+
+  // ------------------------------------------
+  // STATES
+  // ------------------------------------------
+
+  &--disabled,
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--loading {
+    cursor: wait;
+
+    .ui-button__content {
+      opacity: 0.7;
+    }
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  // ------------------------------------------
+  // SPINNER
+  // ------------------------------------------
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  &__content {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,6 @@
+dist/
+www/
+loader/
+node_modules/
+*.d.ts
+package-lock.json

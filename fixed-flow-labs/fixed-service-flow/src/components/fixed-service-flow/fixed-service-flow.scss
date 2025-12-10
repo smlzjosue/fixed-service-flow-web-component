@@ -1,0 +1,107 @@
+// ============================================
+// FIXED SERVICE FLOW - Main Component Styles
+// ============================================
+
+@import '../../global/variables';
+@import '../../global/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+  font-family: $font-family-primary;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+}
+
+// ------------------------------------------
+// CONTAINER
+// ------------------------------------------
+
+.fsf-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-4;
+
+  @include breakpoint-up(md) {
+    padding: $spacing-6;
+  }
+}
+
+// ------------------------------------------
+// LOADING STATE
+// ------------------------------------------
+
+.fsf-loading {
+  @include flex-column-center;
+  min-height: 300px;
+  padding: $spacing-8;
+
+  &__spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $color-gray-200;
+    border-top-color: $color-secondary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__text {
+    margin-top: $spacing-4;
+    @include font-body;
+    color: $color-text-secondary;
+  }
+}
+
+// ------------------------------------------
+// ERROR STATE
+// ------------------------------------------
+
+.fsf-error {
+  @include flex-column-center;
+  min-height: 300px;
+  padding: $spacing-8;
+  text-align: center;
+
+  &__icon {
+    @include flex-center;
+    width: 64px;
+    height: 64px;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-white;
+    background-color: $color-error;
+    border-radius: 50%;
+  }
+
+  &__title {
+    margin-top: $spacing-4;
+    @include font-heading-3;
+    color: $color-text-primary;
+  }
+
+  &__message {
+    margin-top: $spacing-2;
+    @include font-body;
+    color: $color-text-secondary;
+    max-width: 400px;
+  }
+
+  &__button {
+    @include button-primary;
+    margin-top: $spacing-6;
+  }
+}
+
+// ------------------------------------------
+// ANIMATIONS
+// ------------------------------------------
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

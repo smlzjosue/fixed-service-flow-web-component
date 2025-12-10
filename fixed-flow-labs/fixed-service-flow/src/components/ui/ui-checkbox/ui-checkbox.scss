@@ -1,0 +1,89 @@
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--error {
+    .checkbox-checkmark {
+      border-color: $color-error;
+    }
+  }
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+
+  &:checked ~ .checkbox-checkmark {
+    background-color: $color-secondary;
+    border-color: $color-secondary;
+
+    .checkbox-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  &:focus ~ .checkbox-checkmark {
+    box-shadow: 0 0 0 3px rgba($color-secondary, 0.2);
+  }
+
+  &:disabled ~ .checkbox-checkmark {
+    background-color: $color-gray-100;
+    border-color: $color-gray-300;
+  }
+}
+
+.checkbox-checkmark {
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-color: $color-white;
+  border: $border-width-medium solid $color-border-default;
+  border-radius: $border-radius-sm;
+  transition: all $transition-fast;
+
+  .checkbox-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    width: 14px;
+    height: 14px;
+    color: $color-white;
+    opacity: 0;
+    transition: all $transition-fast;
+  }
+}
+
+.checkbox-label {
+  @include font-body;
+  color: $color-text-primary;
+  line-height: 20px;
+}
+
+.checkbox-error {
+  display: block;
+  margin-top: $spacing-1;
+  margin-left: calc(20px + $spacing-3);
+  @include font-caption;
+  color: $color-error;
+}

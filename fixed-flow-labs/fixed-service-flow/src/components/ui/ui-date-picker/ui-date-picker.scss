@@ -1,0 +1,166 @@
+// ============================================
+// UI-DATE-PICKER - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-date-picker {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  // ------------------------------------------
+  // LABEL
+  // ------------------------------------------
+
+  &__label {
+    display: block;
+    margin-bottom: $spacing-2;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &__required {
+    color: $color-error;
+    margin-left: $spacing-1;
+  }
+
+  // ------------------------------------------
+  // INPUT WRAPPER
+  // ------------------------------------------
+
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  // ------------------------------------------
+  // INPUT FIELD
+  // ------------------------------------------
+
+  &__field {
+    width: 100%;
+    height: $input-height-md;
+    padding: 0 $spacing-10 0 $spacing-4;
+    font-family: $font-family-primary;
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    background-color: $color-white;
+    border: $border-width-thin solid $color-border-default;
+    border-radius: $border-radius-md;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+    appearance: none;
+
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    &::placeholder {
+      color: $color-text-placeholder;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-border-focus;
+      box-shadow: 0 0 0 3px rgba($color-secondary, 0.15);
+    }
+
+    &:disabled {
+      background-color: $color-gray-100;
+      color: $color-text-secondary;
+      cursor: not-allowed;
+    }
+
+    &:read-only {
+      background-color: $color-gray-50;
+    }
+  }
+
+  // ------------------------------------------
+  // CALENDAR ICON
+  // ------------------------------------------
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: $spacing-4;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: $color-text-secondary;
+    transition: color $transition-fast;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  // ------------------------------------------
+  // MESSAGE (Error / Helper)
+  // ------------------------------------------
+
+  &__message {
+    margin-top: $spacing-1;
+    font-size: $font-size-xs;
+    color: $color-text-secondary;
+
+    &--error {
+      color: $color-error;
+    }
+  }
+
+  // ------------------------------------------
+  // STATES
+  // ------------------------------------------
+
+  &--focused {
+    .ui-date-picker__label {
+      color: $color-secondary;
+    }
+
+    .ui-date-picker__icon {
+      color: $color-secondary;
+    }
+  }
+
+  &--error {
+    .ui-date-picker__field {
+      border-color: $color-error;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.15);
+      }
+    }
+
+    .ui-date-picker__label {
+      color: $color-error;
+    }
+
+    .ui-date-picker__icon {
+      color: $color-error;
+    }
+  }
+
+  &--disabled {
+    .ui-date-picker__label {
+      color: $color-text-secondary;
+    }
+
+    .ui-date-picker__icon {
+      color: $color-gray-400;
+    }
+  }
+}

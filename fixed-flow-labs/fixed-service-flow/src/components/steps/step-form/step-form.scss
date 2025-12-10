@@ -1,0 +1,182 @@
+// ============================================
+// STEP FORM - Styles
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+}
+
+.step-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+
+  // ------------------------------------------
+  // HEADER
+  // ------------------------------------------
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-4;
+  }
+
+  &__title {
+    @include font-heading-2;
+    color: $color-text-primary;
+  }
+
+  &__btn-back {
+    @include button-outline;
+    height: $button-height-md;
+  }
+
+  // ------------------------------------------
+  // INSTRUCTIONS
+  // ------------------------------------------
+
+  &__instructions {
+    @include font-body-small;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-6;
+    padding: $spacing-4;
+    background: $color-gray-50;
+    border-radius: $border-radius-md;
+  }
+
+  // ------------------------------------------
+  // SECTIONS
+  // ------------------------------------------
+
+  &__section {
+    margin-bottom: $spacing-6;
+    padding-bottom: $spacing-6;
+    border-bottom: 1px solid $color-border-light;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
+
+  // ------------------------------------------
+  // ROWS
+  // ------------------------------------------
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
+    margin-bottom: $spacing-4;
+
+    @include breakpoint-up(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // ------------------------------------------
+  // FIELDS
+  // ------------------------------------------
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+
+    &--id {
+      @include breakpoint-up(md) {
+        grid-column: span 1;
+      }
+    }
+  }
+
+  &__label {
+    @include input-label;
+  }
+
+  &__required {
+    color: $color-error;
+    margin-left: $spacing-1;
+  }
+
+  &__input {
+    @include input-base;
+
+    &--error {
+      border-color: $color-error;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($color-error, 0.15);
+      }
+    }
+  }
+
+  &__error {
+    @include input-error-message;
+  }
+
+  // ------------------------------------------
+  // ID ROW
+  // ------------------------------------------
+
+  &__id-row {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    @include breakpoint-up(md) {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .step-form__input {
+      flex: 1;
+    }
+  }
+
+  // ------------------------------------------
+  // RADIO GROUP
+  // ------------------------------------------
+
+  &__radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+
+    &--horizontal {
+      flex-direction: row;
+      gap: $spacing-4;
+    }
+  }
+
+  &__radio {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    @include font-body-small;
+    color: $color-text-primary;
+    cursor: pointer;
+
+    input[type="radio"] {
+      accent-color: $color-secondary;
+    }
+  }
+
+  // ------------------------------------------
+  // ACTIONS
+  // ------------------------------------------
+
+  &__actions {
+    margin-top: $spacing-8;
+    text-align: center;
+  }
+
+  &__btn-submit {
+    @include button-primary;
+    min-width: 200px;
+  }
+}
