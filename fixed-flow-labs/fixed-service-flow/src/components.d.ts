@@ -74,6 +74,10 @@ export namespace Components {
         "onBack": () => void;
         "onNext": () => void;
     }
+    interface StepShipping {
+        "onBack": () => void;
+        "onNext": () => void;
+    }
     interface UiButton {
         /**
           * Disabled state
@@ -499,6 +503,12 @@ declare global {
         prototype: HTMLStepProductDetailElement;
         new (): HTMLStepProductDetailElement;
     };
+    interface HTMLStepShippingElement extends Components.StepShipping, HTMLStencilElement {
+    }
+    var HTMLStepShippingElement: {
+        prototype: HTMLStepShippingElement;
+        new (): HTMLStepShippingElement;
+    };
     interface HTMLUiButtonElementEventMap {
         "buttonClick": MouseEvent;
     }
@@ -641,6 +651,7 @@ declare global {
         "step-order-summary": HTMLStepOrderSummaryElement;
         "step-plans": HTMLStepPlansElement;
         "step-product-detail": HTMLStepProductDetailElement;
+        "step-shipping": HTMLStepShippingElement;
         "ui-button": HTMLUiButtonElement;
         "ui-carousel": HTMLUiCarouselElement;
         "ui-checkbox": HTMLUiCheckboxElement;
@@ -723,6 +734,10 @@ declare namespace LocalJSX {
         "onNext"?: () => void;
     }
     interface StepProductDetail {
+        "onBack"?: () => void;
+        "onNext"?: () => void;
+    }
+    interface StepShipping {
         "onBack"?: () => void;
         "onNext"?: () => void;
     }
@@ -1115,6 +1130,7 @@ declare namespace LocalJSX {
         "step-order-summary": StepOrderSummary;
         "step-plans": StepPlans;
         "step-product-detail": StepProductDetail;
+        "step-shipping": StepShipping;
         "ui-button": UiButton;
         "ui-carousel": UiCarousel;
         "ui-checkbox": UiCheckbox;
@@ -1138,6 +1154,7 @@ declare module "@stencil/core" {
             "step-order-summary": LocalJSX.StepOrderSummary & JSXBase.HTMLAttributes<HTMLStepOrderSummaryElement>;
             "step-plans": LocalJSX.StepPlans & JSXBase.HTMLAttributes<HTMLStepPlansElement>;
             "step-product-detail": LocalJSX.StepProductDetail & JSXBase.HTMLAttributes<HTMLStepProductDetailElement>;
+            "step-shipping": LocalJSX.StepShipping & JSXBase.HTMLAttributes<HTMLStepShippingElement>;
             "ui-button": LocalJSX.UiButton & JSXBase.HTMLAttributes<HTMLUiButtonElement>;
             "ui-carousel": LocalJSX.UiCarousel & JSXBase.HTMLAttributes<HTMLUiCarouselElement>;
             "ui-checkbox": LocalJSX.UiCheckbox & JSXBase.HTMLAttributes<HTMLUiCheckboxElement>;

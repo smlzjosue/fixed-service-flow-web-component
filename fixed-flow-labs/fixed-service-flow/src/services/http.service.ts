@@ -39,7 +39,7 @@ export class HttpError extends Error {
 // HTTP SERVICE CLASS
 // ------------------------------------------
 
-class HttpService {
+export class HttpService {
   private baseUrl: string = '';
   private defaultTimeout: number = 60000; // 60 seconds
 

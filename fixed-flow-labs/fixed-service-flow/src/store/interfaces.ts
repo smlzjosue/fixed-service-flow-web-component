@@ -277,7 +277,8 @@ export interface ServiceRequestPayload {
 // FLOW STATE
 // ------------------------------------------
 
-export type FlowStep = 1 | 2 | 3 | 4 | 5;
+// Standard flow: 1-5, CLARO HOGAR flow: 1-8
+export type FlowStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 export interface FlowState {
   // Navigation
@@ -474,6 +475,7 @@ export interface CartResponse {
   errorDisplay?: string;
   products?: CartItem[];
   subTotalPrice?: number;
+  subTotalPerMonth?: number;
   totalPrice?: number;
   depositAmount?: number;
   totalDownPayment?: number;
@@ -491,6 +493,7 @@ export interface CartItem {
   qty: number;
   decPrice: number;
   decTotalPerMonth?: number;
+  decTotalPrice?: number;
   installments: number;
   plan?: boolean;
   catalogId?: number;
@@ -499,9 +502,15 @@ export interface CartItem {
   home?: boolean;
   internet?: boolean;
   storage?: string;
+  storageName?: string;
   webColor?: string;
+  colorName?: string;
   brand?: string;
   detailImage?: string;
+  imgUrl?: string;
+  color?: string;
+  stock?: string;
+  catalogName?: string;
 }
 
 export interface CartUpdateResponse {

@@ -323,9 +323,7 @@ export class FixedServiceFlow {
         return <step-order-summary {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.SHIPPING:
-        // TODO: Create step-shipping component
-        // For now, use step-form
-        return <step-form {...stepProps} />;
+        return <step-shipping {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.PAYMENT:
         // TODO: Create step-payment component
