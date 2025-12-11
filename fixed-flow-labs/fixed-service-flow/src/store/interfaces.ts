@@ -78,6 +78,37 @@ export interface RequestResponse {
   errorNum?: number;
 }
 
+export interface OrderDetailsResponse {
+  hasError: boolean;
+  orderId?: string;
+  orderNumber?: string;
+  status?: string;
+  createdAt?: string;
+  customer?: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  plan?: {
+    planId: number;
+    planName: string;
+    price: number;
+  };
+  message?: string;
+  errorDisplay?: string;
+  errorDesc?: string;
+  errorNum?: number;
+}
+
+export interface ConfirmationResponse {
+  hasError: boolean;
+  sent: boolean;
+  message?: string;
+  errorDisplay?: string;
+  errorDesc?: string;
+  errorNum?: number;
+}
+
 // ------------------------------------------
 // LOCATION DATA
 // ------------------------------------------
@@ -139,6 +170,7 @@ export interface PersonalData {
   phone1: string;
   phone2?: string;
   email: string;
+  birthDate?: string; // Opcional - requerido por backend pero no siempre recolectado en flujo empresarial
 }
 
 export interface BusinessData {
@@ -186,7 +218,7 @@ export interface ServiceRequestPayload {
   installation: string;
   activation: string;
   moden: string;
-  claro_customer: string; // 'Si' | 'No'
+  claro_customer: boolean; // Backend espera booleano
   latitud: string;
   longitud: string;
   business_name?: string;
@@ -269,6 +301,23 @@ export interface StepChangeEvent {
 // CONSTANTS
 // ------------------------------------------
 
+/**
+ * Valor base del modem (usado en cálculos de Sin Contrato)
+ * Fuente: TEL/frondend/src/app/shared/const/appConst.ts
+ */
+export const VALUE_MODEM = 40;
+
+/**
+ * Opciones de contrato para servicio de internet fijo
+ * Fuente: TEL/frondend/src/app/shared/const/appConst.ts (INTERNET constant)
+ *
+ * CON CONTRATO:
+ * - 24 meses: Todo sin costo (instalación, activación, modem)
+ * - 12 meses: Instalación $25, Activación $20, Modem sin costo
+ *
+ * SIN CONTRATO:
+ * - Instalación $50, Activación $40, Modem $40
+ */
 export const CONTRACT_OPTIONS: ContractType[] = [
   {
     typeId: 1,
@@ -285,7 +334,7 @@ export const CONTRACT_OPTIONS: ContractType[] = [
         contractId: 2,
         deadlines: 12,
         installation: 25,
-        activation: 25,
+        activation: 20, // Corregido: era 25, debe ser 20 (según TEL)
         modem: 0,
       },
     ],
@@ -298,7 +347,7 @@ export const CONTRACT_OPTIONS: ContractType[] = [
         contractId: 1,
         deadlines: 0,
         installation: 50,
-        activation: 0,
+        activation: 40, // Corregido: era 0, debe ser 40 (según TEL)
         modem: 40,
       },
     ],

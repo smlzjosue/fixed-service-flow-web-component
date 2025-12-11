@@ -29,6 +29,8 @@ export class StepConfirmation {
 
   @State() status: 'loading' | 'success' | 'error' = 'loading';
   @State() orderId: string | null = null;
+  @State() orderNumber: string | null = null;
+  @State() confirmationSent: boolean = false;
   @State() errorMessage: string = '';
 
   // ------------------------------------------
@@ -69,9 +71,18 @@ export class StepConfirmation {
         throw new Error(response.errorDisplay || response.message || ERROR_MESSAGES.REQUEST_ERROR);
       }
 
-      // Success
-      this.status = 'success';
+      // Success - store orderId
       this.orderId = response.orderId || null;
+
+      // Get order details (async, don't block on failure)
+      if (this.orderId) {
+        this.fetchOrderDetails(this.orderId);
+        // Send confirmation email (async, don't block on failure)
+        this.sendConfirmationEmail(this.orderId, formData!.personal.email);
+      }
+
+      // Mark as success
+      this.status = 'success';
 
       // Store result
       flowActions.setOrderResult(this.orderId, null);
@@ -93,14 +104,103 @@ export class StepConfirmation {
     }
   }
 
+  /**
+   * Fetches order details after successful submission
+   * Non-blocking - errors are logged but don't affect UI
+   */
+  private async fetchOrderDetails(orderId: string) {
+    try {
+      const orderDetails = await requestService.getOrder(orderId);
+      if (!orderDetails.hasError && orderDetails.orderNumber) {
+        this.orderNumber = orderDetails.orderNumber;
+      }
+    } catch (error) {
+      // Non-critical - just log the error
+      console.warn('Could not fetch order details:', error);
+    }
+  }
+
+  /**
+   * Sends confirmation email to customer
+   * Non-blocking - errors are logged but don't affect UI
+   */
+  private async sendConfirmationEmail(orderId: string, email: string) {
+    try {
+      const confirmationResult = await requestService.sendConfirmation(orderId, email);
+      if (!confirmationResult.hasError && confirmationResult.sent) {
+        this.confirmationSent = true;
+      }
+    } catch (error) {
+      // Non-critical - just log the error
+      console.warn('Could not send confirmation email:', error);
+    }
+  }
+
   private handleRetry = () => {
     this.submitRequest();
   };
 
   private handleClose = () => {
+    // Clear all sessionStorage data (following TEL pattern)
+    this.clearSessionStorage();
+
+    // Reset flow state
     flowActions.resetFlow();
+
+    // Notify parent
     this.onCancel?.();
   };
+
+  /**
+   * Clears all flow-related sessionStorage keys
+   * Source: TEL - frontend/src/app/internet/components/result/result.component.ts
+   */
+  private clearSessionStorage() {
+    const keysToRemove = [
+      // Location data
+      'serviceLatitude',
+      'serviceLongitude',
+      'serviceAddress',
+      'serviceCity',
+      'serviceZipCode',
+      'serviceType',
+      'serviceMessage',
+      // Plan data
+      'planId',
+      'planName',
+      'planSoc',
+      'planPrice',
+      'planFeatures',
+      // Contract data
+      'typeContractId',
+      'contractInstallment',
+      'contractInstallation',
+      'contractActivation',
+      'contractModen',
+      // Form data
+      'customerFirstName',
+      'customerSecondName',
+      'customerLastName',
+      'customerSecondLastName',
+      'customerIdType',
+      'customerIdNumber',
+      'customerIdExpiration',
+      'customerPhone1',
+      'customerPhone2',
+      'customerEmail',
+      'customerBirthDate',
+      'businessName',
+      'businessPosition',
+      'isExistingCustomer',
+      // Cart data
+      'cartId',
+      'shoppingCart',
+    ];
+
+    keysToRemove.forEach(key => {
+      sessionStorage.removeItem(key);
+    });
+  }
 
   // ------------------------------------------
   // RENDER
@@ -116,6 +216,9 @@ export class StepConfirmation {
   }
 
   private renderSuccess() {
+    // Prefer orderNumber from getOrder API, fallback to orderId from submit response
+    const displayOrderId = this.orderNumber || this.orderId;
+
     return (
       <div class="step-confirmation__result step-confirmation__result--success">
         <div class="step-confirmation__icon step-confirmation__icon--success">
@@ -125,8 +228,13 @@ export class StepConfirmation {
         </div>
         <h2 class="step-confirmation__title">{SUCCESS_MESSAGES.REQUEST_SUCCESS}</h2>
         <p class="step-confirmation__message">{SUCCESS_MESSAGES.REQUEST_SUCCESS_SUBTITLE}</p>
-        {this.orderId && (
-          <p class="step-confirmation__order-id">Número de orden: {this.orderId}</p>
+        {displayOrderId && (
+          <p class="step-confirmation__order-id">Número de orden: {displayOrderId}</p>
+        )}
+        {this.confirmationSent && (
+          <p class="step-confirmation__email-sent">
+            Se ha enviado un correo de confirmación a tu email.
+          </p>
         )}
         <button class="step-confirmation__btn" onClick={this.handleClose}>
           Cerrar

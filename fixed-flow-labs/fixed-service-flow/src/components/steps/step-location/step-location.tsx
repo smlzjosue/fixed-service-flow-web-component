@@ -358,11 +358,21 @@ export class StepLocation {
                   ref={(el) => this.addressInput = el}
                 />
                 <button
-                  class="step-location__btn-validate"
+                  class={{
+                    'step-location__btn-validate': true,
+                    'step-location__btn-validate--loading': this.isValidating,
+                  }}
                   onClick={this.handleValidate}
                   disabled={this.isValidating || (!this.address.trim() && !this.currentCoordinates)}
                 >
-                  {this.isValidating ? 'Validando...' : 'Validar'}
+                  {this.isValidating ? (
+                    <span class="step-location__btn-validate-content">
+                      <span class="step-location__btn-spinner"></span>
+                      Validando...
+                    </span>
+                  ) : (
+                    'Validar'
+                  )}
                 </button>
               </div>
               <button

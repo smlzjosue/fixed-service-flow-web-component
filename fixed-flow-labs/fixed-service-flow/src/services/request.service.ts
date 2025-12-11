@@ -7,6 +7,8 @@ import { httpService } from './http.service';
 import { tokenService } from './token.service';
 import {
   RequestResponse,
+  OrderDetailsResponse,
+  ConfirmationResponse,
   ServiceRequestPayload,
   FormData as CustomerFormData,
   SelectedContract,
@@ -50,6 +52,49 @@ class RequestService {
   }
 
   // ------------------------------------------
+  // GET ORDER DETAILS
+  // ------------------------------------------
+
+  /**
+   * Gets order details after successful submission
+   * Endpoint: GET api/Orders/getOrder?orderId={orderId}
+   * Source: TEL - frontend/src/app/internet/services/plans.service.ts
+   */
+  async getOrder(orderId: string): Promise<OrderDetailsResponse> {
+    await tokenService.ensureToken();
+
+    const response = await httpService.get<OrderDetailsResponse>(
+      `api/Orders/getOrder?orderId=${encodeURIComponent(orderId)}`,
+    );
+
+    return response;
+  }
+
+  // ------------------------------------------
+  // SEND CONFIRMATION EMAIL
+  // ------------------------------------------
+
+  /**
+   * Sends confirmation email to customer
+   * Endpoint: POST api/Orders/sendConfirmation
+   * Source: TEL - frontend/src/app/internet/services/plans.service.ts
+   */
+  async sendConfirmation(orderId: string, email: string): Promise<ConfirmationResponse> {
+    await tokenService.ensureToken();
+
+    const formData = new FormData();
+    formData.append('orderId', orderId);
+    formData.append('email', email);
+
+    const response = await httpService.postFormData<ConfirmationResponse>(
+      'api/Orders/sendConfirmation',
+      formData,
+    );
+
+    return response;
+  }
+
+  // ------------------------------------------
   // BUILD PAYLOAD
   // ------------------------------------------
 
@@ -71,7 +116,9 @@ class RequestService {
       second_name: formData.personal.secondName || '',
       last_name: formData.personal.lastName,
       second_surname: formData.personal.secondLastName,
-      date_birth: '', // Not collected in current form
+      // date_birth: Campo requerido por el backend pero no recolectado en el formulario empresarial.
+      // Se envía fecha por defecto. TODO: Discutir con backend si es necesario para flujo empresarial.
+      date_birth: formData.personal.birthDate || '1990-01-01',
       email: formData.personal.email,
       telephone1: formData.personal.phone1,
       telephone2: formData.personal.phone2 || '',
@@ -99,8 +146,8 @@ class RequestService {
       activation: String(contract.activation),
       moden: String(contract.modem),
 
-      // Customer status
-      claro_customer: formData.isExistingCustomer ? 'Si' : 'No',
+      // Customer status - Backend espera booleano, no string
+      claro_customer: formData.isExistingCustomer,
 
       // Location
       latitud: String(location.latitude),

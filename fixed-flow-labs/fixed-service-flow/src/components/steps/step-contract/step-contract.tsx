@@ -4,7 +4,7 @@
 // ============================================
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
-import { flowActions } from '../../../store/flow.store';
+import { flowState, flowActions } from '../../../store/flow.store';
 import { CONTRACT_OPTIONS, SelectedContract, ContractTypeId } from '../../../store/interfaces';
 import { formatPrice, formatContractDuration } from '../../../utils/formatters';
 
@@ -29,12 +29,62 @@ export class StepContract {
   @State() selectedOption: SelectedContract | null = null;
 
   // ------------------------------------------
+  // LIFECYCLE
+  // ------------------------------------------
+
+  componentWillLoad() {
+    // Restaurar selección previa si existe (cuando el usuario vuelve a este paso)
+    this.restorePreviousSelection();
+  }
+
+  // ------------------------------------------
   // METHODS
   // ------------------------------------------
 
+  /**
+   * Restaura la selección previa desde el store o sessionStorage
+   * Esto permite mantener la selección cuando el usuario navega hacia atrás
+   */
+  private restorePreviousSelection() {
+    // Primero intentar desde el store
+    if (flowState.selectedContract) {
+      this.selectedOption = flowState.selectedContract;
+      this.activeTab = flowState.selectedContract.typeId;
+      return;
+    }
+
+    // Si no está en el store, intentar desde sessionStorage
+    const typeContractId = sessionStorage.getItem('typeContractId');
+    if (typeContractId !== null) {
+      const typeId = parseInt(typeContractId) as ContractTypeId;
+      const deadlines = parseInt(sessionStorage.getItem('contractInstallment') || '0');
+      const installation = parseInt(sessionStorage.getItem('contractInstallation') || '0');
+      const activation = parseInt(sessionStorage.getItem('contractActivation') || '0');
+      const modem = parseInt(sessionStorage.getItem('contractModen') || '0');
+
+      const contractType = CONTRACT_OPTIONS.find(c => c.typeId === typeId);
+
+      this.selectedOption = {
+        typeId,
+        typeName: contractType?.type || '',
+        deadlines,
+        installation,
+        activation,
+        modem,
+      };
+      this.activeTab = typeId;
+
+      // Sincronizar con el store
+      flowActions.setContract(this.selectedOption);
+    }
+  }
+
   private handleTabChange = (typeId: ContractTypeId) => {
     this.activeTab = typeId;
-    this.selectedOption = null;
+    // No limpiar la selección si ya hay una del mismo tipo
+    if (this.selectedOption?.typeId !== typeId) {
+      this.selectedOption = null;
+    }
   };
 
   private handleSelectOption = (typeId: ContractTypeId, option: any) => {
@@ -157,7 +207,7 @@ export class StepContract {
                     <div class="step-contract__option-content">
                       <span class="step-contract__option-title">Sin contrato</span>
                       <div class="step-contract__option-details">
-                        <span>Activación: Sin costo</span>
+                        <span>Activación: {option.activation > 0 ? formatPrice(option.activation) : 'Sin Costo'}</span>
                         <span>Modem: {formatPrice(option.modem)}</span>
                         <span>Instalación: {formatPrice(option.installation)}</span>
                       </div>
