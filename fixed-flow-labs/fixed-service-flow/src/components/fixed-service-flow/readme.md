@@ -39,6 +39,7 @@
 - [step-product-detail](../steps/step-product-detail)
 - [step-order-summary](../steps/step-order-summary)
 - [step-shipping](../steps/step-shipping)
+- [step-payment](../steps/step-payment)
 
 ### Graph
 ```mermaid
@@ -52,6 +53,7 @@ graph TD;
   fixed-service-flow --> step-product-detail
   fixed-service-flow --> step-order-summary
   fixed-service-flow --> step-shipping
+  fixed-service-flow --> step-payment
   step-plans --> ui-carousel
   style fixed-service-flow fill:#f9f,stroke:#333,stroke-width:4px
 ```

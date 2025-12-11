@@ -326,16 +326,7 @@ export class FixedServiceFlow {
         return <step-shipping {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.PAYMENT:
-        // TODO: Create step-payment component
-        this.log('Payment step - TODO');
-        return (
-          <div class="step-placeholder">
-            <h2>Pago</h2>
-            <p>Este paso está en desarrollo</p>
-            <button onClick={stepProps.onNext}>Continuar</button>
-            <button onClick={stepProps.onBack}>Regresar</button>
-          </div>
-        );
+        return <step-payment {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.CONFIRMATION:
         return <step-confirmation {...stepProps} onCancel={this.handleFlowCancel} />;

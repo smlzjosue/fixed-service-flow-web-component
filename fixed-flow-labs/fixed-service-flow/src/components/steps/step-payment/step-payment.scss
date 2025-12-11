@@ -1,0 +1,404 @@
+// ============================================
+// STEP PAYMENT - SCSS Styles
+// Fixed Service Flow Web Component
+// Design based on TEL payment-web.component
+// ============================================
+
+@import '../../../global/variables';
+
+// ------------------------------------------
+// LOCAL ALIASES
+// ------------------------------------------
+
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$error-color: $color-error;
+$success-color: $color-success;
+$gray-50: $color-gray-50;
+$gray-100: $color-gray-100;
+$gray-200: $color-gray-200;
+$gray-300: $color-gray-300;
+$gray-400: $color-gray-400;
+$gray-500: $color-gray-500;
+$gray-600: $color-gray-600;
+$gray-700: $color-gray-700;
+$gray-900: $color-gray-900;
+$radius-sm: $border-radius-sm;
+$radius-md: $border-radius-md;
+$radius-lg: $border-radius-lg;
+$radius-full: $border-radius-full;
+$spacing-xs: $spacing-1;
+$spacing-sm: $spacing-2;
+$spacing-md: $spacing-4;
+$spacing-lg: $spacing-6;
+$spacing-xl: $spacing-8;
+
+// ------------------------------------------
+// HOST
+// ------------------------------------------
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  background-color: $gray-50;
+}
+
+// ------------------------------------------
+// MAIN CONTAINER
+// ------------------------------------------
+
+.step-payment {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  min-height: 100vh;
+}
+
+// ------------------------------------------
+// HEADER
+// ------------------------------------------
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+
+  .btn-back-nav {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: none;
+    border: none;
+    color: $secondary-color;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    padding: $spacing-xs;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+    flex: 1;
+  }
+}
+
+// ------------------------------------------
+// CONTENT
+// ------------------------------------------
+
+.content {
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-md;
+  min-height: 400px;
+}
+
+// ------------------------------------------
+// LOADING STATES
+// ------------------------------------------
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: $spacing-xl;
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $gray-900;
+    margin: $spacing-md 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $gray-600;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  .warning {
+    color: $error-color;
+    font-weight: 500;
+    font-size: $font-size-sm;
+  }
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid $gray-200;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ------------------------------------------
+// PAYMENT CONTAINER
+// ------------------------------------------
+
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.payment-summary {
+  background: $gray-50;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+
+  h3 {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $gray-900;
+    margin: 0 0 $spacing-md 0;
+  }
+}
+
+.amount-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-sm 0;
+  border-bottom: 1px solid $gray-200;
+
+  .label {
+    font-size: $font-size-base;
+    color: $gray-600;
+  }
+
+  .value {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $primary-color;
+  }
+}
+
+.payment-items {
+  margin-top: $spacing-md;
+
+  .payment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-xs 0;
+    font-size: $font-size-sm;
+
+    .item-type {
+      color: $gray-600;
+    }
+
+    .item-amount {
+      color: $gray-900;
+      font-weight: 500;
+    }
+  }
+}
+
+// ------------------------------------------
+// IFRAME CONTAINER
+// ------------------------------------------
+
+.iframe-container {
+  border: 1px solid $gray-200;
+  border-radius: $radius-md;
+  overflow: hidden;
+  min-height: 400px;
+
+  iframe {
+    display: block;
+    border: none;
+    width: 100%;
+  }
+}
+
+.iframe-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: $gray-50;
+
+  p {
+    color: $gray-600;
+    margin-top: $spacing-md;
+  }
+}
+
+// ------------------------------------------
+// SUCCESS CONTAINER
+// ------------------------------------------
+
+.success-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: $spacing-xl;
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    background: lighten($success-color, 40%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-md;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      color: $success-color;
+    }
+  }
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $success-color;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $gray-600;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  .redirect-note {
+    font-size: $font-size-sm;
+    color: $gray-500;
+  }
+}
+
+// ------------------------------------------
+// ERROR CONTAINER
+// ------------------------------------------
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: $spacing-xl;
+
+  .error-icon {
+    width: 80px;
+    height: 80px;
+    background: lighten($error-color, 35%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-md;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      color: $error-color;
+    }
+  }
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $error-color;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $gray-600;
+    margin: 0 0 $spacing-lg 0;
+    max-width: 400px;
+  }
+}
+
+.error-actions {
+  display: flex;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+// ------------------------------------------
+// BUTTONS
+// ------------------------------------------
+
+.btn-retry {
+  height: 44px;
+  padding: 0 $spacing-lg;
+  background: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $radius-full;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+  }
+}
+
+.btn-back {
+  height: 44px;
+  padding: 0 $spacing-lg;
+  background: white;
+  color: $gray-700;
+  border: 1px solid $gray-300;
+  border-radius: $radius-full;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $gray-50;
+    border-color: $gray-400;
+  }
+}
+
+.btn-cancel {
+  align-self: center;
+  height: 44px;
+  padding: 0 $spacing-lg;
+  background: white;
+  color: $gray-600;
+  border: 1px solid $gray-300;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $gray-50;
+    border-color: $gray-400;
+  }
+}

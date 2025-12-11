@@ -66,6 +66,11 @@ export namespace Components {
         "onBack": () => void;
         "onNext": () => void;
     }
+    interface StepPayment {
+        "onBack": () => void;
+        "onNext": () => void;
+        "paymentIframeUrl"?: string;
+    }
     interface StepPlans {
         "onBack": () => void;
         "onNext": () => void;
@@ -491,6 +496,12 @@ declare global {
         prototype: HTMLStepOrderSummaryElement;
         new (): HTMLStepOrderSummaryElement;
     };
+    interface HTMLStepPaymentElement extends Components.StepPayment, HTMLStencilElement {
+    }
+    var HTMLStepPaymentElement: {
+        prototype: HTMLStepPaymentElement;
+        new (): HTMLStepPaymentElement;
+    };
     interface HTMLStepPlansElement extends Components.StepPlans, HTMLStencilElement {
     }
     var HTMLStepPlansElement: {
@@ -649,6 +660,7 @@ declare global {
         "step-form": HTMLStepFormElement;
         "step-location": HTMLStepLocationElement;
         "step-order-summary": HTMLStepOrderSummaryElement;
+        "step-payment": HTMLStepPaymentElement;
         "step-plans": HTMLStepPlansElement;
         "step-product-detail": HTMLStepProductDetailElement;
         "step-shipping": HTMLStepShippingElement;
@@ -728,6 +740,11 @@ declare namespace LocalJSX {
     interface StepOrderSummary {
         "onBack"?: () => void;
         "onNext"?: () => void;
+    }
+    interface StepPayment {
+        "onBack"?: () => void;
+        "onNext"?: () => void;
+        "paymentIframeUrl"?: string;
     }
     interface StepPlans {
         "onBack"?: () => void;
@@ -1128,6 +1145,7 @@ declare namespace LocalJSX {
         "step-form": StepForm;
         "step-location": StepLocation;
         "step-order-summary": StepOrderSummary;
+        "step-payment": StepPayment;
         "step-plans": StepPlans;
         "step-product-detail": StepProductDetail;
         "step-shipping": StepShipping;
@@ -1152,6 +1170,7 @@ declare module "@stencil/core" {
             "step-form": LocalJSX.StepForm & JSXBase.HTMLAttributes<HTMLStepFormElement>;
             "step-location": LocalJSX.StepLocation & JSXBase.HTMLAttributes<HTMLStepLocationElement>;
             "step-order-summary": LocalJSX.StepOrderSummary & JSXBase.HTMLAttributes<HTMLStepOrderSummaryElement>;
+            "step-payment": LocalJSX.StepPayment & JSXBase.HTMLAttributes<HTMLStepPaymentElement>;
             "step-plans": LocalJSX.StepPlans & JSXBase.HTMLAttributes<HTMLStepPlansElement>;
             "step-product-detail": LocalJSX.StepProductDetail & JSXBase.HTMLAttributes<HTMLStepProductDetailElement>;
             "step-shipping": LocalJSX.StepShipping & JSXBase.HTMLAttributes<HTMLStepShippingElement>;
