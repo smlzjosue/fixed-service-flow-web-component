@@ -11,6 +11,52 @@
 
 .step-location {
   width: 100%;
+  position: relative;
+
+  // ------------------------------------------
+  // VALIDATING OVERLAY
+  // ------------------------------------------
+
+  &__validating-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  &__validating-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-4;
+    padding: $spacing-6;
+    background: $color-white;
+    border-radius: 16px;
+    box-shadow: $shadow-xl;
+  }
+
+  &__validating-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid $color-gray-200;
+    border-top-color: $color-primary;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__validating-text {
+    margin: 0;
+    font-size: 18px;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
 
   // ------------------------------------------
   // HEADER

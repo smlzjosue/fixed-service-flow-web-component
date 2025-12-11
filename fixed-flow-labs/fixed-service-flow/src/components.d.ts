@@ -40,6 +40,10 @@ export namespace Components {
          */
         "initialStep"?: FlowStep;
     }
+    interface StepCatalogue {
+        "onBack": () => void;
+        "onNext": () => void;
+    }
     interface StepConfirmation {
         "onBack": () => void;
         "onCancel": () => void;
@@ -439,6 +443,12 @@ declare global {
         prototype: HTMLFixedServiceFlowElement;
         new (): HTMLFixedServiceFlowElement;
     };
+    interface HTMLStepCatalogueElement extends Components.StepCatalogue, HTMLStencilElement {
+    }
+    var HTMLStepCatalogueElement: {
+        prototype: HTMLStepCatalogueElement;
+        new (): HTMLStepCatalogueElement;
+    };
     interface HTMLStepConfirmationElement extends Components.StepConfirmation, HTMLStencilElement {
     }
     var HTMLStepConfirmationElement: {
@@ -603,6 +613,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "fixed-service-flow": HTMLFixedServiceFlowElement;
+        "step-catalogue": HTMLStepCatalogueElement;
         "step-confirmation": HTMLStepConfirmationElement;
         "step-contract": HTMLStepContractElement;
         "step-form": HTMLStepFormElement;
@@ -658,6 +669,10 @@ declare namespace LocalJSX {
           * Emitted when step changes
          */
         "onStepChange"?: (event: FixedServiceFlowCustomEvent<StepChangeEvent>) => void;
+    }
+    interface StepCatalogue {
+        "onBack"?: () => void;
+        "onNext"?: () => void;
     }
     interface StepConfirmation {
         "onBack"?: () => void;
@@ -1062,6 +1077,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "fixed-service-flow": FixedServiceFlow;
+        "step-catalogue": StepCatalogue;
         "step-confirmation": StepConfirmation;
         "step-contract": StepContract;
         "step-form": StepForm;
@@ -1082,6 +1098,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "fixed-service-flow": LocalJSX.FixedServiceFlow & JSXBase.HTMLAttributes<HTMLFixedServiceFlowElement>;
+            "step-catalogue": LocalJSX.StepCatalogue & JSXBase.HTMLAttributes<HTMLStepCatalogueElement>;
             "step-confirmation": LocalJSX.StepConfirmation & JSXBase.HTMLAttributes<HTMLStepConfirmationElement>;
             "step-contract": LocalJSX.StepContract & JSXBase.HTMLAttributes<HTMLStepContractElement>;
             "step-form": LocalJSX.StepForm & JSXBase.HTMLAttributes<HTMLStepFormElement>;

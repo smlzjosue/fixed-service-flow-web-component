@@ -110,6 +110,54 @@ export interface ConfirmationResponse {
 }
 
 // ------------------------------------------
+// CATALOGUE INTERFACES (CLARO HOGAR)
+// ------------------------------------------
+
+export interface CatalogueResponse {
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+  errorDesc?: string;
+  errorNum?: number;
+  products?: CatalogueProduct[];
+  totalItems?: number;
+  totalPages?: number;
+  currentPage?: number;
+}
+
+export interface CatalogueProduct {
+  productId: number;
+  productName: string;
+  imgUrl: string;
+  update_price: number; // Monthly installment price
+  regular_price: number; // Full price
+  installments: number; // Number of installments (e.g., 36)
+  shortDescription?: string;
+  colors?: ProductColor[];
+  offer?: ProductOffer | null;
+  offerData?: ProductOfferData | null;
+  promoImg?: string;
+  checkCompare?: boolean; // For compare checkbox state
+}
+
+export interface ProductColor {
+  webColor: string;
+}
+
+export interface ProductOffer {
+  nameDesingn: string; // 'normal' | 'cyberweek'
+}
+
+export interface ProductOfferData {
+  installmentOffer: number;
+}
+
+export interface CatalogueFilter {
+  value: string;
+  label: string;
+}
+
+// ------------------------------------------
 // LOCATION DATA
 // ------------------------------------------
 

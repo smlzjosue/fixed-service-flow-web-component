@@ -31,6 +31,7 @@
 ### Depends on
 
 - [step-location](../steps/step-location)
+- [step-catalogue](../steps/step-catalogue)
 - [step-plans](../steps/step-plans)
 - [step-contract](../steps/step-contract)
 - [step-form](../steps/step-form)
@@ -40,6 +41,7 @@
 ```mermaid
 graph TD;
   fixed-service-flow --> step-location
+  fixed-service-flow --> step-catalogue
   fixed-service-flow --> step-plans
   fixed-service-flow --> step-contract
   fixed-service-flow --> step-form

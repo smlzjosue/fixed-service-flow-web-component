@@ -329,6 +329,16 @@ export class StepLocation {
     return (
       <Host>
         <div class="step-location">
+          {/* Validating Overlay */}
+          {this.isValidating && (
+            <div class="step-location__validating-overlay">
+              <div class="step-location__validating-content">
+                <div class="step-location__validating-spinner"></div>
+                <p class="step-location__validating-text">Validando cobertura...</p>
+              </div>
+            </div>
+          )}
+
           {/* Header */}
           <header class="step-location__header">
             <h1 class="step-location__title">

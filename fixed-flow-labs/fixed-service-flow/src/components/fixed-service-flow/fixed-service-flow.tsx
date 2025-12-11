@@ -222,6 +222,14 @@ export class FixedServiceFlow {
     }
   }
 
+  /**
+   * Checks if the current flow is for CLARO HOGAR (wireless internet)
+   */
+  private isClaroHogar(): boolean {
+    const serviceType = flowState.location?.serviceType?.toUpperCase();
+    return serviceType === 'CLARO HOGAR';
+  }
+
   // ------------------------------------------
   // RENDER
   // ------------------------------------------
@@ -238,6 +246,11 @@ export class FixedServiceFlow {
       case 1:
         return <step-location {...stepProps} />;
       case 2:
+        // CLARO HOGAR uses catalogue (devices), others use plans (internet)
+        if (this.isClaroHogar()) {
+          this.log('CLARO HOGAR detected - showing catalogue');
+          return <step-catalogue {...stepProps} />;
+        }
         return <step-plans {...stepProps} />;
       case 3:
         return <step-contract {...stepProps} />;
