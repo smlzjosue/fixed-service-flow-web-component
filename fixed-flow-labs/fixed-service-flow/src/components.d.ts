@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
+import { FlowCompleteEvent, FlowErrorEvent, StepChangeEvent } from "./store/interfaces";
 import { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 import { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 import { InputType } from "./components/ui/ui-input/ui-input";
 import { SelectOption } from "./components/ui/ui-select/ui-select";
-export { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
+export { FlowCompleteEvent, FlowErrorEvent, StepChangeEvent } from "./store/interfaces";
 export { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 export { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 export { InputType } from "./components/ui/ui-input/ui-input";
@@ -63,6 +63,10 @@ export namespace Components {
         "onNext": () => void;
     }
     interface StepPlans {
+        "onBack": () => void;
+        "onNext": () => void;
+    }
+    interface StepProductDetail {
         "onBack": () => void;
         "onNext": () => void;
     }
@@ -479,6 +483,12 @@ declare global {
         prototype: HTMLStepPlansElement;
         new (): HTMLStepPlansElement;
     };
+    interface HTMLStepProductDetailElement extends Components.StepProductDetail, HTMLStencilElement {
+    }
+    var HTMLStepProductDetailElement: {
+        prototype: HTMLStepProductDetailElement;
+        new (): HTMLStepProductDetailElement;
+    };
     interface HTMLUiButtonElementEventMap {
         "buttonClick": MouseEvent;
     }
@@ -619,6 +629,7 @@ declare global {
         "step-form": HTMLStepFormElement;
         "step-location": HTMLStepLocationElement;
         "step-plans": HTMLStepPlansElement;
+        "step-product-detail": HTMLStepProductDetailElement;
         "ui-button": HTMLUiButtonElement;
         "ui-carousel": HTMLUiCarouselElement;
         "ui-checkbox": HTMLUiCheckboxElement;
@@ -693,6 +704,10 @@ declare namespace LocalJSX {
         "onNext"?: () => void;
     }
     interface StepPlans {
+        "onBack"?: () => void;
+        "onNext"?: () => void;
+    }
+    interface StepProductDetail {
         "onBack"?: () => void;
         "onNext"?: () => void;
     }
@@ -1083,6 +1098,7 @@ declare namespace LocalJSX {
         "step-form": StepForm;
         "step-location": StepLocation;
         "step-plans": StepPlans;
+        "step-product-detail": StepProductDetail;
         "ui-button": UiButton;
         "ui-carousel": UiCarousel;
         "ui-checkbox": UiCheckbox;
@@ -1104,6 +1120,7 @@ declare module "@stencil/core" {
             "step-form": LocalJSX.StepForm & JSXBase.HTMLAttributes<HTMLStepFormElement>;
             "step-location": LocalJSX.StepLocation & JSXBase.HTMLAttributes<HTMLStepLocationElement>;
             "step-plans": LocalJSX.StepPlans & JSXBase.HTMLAttributes<HTMLStepPlansElement>;
+            "step-product-detail": LocalJSX.StepProductDetail & JSXBase.HTMLAttributes<HTMLStepProductDetailElement>;
             "ui-button": LocalJSX.UiButton & JSXBase.HTMLAttributes<HTMLUiButtonElement>;
             "ui-carousel": LocalJSX.UiCarousel & JSXBase.HTMLAttributes<HTMLUiCarouselElement>;
             "ui-checkbox": LocalJSX.UiCheckbox & JSXBase.HTMLAttributes<HTMLUiCheckboxElement>;

@@ -7,13 +7,37 @@ import { Component, Prop, State, Event, EventEmitter, h, Host, Watch } from '@st
 import { flowState, flowActions } from '../../store/flow.store';
 import { httpService, tokenService } from '../../services';
 import {
-  FlowStep,
   FlowCompleteEvent,
   FlowErrorEvent,
   StepChangeEvent,
 } from '../../store/interfaces';
 // @ts-ignore: STEP_TITLES reserved for future use (step header rendering)
 import { STEP_TITLES as _STEP_TITLES } from '../../utils/constants';
+
+/**
+ * Flow step definitions
+ * Standard Flow (GPON/VRAD): 1-5
+ * CLARO HOGAR Flow: 1-8
+ */
+type FlowStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+/**
+ * CLARO HOGAR step names for clarity
+ */
+const CLARO_HOGAR_STEPS = {
+  LOCATION: 1,        // Ubicación/Cobertura
+  CATALOGUE: 2,       // Catálogo de productos
+  PRODUCT_DETAIL: 3,  // Detalle del producto
+  PLANS: 4,           // Planes de internet
+  ORDER_SUMMARY: 5,   // Resumen de orden
+  SHIPPING: 6,        // Dirección de envío
+  PAYMENT: 7,         // Pago
+  CONFIRMATION: 8,    // Confirmación
+} as const;
+
+// Max step per flow type
+const MAX_STEP_STANDARD = 5;
+const MAX_STEP_CLARO_HOGAR = 8;
 
 @Component({
   tag: 'fixed-service-flow',
@@ -159,17 +183,19 @@ export class FixedServiceFlow {
 
   private handleStepChange = (direction: 'forward' | 'backward') => {
     const from = this.currentStep;
+    const maxStep = this.isClaroHogar() ? MAX_STEP_CLARO_HOGAR : MAX_STEP_STANDARD;
     let to: FlowStep;
 
     if (direction === 'forward') {
-      to = Math.min(this.currentStep + 1, 5) as FlowStep;
+      to = Math.min(this.currentStep + 1, maxStep) as FlowStep;
       flowActions.nextStep();
     } else {
       to = Math.max(this.currentStep - 1, 1) as FlowStep;
       flowActions.prevStep();
     }
 
-    this.currentStep = flowState.currentStep;
+    this.currentStep = to;
+    flowActions.setStep(to);
 
     this.stepChange.emit({ from, to, direction });
     this.log(`Step changed: ${from} -> ${to}`);
@@ -242,15 +268,25 @@ export class FixedServiceFlow {
       googleMapsKey: this.googleMapsKey,
     };
 
+    // CLARO HOGAR Flow (e-commerce)
+    if (this.isClaroHogar()) {
+      this.log('CLARO HOGAR flow - step:', this.currentStep);
+      return this.renderClaroHogarStep(stepProps);
+    }
+
+    // Standard Flow (GPON/VRAD - internet service request)
+    return this.renderStandardStep(stepProps);
+  }
+
+  /**
+   * Renders steps for Standard Flow (GPON/VRAD)
+   * Steps: 1.Location -> 2.Plans -> 3.Contract -> 4.Form -> 5.Confirmation
+   */
+  private renderStandardStep(stepProps: any) {
     switch (this.currentStep) {
       case 1:
         return <step-location {...stepProps} />;
       case 2:
-        // CLARO HOGAR uses catalogue (devices), others use plans (internet)
-        if (this.isClaroHogar()) {
-          this.log('CLARO HOGAR detected - showing catalogue');
-          return <step-catalogue {...stepProps} />;
-        }
         return <step-plans {...stepProps} />;
       case 3:
         return <step-contract {...stepProps} />;
@@ -258,6 +294,64 @@ export class FixedServiceFlow {
         return <step-form {...stepProps} />;
       case 5:
         return <step-confirmation {...stepProps} onCancel={this.handleFlowCancel} />;
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Renders steps for CLARO HOGAR Flow (e-commerce)
+   * Steps: 1.Location -> 2.Catalogue -> 3.ProductDetail -> 4.Plans ->
+   *        5.OrderSummary -> 6.Shipping -> 7.Payment -> 8.Confirmation
+   */
+  private renderClaroHogarStep(stepProps: any) {
+    switch (this.currentStep) {
+      case CLARO_HOGAR_STEPS.LOCATION:
+        return <step-location {...stepProps} />;
+
+      case CLARO_HOGAR_STEPS.CATALOGUE:
+        return <step-catalogue {...stepProps} />;
+
+      case CLARO_HOGAR_STEPS.PRODUCT_DETAIL:
+        return <step-product-detail {...stepProps} />;
+
+      case CLARO_HOGAR_STEPS.PLANS:
+        // Plans for the selected product
+        return <step-plans {...stepProps} />;
+
+      case CLARO_HOGAR_STEPS.ORDER_SUMMARY:
+        // TODO: Create step-order-summary component
+        // For now, skip to shipping
+        this.log('Order Summary step - TODO');
+        return (
+          <div class="step-placeholder">
+            <h2>Resumen de Orden</h2>
+            <p>Este paso está en desarrollo</p>
+            <button onClick={stepProps.onNext}>Continuar</button>
+            <button onClick={stepProps.onBack}>Regresar</button>
+          </div>
+        );
+
+      case CLARO_HOGAR_STEPS.SHIPPING:
+        // TODO: Create step-shipping component
+        // For now, use step-form
+        return <step-form {...stepProps} />;
+
+      case CLARO_HOGAR_STEPS.PAYMENT:
+        // TODO: Create step-payment component
+        this.log('Payment step - TODO');
+        return (
+          <div class="step-placeholder">
+            <h2>Pago</h2>
+            <p>Este paso está en desarrollo</p>
+            <button onClick={stepProps.onNext}>Continuar</button>
+            <button onClick={stepProps.onBack}>Regresar</button>
+          </div>
+        );
+
+      case CLARO_HOGAR_STEPS.CONFIRMATION:
+        return <step-confirmation {...stepProps} onCancel={this.handleFlowCancel} />;
+
       default:
         return null;
     }

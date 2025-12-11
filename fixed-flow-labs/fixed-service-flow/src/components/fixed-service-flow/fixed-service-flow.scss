@@ -94,6 +94,42 @@
 }
 
 // ------------------------------------------
+// PLACEHOLDER (for steps in development)
+// ------------------------------------------
+
+.step-placeholder {
+  @include flex-column-center;
+  min-height: 400px;
+  padding: $spacing-8;
+  text-align: center;
+  background: $color-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  margin: $spacing-4;
+
+  h2 {
+    @include font-heading-2;
+    color: $color-text-primary;
+    margin-bottom: $spacing-4;
+  }
+
+  p {
+    @include font-body;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-6;
+  }
+
+  button {
+    @include button-primary;
+    margin: $spacing-2;
+
+    &:last-child {
+      @include button-secondary;
+    }
+  }
+}
+
+// ------------------------------------------
 // ANIMATIONS
 // ------------------------------------------
 
