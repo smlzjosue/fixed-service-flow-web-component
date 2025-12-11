@@ -320,17 +320,7 @@ export class FixedServiceFlow {
         return <step-plans {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.ORDER_SUMMARY:
-        // TODO: Create step-order-summary component
-        // For now, skip to shipping
-        this.log('Order Summary step - TODO');
-        return (
-          <div class="step-placeholder">
-            <h2>Resumen de Orden</h2>
-            <p>Este paso está en desarrollo</p>
-            <button onClick={stepProps.onNext}>Continuar</button>
-            <button onClick={stepProps.onBack}>Regresar</button>
-          </div>
-        );
+        return <step-order-summary {...stepProps} />;
 
       case CLARO_HOGAR_STEPS.SHIPPING:
         // TODO: Create step-shipping component

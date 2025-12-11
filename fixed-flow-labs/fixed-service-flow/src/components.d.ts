@@ -62,6 +62,10 @@ export namespace Components {
         "onBack": () => void;
         "onNext": () => void;
     }
+    interface StepOrderSummary {
+        "onBack": () => void;
+        "onNext": () => void;
+    }
     interface StepPlans {
         "onBack": () => void;
         "onNext": () => void;
@@ -477,6 +481,12 @@ declare global {
         prototype: HTMLStepLocationElement;
         new (): HTMLStepLocationElement;
     };
+    interface HTMLStepOrderSummaryElement extends Components.StepOrderSummary, HTMLStencilElement {
+    }
+    var HTMLStepOrderSummaryElement: {
+        prototype: HTMLStepOrderSummaryElement;
+        new (): HTMLStepOrderSummaryElement;
+    };
     interface HTMLStepPlansElement extends Components.StepPlans, HTMLStencilElement {
     }
     var HTMLStepPlansElement: {
@@ -628,6 +638,7 @@ declare global {
         "step-contract": HTMLStepContractElement;
         "step-form": HTMLStepFormElement;
         "step-location": HTMLStepLocationElement;
+        "step-order-summary": HTMLStepOrderSummaryElement;
         "step-plans": HTMLStepPlansElement;
         "step-product-detail": HTMLStepProductDetailElement;
         "ui-button": HTMLUiButtonElement;
@@ -700,6 +711,10 @@ declare namespace LocalJSX {
     }
     interface StepLocation {
         "googleMapsKey"?: string;
+        "onBack"?: () => void;
+        "onNext"?: () => void;
+    }
+    interface StepOrderSummary {
         "onBack"?: () => void;
         "onNext"?: () => void;
     }
@@ -1097,6 +1112,7 @@ declare namespace LocalJSX {
         "step-contract": StepContract;
         "step-form": StepForm;
         "step-location": StepLocation;
+        "step-order-summary": StepOrderSummary;
         "step-plans": StepPlans;
         "step-product-detail": StepProductDetail;
         "ui-button": UiButton;
@@ -1119,6 +1135,7 @@ declare module "@stencil/core" {
             "step-contract": LocalJSX.StepContract & JSXBase.HTMLAttributes<HTMLStepContractElement>;
             "step-form": LocalJSX.StepForm & JSXBase.HTMLAttributes<HTMLStepFormElement>;
             "step-location": LocalJSX.StepLocation & JSXBase.HTMLAttributes<HTMLStepLocationElement>;
+            "step-order-summary": LocalJSX.StepOrderSummary & JSXBase.HTMLAttributes<HTMLStepOrderSummaryElement>;
             "step-plans": LocalJSX.StepPlans & JSXBase.HTMLAttributes<HTMLStepPlansElement>;
             "step-product-detail": LocalJSX.StepProductDetail & JSXBase.HTMLAttributes<HTMLStepProductDetailElement>;
             "ui-button": LocalJSX.UiButton & JSXBase.HTMLAttributes<HTMLUiButtonElement>;

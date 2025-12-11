@@ -1,0 +1,576 @@
+// ============================================
+// STEP ORDER SUMMARY - SCSS Styles
+// Fixed Service Flow Web Component
+// Design based on TEL order-summary-web.component
+// ============================================
+
+@import '../../../global/variables';
+
+// ------------------------------------------
+// LOCAL ALIASES
+// ------------------------------------------
+
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$error-color: $color-error;
+$success-color: $color-success;
+$gray-50: $color-gray-50;
+$gray-100: $color-gray-100;
+$gray-200: $color-gray-200;
+$gray-300: $color-gray-300;
+$gray-400: $color-gray-400;
+$gray-500: $color-gray-500;
+$gray-600: $color-gray-600;
+$gray-700: $color-gray-700;
+$gray-900: $color-gray-900;
+$radius-sm: $border-radius-sm;
+$radius-md: $border-radius-md;
+$radius-lg: $border-radius-lg;
+$radius-full: $border-radius-full;
+$spacing-xs: $spacing-1;
+$spacing-sm: $spacing-2;
+$spacing-md: $spacing-4;
+$spacing-lg: $spacing-6;
+$spacing-xl: $spacing-8;
+
+// ------------------------------------------
+// HOST
+// ------------------------------------------
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100%;
+  background-color: $gray-50;
+}
+
+// ------------------------------------------
+// MAIN CONTAINER
+// ------------------------------------------
+
+.step-order-summary {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+}
+
+// ------------------------------------------
+// HEADER
+// ------------------------------------------
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: none;
+    border: none;
+    color: $secondary-color;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    padding: $spacing-xs;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .title {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+    flex: 1;
+  }
+
+  .item-count {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    background: $gray-200;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-full;
+  }
+}
+
+// ------------------------------------------
+// LOADING & ERROR & EMPTY
+// ------------------------------------------
+
+.loading-container,
+.error-container,
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-xl;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid $gray-200;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: $spacing-md;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-container p {
+  color: $error-color;
+  margin-bottom: $spacing-md;
+}
+
+.btn-retry {
+  background: $primary-color;
+  color: white;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-full;
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+  }
+}
+
+.empty-cart {
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    color: $gray-400;
+    margin-bottom: $spacing-md;
+  }
+
+  h3 {
+    font-size: $font-size-xl;
+    color: $gray-700;
+    margin: 0 0 $spacing-sm 0;
+  }
+
+  p {
+    color: $gray-500;
+    margin: 0 0 $spacing-lg 0;
+  }
+
+  .btn-back-catalog {
+    background: $secondary-color;
+    color: white;
+    border: none;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-full;
+    cursor: pointer;
+    font-weight: 600;
+
+    &:hover {
+      background: darken($secondary-color, 10%);
+    }
+  }
+}
+
+// ------------------------------------------
+// CONTENT GRID
+// ------------------------------------------
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: $spacing-lg;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ------------------------------------------
+// CART ITEMS SECTION
+// ------------------------------------------
+
+.cart-items-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  gap: $spacing-md;
+  align-items: center;
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-sm;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  &__image {
+    width: 100px;
+    height: 100px;
+    background: $gray-50;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    @media (max-width: 768px) {
+      width: 80px;
+      height: 80px;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    .item-name {
+      font-size: $font-size-base;
+      font-weight: 600;
+      color: $gray-900;
+      margin: 0;
+    }
+
+    .item-variant,
+    .item-qty {
+      font-size: $font-size-sm;
+      color: $gray-600;
+    }
+  }
+
+  &__pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: $spacing-xs;
+
+    @media (max-width: 768px) {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .monthly-price,
+    .total-price {
+      text-align: right;
+
+      .label {
+        font-size: $font-size-xs;
+        color: $gray-500;
+        display: block;
+      }
+
+      .value {
+        font-size: $font-size-base;
+        font-weight: 600;
+        color: $gray-900;
+      }
+    }
+
+    .monthly-price .value {
+      color: $primary-color;
+    }
+
+    .installments {
+      font-size: $font-size-xs;
+      color: $gray-500;
+    }
+  }
+
+  &__remove {
+    background: none;
+    border: none;
+    color: $gray-400;
+    cursor: pointer;
+    padding: $spacing-xs;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $error-color;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+// ------------------------------------------
+// SUMMARY SECTION
+// ------------------------------------------
+
+.summary-section {
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-md;
+  height: fit-content;
+  position: sticky;
+  top: $spacing-lg;
+}
+
+.section-title {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 $spacing-md 0;
+}
+
+// ------------------------------------------
+// PROMO CODE
+// ------------------------------------------
+
+.promo-section {
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid $gray-200;
+}
+
+.promo-input-group {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.promo-input {
+  flex: 1;
+  height: 44px;
+  border: 1px solid $gray-300;
+  border-radius: $radius-md;
+  padding: 0 $spacing-md;
+  font-size: $font-size-sm;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $secondary-color;
+  }
+
+  &.error {
+    border-color: $error-color;
+  }
+
+  &.success {
+    border-color: $success-color;
+  }
+
+  &:disabled {
+    background: $gray-100;
+    cursor: not-allowed;
+  }
+}
+
+.promo-button {
+  height: 44px;
+  padding: 0 $spacing-lg;
+  background: $gray-200;
+  color: $gray-700;
+  border: none;
+  border-radius: $radius-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: $gray-300;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.promo-message {
+  display: block;
+  font-size: $font-size-sm;
+  margin-top: $spacing-xs;
+
+  &.error {
+    color: $error-color;
+  }
+
+  &.success {
+    color: $success-color;
+  }
+}
+
+// ------------------------------------------
+// PAYMENT DETAILS
+// ------------------------------------------
+
+.payment-details {
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid $gray-200;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-sm 0;
+
+  .label {
+    font-size: $font-size-sm;
+    color: $gray-600;
+  }
+
+  .value {
+    font-size: $font-size-base;
+    color: $gray-900;
+  }
+
+  &.total {
+    padding-top: $spacing-md;
+    border-top: 1px solid $gray-200;
+    margin-top: $spacing-sm;
+
+    .label {
+      font-weight: 600;
+      color: $gray-900;
+    }
+
+    .value {
+      font-size: $font-size-lg;
+      font-weight: 700;
+      color: $primary-color;
+    }
+  }
+
+  &.monthly {
+    .value {
+      color: $secondary-color;
+      font-weight: 600;
+    }
+  }
+}
+
+// ------------------------------------------
+// TERMS CHECKBOX
+// ------------------------------------------
+
+.terms-section {
+  margin-bottom: $spacing-lg;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    display: none;
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $gray-300;
+    border-radius: $radius-sm;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border: 2px solid white;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+  }
+
+  input[type="checkbox"]:checked + .checkmark {
+    background: $secondary-color;
+    border-color: $secondary-color;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  .terms-text {
+    font-size: $font-size-sm;
+    color: $gray-600;
+    line-height: 1.4;
+
+    a {
+      color: $secondary-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ------------------------------------------
+// PROCEED BUTTON
+// ------------------------------------------
+
+.btn-proceed {
+  width: 100%;
+  height: 52px;
+  background: $primary-color;
+  color: white;
+  border: none;
+  border-radius: $radius-full;
+  font-size: $font-size-base;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: darken($primary-color, 10%);
+  }
+
+  &:disabled,
+  &.disabled {
+    background: $gray-300;
+    cursor: not-allowed;
+  }
+}
