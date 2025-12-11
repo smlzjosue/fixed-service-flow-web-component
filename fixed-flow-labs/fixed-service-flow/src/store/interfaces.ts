@@ -408,3 +408,339 @@ export const SERVICE_MESSAGES: Record<string, string> = {
   'CLARO HOGAR': 'Tenemos un poderoso servicio de internet inalámbrico en tu área que tú mismo instalas.',
   NO_COVERAGE: '¡Fuera de área! Por el momento no contamos con cobertura en tu zona.',
 };
+
+// ------------------------------------------
+// PRODUCT DETAIL INTERFACES (CLARO HOGAR)
+// ------------------------------------------
+
+export interface ProductDetailResponse {
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+  product?: ProductDetail;
+}
+
+export interface ProductDetail {
+  productId: number;
+  productName: string;
+  brandName?: string;
+  imgUrl: string;
+  detailImage?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  regular_price: number;
+  update_price: number;
+  installments: number;
+  decDownPayment?: number;
+  decDeposit?: number;
+  creditClass?: string;
+  colors?: ProductColorDetail[];
+  storages?: ProductStorage[];
+  specifications?: ProductSpecification[];
+  features?: string[];
+  catalogId?: number;
+  home?: boolean; // Flag for CLARO HOGAR products
+}
+
+export interface ProductColorDetail {
+  colorId: number;
+  colorName: string;
+  webColor: string;
+  imgUrl?: string;
+  available?: boolean;
+}
+
+export interface ProductStorage {
+  storageId: number;
+  storageName: string;
+  storageValue: string;
+  priceDiff?: number;
+  available?: boolean;
+}
+
+export interface ProductSpecification {
+  name: string;
+  value: string;
+  category?: string;
+}
+
+// ------------------------------------------
+// CART INTERFACES
+// ------------------------------------------
+
+export interface CartResponse {
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+  products?: CartItem[];
+  subTotalPrice?: number;
+  totalPrice?: number;
+  depositAmount?: number;
+  totalDownPayment?: number;
+  totalTax?: number;
+  installmentAmount?: number;
+  cartUpdateResponse?: CartUpdateResponse;
+}
+
+export interface CartItem {
+  cartId: number;
+  productId: number;
+  parentProductId?: number;
+  parentCartId?: number;
+  productName: string;
+  qty: number;
+  decPrice: number;
+  decTotalPerMonth?: number;
+  installments: number;
+  plan?: boolean;
+  catalogId?: number;
+  equipment?: boolean;
+  accesory?: boolean;
+  home?: boolean;
+  internet?: boolean;
+  storage?: string;
+  webColor?: string;
+  brand?: string;
+  detailImage?: string;
+}
+
+export interface CartUpdateResponse {
+  decCurrentPlanPrice?: number;
+  locationId?: string;
+  invoiceNumber?: string;
+  pendingAccelerated?: number;
+  acceletartedAmount?: number;
+}
+
+export interface AddToCartRequest {
+  token: string;
+  productId: number;
+  notificationDetailID?: number;
+  chvSource?: string;
+  promoCode?: string;
+  installments: number;
+  decPrice: number;
+  decDeposit?: number;
+  decDownPayment?: number;
+  decTotalPrice: number;
+  Qty: number;
+  flowId?: number;
+  ssoToken?: string;
+  userID?: string;
+  parentProductId?: number;
+  parentCartId?: number;
+  creditClass?: string;
+  downgradeAllowed?: boolean;
+  pendingAccelerated?: number;
+  acceletartedAmount?: number;
+  pastDueAmount?: number;
+  delicuency?: boolean;
+}
+
+export interface AddToCartResponse {
+  code: number; // mainId returned
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+}
+
+export interface DeleteCartItemRequest {
+  cartId: number;
+  productId: number;
+}
+
+// ------------------------------------------
+// SHIPPING INTERFACES
+// ------------------------------------------
+
+export interface ShippingAddressRequest {
+  firstName: string;
+  lastName: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  state?: string;
+  zipCode: string;
+  country?: string;
+  phone: string;
+  email?: string;
+  instructions?: string;
+}
+
+export interface ShippingAddressResponse {
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+  shipmentId?: number;
+}
+
+export interface DeliveryMethod {
+  id: number;
+  name: string;
+  description?: string;
+  cost: number;
+  estimatedDays?: number;
+  available?: boolean;
+}
+
+export interface DeliveryMethodsResponse {
+  hasError: boolean;
+  message?: string;
+  deliveryMethods?: DeliveryMethod[];
+}
+
+// ------------------------------------------
+// ORDER INTERFACES
+// ------------------------------------------
+
+export interface OrderCreateRequest {
+  flowId?: number;
+  frontFlowId?: string;
+  zipCode: string;
+  shipmentId?: number;
+  deliveryMethodId?: number;
+  customerInfo?: CustomerInfo;
+  paymentType?: string;
+}
+
+export interface CustomerInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  identificationType: string;
+  identificationNumber: string;
+}
+
+export interface OrderCreateResponse {
+  hasError: boolean;
+  message?: string;
+  errorDisplay?: string;
+  code?: string; // Order ID
+  orderId?: string;
+  bitPayment?: boolean;
+  bitPortability?: boolean;
+  bitAuthenticated?: boolean;
+  bitAddressValidate?: boolean;
+  bitEquifaxValidate?: boolean;
+}
+
+export interface OrderSummary {
+  orderId: string;
+  orderNumber?: string;
+  status: string;
+  createdAt: string;
+  products: CartItem[];
+  plan?: Plan;
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  total: number;
+  customer: CustomerInfo;
+  shippingAddress?: ShippingAddressRequest;
+  deliveryMethod?: DeliveryMethod;
+}
+
+// ------------------------------------------
+// PAYMENT INTERFACES
+// ------------------------------------------
+
+export interface PaymentIframeRequest {
+  ssoToken?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  amount: number;
+  transactionType: string; // 'payment' | 'MULTIPLE'
+  selectBan?: string;
+  currentSubscriber?: string;
+  permissions?: PaymentPermissions;
+  installments?: PaymentInstallments;
+  paymentItems?: PaymentItem[];
+}
+
+export interface PaymentPermissions {
+  provision?: boolean;
+  displayConfirmation?: boolean;
+  emailNotification?: boolean;
+  showInstrument?: boolean;
+  storeInstrument?: boolean;
+  useBanZipCode?: boolean;
+}
+
+export interface PaymentInstallments {
+  locationId?: string;
+  invoiceNumber?: string;
+  installmentCount: number;
+}
+
+export interface PaymentItem {
+  type: 'INSTALLMENT' | 'DEPOSIT' | 'DOWNPAYMENT' | 'TAXES' | 'PASTDUEONLY';
+  amount: number;
+}
+
+export interface PaymentIframeResponse {
+  hasError: boolean;
+  message?: string;
+  url?: string;
+  errorInfo?: {
+    hasError: boolean;
+    message?: string;
+  };
+}
+
+export interface PaymentResult {
+  state: string; // 'paymentResult'
+  data: PaymentResultData;
+}
+
+export interface PaymentResultData {
+  success: boolean;
+  authorizationNumber?: string;
+  code?: string;
+  date?: string;
+  description?: string;
+  operationId?: string;
+  operationType?: string;
+  paymentMethod?: string;
+  provisioning?: any;
+  storedInstrument?: any;
+  paymentCard?: any;
+}
+
+export interface PaymentRecordRequest {
+  orderId: string;
+  operationId: string;
+  authCode: string;
+  responseCode: string;
+  amount: number;
+}
+
+export interface PaymentErrorRequest {
+  orderId: string;
+  operationId: string;
+  responseCode: string;
+  errorMessage?: string;
+}
+
+// ------------------------------------------
+// CONFIRMATION INTERFACES
+// ------------------------------------------
+
+export interface OrderConfirmation {
+  orderId: string;
+  orderNumber: string;
+  status: string;
+  createdAt: string;
+  estimatedDelivery?: string;
+  trackingNumber?: string;
+  customer: CustomerInfo;
+  products: CartItem[];
+  plan?: Plan;
+  subtotal: number;
+  tax: number;
+  shipping: number;
+  total: number;
+  paymentMethod?: string;
+  lastFourDigits?: string;
+}

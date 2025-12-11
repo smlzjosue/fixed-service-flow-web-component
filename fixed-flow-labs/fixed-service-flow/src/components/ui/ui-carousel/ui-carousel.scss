@@ -1,0 +1,142 @@
+// ============================================
+// UI-CAROUSEL - Styles
+// Based on TEL's carousel design
+// ============================================
+
+@import '../../../global/variables';
+@import '../../../global/mixins';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-carousel {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  // ------------------------------------------
+  // VIEWPORT (overflow container)
+  // ------------------------------------------
+
+  &__viewport {
+    flex: 1;
+    overflow: hidden;
+    margin: 0 $spacing-2;
+
+    @include breakpoint-up(md) {
+      margin: 0 $spacing-4;
+    }
+  }
+
+  // ------------------------------------------
+  // TRACK (slides container)
+  // ------------------------------------------
+
+  &__track {
+    display: flex;
+    transition: transform 0.3s ease-out;
+    will-change: transform;
+
+    &--dragging {
+      transition: none;
+      cursor: grabbing;
+    }
+  }
+
+  // ------------------------------------------
+  // NAVIGATION ARROWS
+  // ------------------------------------------
+
+  &__nav {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $color-white;
+    border: 2px solid $color-primary;
+    color: $color-primary;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+      background: $color-primary;
+      color: $color-white;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &--disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    // Hide on mobile if needed
+    @media (max-width: 599px) {
+      width: 32px;
+      height: 32px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // PAGINATION DOTS
+  // ------------------------------------------
+
+  &__pagination {
+    position: absolute;
+    bottom: -$spacing-8;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: $spacing-2;
+    z-index: 2;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: $color-gray-300;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $color-gray-400;
+    }
+
+    &--active {
+      background: $color-primary;
+      transform: scale(1.2);
+    }
+  }
+}
+
+// ------------------------------------------
+// SLOTTED CONTENT STYLES (for cards)
+// ------------------------------------------
+
+::slotted(*) {
+  box-sizing: border-box;
+}

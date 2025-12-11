@@ -234,12 +234,6 @@ export class StepCatalogue {
           <button class="action-button" onClick={() => this.handleViewMore(product)}>
             Ver más
           </button>
-          <div class="check-info">
-            <input type="checkbox" id={`compare-${product.productId}`} />
-            <label htmlFor={`compare-${product.productId}`} class="check-label">
-              Comparar
-            </label>
-          </div>
         </div>
       </div>
     );
