@@ -21,13 +21,13 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Última actualización** | 2025-12-11 (Sesión 6) |
-| **Fase actual** | Fase 12 - Refinamiento UX y Validación |
-| **Próximo paso** | Continuar pruebas E2E flujo CLARO HOGAR |
+| **Última actualización** | 2025-12-12 (Sesión 7) |
+| **Fase actual** | Fase 11 - Revisión y Correcciones UX |
+| **Próximo paso** | Pruebas E2E flujo completo GPON + CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | `f46fd13` - feat: add CLARO HOGAR catalogue flow and UX improvements |
+| **Último commit** | `fccb497` - style: update form and confirmation views to match reference design |
 
-### Progreso por Fases (Verificado 2025-12-11)
+### Progreso por Fases (Verificado 2025-12-12)
 
 | Fase | Descripción | Estado | Items |
 |------|-------------|--------|-------|
@@ -42,7 +42,7 @@
 | 8 | Testing | ✅ Completado | Tests unitarios creados |
 | 9 | Documentación | ✅ Completado | 4/5 |
 | 10 | Build y distribución | ✅ Completado | 4/8 |
-| **11** | **Revisión y Correcciones** | **⏳ En progreso** | **3/5 ← ACTUAL** |
+| **11** | **Revisión y Correcciones UX** | **⏳ En progreso** | **5/7 ← ACTUAL** |
 
 ### Tareas Completadas
 
@@ -93,30 +93,50 @@
 - [x] Eventos (flowComplete, flowError, stepChange, flowCancel)
 - [x] Props (apiUrl, googleMapsKey, debug)
 
-### Notas de la Última Sesión (2025-12-11 - Sesión 6)
+### Notas de la Última Sesión (2025-12-12 - Sesión 7)
 
-- **Selector de cantidad comentado** en step-product-detail
-- **Fondo blanco** aplicado al body (index.html)
-- **Flujo CLARO HOGAR validado** - Ubicación → Catálogo → Detalle de producto
+- **Refinamiento visual de step-form** según captura datos-envio.png
+- **Vista confirmación éxito** actualizada según captura 9.png
+- **Vista confirmación error** actualizada según captura 10.png
 - **Ejecutar servidor**: `cd fixed-flow-labs/fixed-service-flow && npm start`
 - **Puerto de desarrollo**: http://localhost:3333
 
-### Cambios de Esta Sesión (2025-12-11 - Sesión 6)
+### Cambios de Esta Sesión (2025-12-12 - Sesión 7)
 
-**Mejoras UX en Detalle de Producto:**
+**Mejoras UX en step-form:**
 
-1. **Selector de Cantidad Comentado:**
-   - `step-product-detail.tsx` líneas 472-489: JSX comentado
-   - `step-product-detail.tsx` líneas 323-329: función handleQuantityChange() comentada
-   - Evita error TypeScript: `'handleQuantityChange' is declared but its value is never read`
+1. **Mensaje de instrucciones:**
+   - Eliminado fondo gris y padding
+   - `background: transparent; padding: 0;`
 
-2. **Background Blanco:**
-   - `src/index.html`: `background-color: #f5f5f5` → `#ffffff`
+2. **Radio buttons horizontales:**
+   - "Licencia de conducir" y "Pasaporte" lado a lado
+   - Alineados con el input de identificación
 
-**Validación del Flujo CLARO HOGAR:**
-- Ubicación: PRI-2, Corcovado, Hatillo (cobertura CLARO HOGAR)
-- Catálogo: 4 productos (D-LINK, Franklin R717, FRANKLIN RG1000 5G, PCD R402)
-- Detalle: PCD R402 WHITE sin selector de cantidad
+3. **Líneas divisorias:**
+   - Eliminadas líneas entre secciones del formulario
+   - Solo queda línea arriba del botón submit
+
+4. **Contenedor del formulario:**
+   - Borde gris suave de 1px
+   - Border-radius en todas las esquinas
+
+5. **Header con divider:**
+   - Línea divisoria debajo del título
+
+**Mejoras UX en step-confirmation (éxito):**
+- Color verde del título: `#15A045`
+- Icono: `ok-check.svg` (nuevo asset)
+- Botón "Cerrar" estilo outline
+- Botón fuera del contenedor gris
+- Header con línea divisoria
+
+**Mejoras UX en step-confirmation (error):**
+- Color rojo del título: `#E00814`
+- Icono: `error-check.svg` (nuevo asset)
+- Botón "Volver a intentar" sólido rojo
+- Botón fuera del contenedor gris
+- Header con línea divisoria
 
 ### Tareas Críticas Pendientes
 
@@ -469,4 +489,4 @@ npm start  # http://localhost:3333
 
 ---
 
-*Última actualización: 2025-12-11 (Sesión 6)*
+*Última actualización: 2025-12-12 (Sesión 7)*

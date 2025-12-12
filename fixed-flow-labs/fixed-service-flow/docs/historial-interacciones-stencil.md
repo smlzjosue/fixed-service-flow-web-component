@@ -1568,4 +1568,307 @@ Se validó el flujo completo de CLARO HOGAR:
 
 ---
 
-*Última actualización: 2025-12-11 (Sesión 6)*
+## Fecha: 2025-12-12 (Sesión 7)
+
+---
+
+## 35. Refinamiento Visual del Formulario (step-form)
+
+### 35.1 Mensaje de Instrucciones
+
+**Solicitud del usuario:** Quitar el fondo gris y padding del mensaje de instrucciones.
+
+**Archivo modificado:** `src/components/steps/step-form/step-form.scss`
+
+**Cambios:**
+```scss
+&__instructions {
+  @include font-body-small;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-6;
+  padding: 0;              // Antes: $spacing-3
+  background: transparent;  // Antes: $color-gray-50
+}
+```
+
+### 35.2 Radio Buttons Horizontales
+
+**Solicitud del usuario:** Los radio buttons de "Licencia de conducir" y "Pasaporte" deben estar uno al lado del otro, no en filas.
+
+**Cambios en step-form.scss:**
+```scss
+&__radio-group {
+  display: flex;
+  flex-direction: row;      // Horizontal
+  align-items: flex-start;
+  gap: $spacing-4;
+}
+
+&__radio {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-1;
+  @include font-body-small;
+  color: $color-text-primary;
+  cursor: pointer;
+  max-width: 90px;
+  line-height: 1.2;
+  margin-top: 14px;         // Alineación con input
+
+  input[type="radio"] {
+    accent-color: $color-secondary;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+}
+```
+
+### 35.3 Eliminar Líneas Divisorias
+
+**Solicitud del usuario:** Quitar las líneas divisorias entre secciones del formulario, solo mantener una línea arriba del botón.
+
+**Cambios:**
+```scss
+&__section {
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-2;
+  // Se eliminó: border-bottom: 1px solid $color-border-light;
+}
+
+&__actions {
+  margin-top: $spacing-6;
+  padding-top: $spacing-6;
+  border-top: 1px solid $color-border-light;  // Única línea divisoria
+  text-align: center;
+}
+```
+
+### 35.4 Contenedor con Borde
+
+**Solicitud del usuario:** Todo el formulario dentro de un cuadro gris suave con border-radius.
+
+**Cambios:**
+```scss
+form {
+  border: 1px solid $color-border-light;
+  border-radius: $border-radius-lg;
+  padding: $spacing-6;
+  background: white;
+}
+```
+
+### 35.5 Línea Divisoria del Header
+
+**Solicitud del usuario:** Agregar línea divisoria entre el título "Formulario de solicitud de servicio fijo" y el formulario.
+
+**Cambios:**
+```scss
+&__header {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-4;
+  border-bottom: 1px solid $color-border-light;
+}
+```
+
+---
+
+## 36. Vista de Confirmación - Éxito (step-confirmation)
+
+### 36.1 Color Verde del Título
+
+**Solicitud del usuario:** El texto de éxito debe usar el color verde #15A045.
+
+**Archivo modificado:** `src/components/steps/step-confirmation/step-confirmation.scss`
+
+**Cambios:**
+```scss
+&__title {
+  @include font-heading-3;
+  color: $color-text-primary;
+  margin-bottom: $spacing-2;
+
+  &--success {
+    color: #15A045;  // Verde de éxito
+  }
+}
+```
+
+### 36.2 Icono SVG de Éxito
+
+**Solicitud del usuario:** Usar el icono correcto de `assets/images/ok-check.svg`.
+
+**Archivo creado:** `src/assets/images/ok-check.svg` (icono de check verde)
+
+**Cambio en step-confirmation.tsx:**
+```tsx
+private renderSuccess() {
+  return (
+    <div class="step-confirmation__result step-confirmation__result--success">
+      <div class="step-confirmation__icon step-confirmation__icon--success">
+        <img src="/assets/images/ok-check.svg" alt="Éxito" />
+      </div>
+      <h2 class="step-confirmation__title step-confirmation__title--success">
+        {SUCCESS_MESSAGES.REQUEST_SUCCESS}
+      </h2>
+      // ...
+    </div>
+  );
+}
+```
+
+### 36.3 Botón Outline
+
+**Solicitud del usuario:** El botón "Cerrar" debe ser estilo outline.
+
+**Cambios en SCSS:**
+```scss
+&__btn {
+  @include button-outline;
+  min-width: 180px;
+}
+```
+
+### 36.4 Botón Fuera del Contenedor
+
+**Solicitud del usuario:** El botón debe estar fuera del rectángulo gris del contenido.
+
+**Cambio en render():**
+```tsx
+render() {
+  return (
+    <Host>
+      <div class="step-confirmation">
+        <header class="step-confirmation__header">...</header>
+        <div class="step-confirmation__content">
+          {/* Contenido sin botones */}
+        </div>
+        {this.status === 'success' && (
+          <div class="step-confirmation__actions">
+            <button class="step-confirmation__btn" onClick={this.handleClose}>
+              Cerrar
+            </button>
+          </div>
+        )}
+      </div>
+    </Host>
+  );
+}
+```
+
+---
+
+## 37. Vista de Confirmación - Error (step-confirmation)
+
+### 37.1 Color Rojo del Título
+
+**Solicitud del usuario:** El texto de error debe usar el color rojo #E00814.
+
+**Cambios en SCSS:**
+```scss
+&__title {
+  &--error {
+    color: #E00814;  // Rojo de error
+  }
+}
+```
+
+### 37.2 Icono SVG de Error
+
+**Solicitud del usuario:** Usar el icono de `assets/images/error-check.svg`.
+
+**Archivo creado:** `src/assets/images/error-check.svg` (icono de exclamación rojo)
+
+**Cambio en renderError():**
+```tsx
+private renderError() {
+  return (
+    <div class="step-confirmation__result step-confirmation__result--error">
+      <div class="step-confirmation__icon step-confirmation__icon--error">
+        <img src="/assets/images/error-check.svg" alt="Error" />
+      </div>
+      <h2 class="step-confirmation__title step-confirmation__title--error">
+        ¡Lo sentimos, ha ocurrido un error en el proceso de solicitud!
+      </h2>
+      // ...
+    </div>
+  );
+}
+```
+
+### 37.3 Botón Sólido (No Outline)
+
+**Solicitud del usuario:** El botón "Volver a intentar" debe ser sólido rojo, no outline.
+
+**Cambios en SCSS:**
+```scss
+&__btn {
+  @include button-outline;
+  min-width: 180px;
+
+  &--error {
+    @include button-primary;  // Botón sólido rojo
+  }
+}
+```
+
+### 37.4 Línea Divisoria del Header
+
+**Solicitud del usuario:** Agregar línea divisoria debajo del título de sección en ambas vistas.
+
+**Cambios en step-confirmation.scss:**
+```scss
+&__header {
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-4;
+  border-bottom: 1px solid $color-border-light;
+}
+```
+
+---
+
+## 38. Archivos Modificados (Sesión 7)
+
+| Archivo | Cambios |
+|---------|---------|
+| `step-form.scss` | Instrucciones sin fondo, radios horizontales, sin líneas divisorias, form con borde, header con divider |
+| `step-confirmation.scss` | Header con divider, colores de título (#15A045 y #E00814), iconos img, botón outline/solid |
+| `step-confirmation.tsx` | Iconos SVG externos, botones fuera del contenedor, soporte flujo catálogo |
+| `src/assets/images/ok-check.svg` | Nuevo icono de éxito |
+| `src/assets/images/error-check.svg` | Nuevo icono de error |
+
+---
+
+## 39. Commits de la Sesión 7
+
+| Commit | Mensaje |
+|--------|---------|
+| `fccb497` | style: update form and confirmation views to match reference design |
+
+---
+
+## 40. Estado del Proyecto (Sesión 7)
+
+### Vistas Actualizadas
+
+| Vista | Referencia | Estado |
+|-------|------------|--------|
+| step-form | Captura datos-envio.png | ✅ Completado |
+| step-confirmation (éxito) | Captura 9.png | ✅ Completado |
+| step-confirmation (error) | Captura 10.png | ✅ Completado |
+
+### Elementos Verificados
+
+- ✅ Formulario con borde gris y border-radius
+- ✅ Header con línea divisoria
+- ✅ Instrucciones sin fondo gris
+- ✅ Radio buttons horizontales y alineados
+- ✅ Sin líneas divisorias entre secciones
+- ✅ Botón submit con línea divisoria arriba
+- ✅ Vista éxito con verde #15A045 y ok-check.svg
+- ✅ Vista error con rojo #E00814 y error-check.svg
+- ✅ Botones fuera del contenedor gris
+
+---
+
+*Última actualización: 2025-12-12 (Sesión 7)*
