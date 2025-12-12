@@ -38,13 +38,12 @@ export class StepLocation {
   @State() isValidating: boolean = false;
   @State() isLoadingMap: boolean = true;
   @State() isGettingLocation: boolean = false;
-  @State() showModal: boolean = false;
-  @State() modalType: 'success' | 'error' = 'success';
-  @State() modalMessage: string = '';
   @State() locationData: LocationData | null = null;
   @State() mapError: string | null = null;
   @State() currentCoordinates: Coordinates | null = null;
   @State() geocodeResult: GeocodeResult | null = null;
+  @State() showErrorModal: boolean = false;
+  @State() errorMessage: string = '';
 
   // ------------------------------------------
   // REFS
@@ -185,18 +184,16 @@ export class StepLocation {
           mapsService.setMarker(coords);
           mapsService.centerMap(coords);
         } else {
-          this.modalType = 'error';
-          this.modalMessage = 'No se pudo encontrar la dirección. Por favor, intenta con otra dirección.';
-          this.showModal = true;
+          this.errorMessage = 'No se pudo encontrar la dirección. Por favor, intenta con otra dirección.';
+          this.showErrorModal = true;
           this.isValidating = false;
           return;
         }
       }
 
       if (!coords) {
-        this.modalType = 'error';
-        this.modalMessage = 'Por favor, ingresa una dirección válida.';
-        this.showModal = true;
+        this.errorMessage = 'Por favor, ingresa una dirección válida.';
+        this.showErrorModal = true;
         this.isValidating = false;
         return;
       }
@@ -213,35 +210,99 @@ export class StepLocation {
       this.locationData = location;
 
       if (location.isValid) {
-        this.modalType = 'success';
-        this.modalMessage = location.serviceMessage;
+        // Show InfoWindow on marker (like TEL)
+        this.showCoverageInfoWindow(location.serviceMessage, true);
       } else {
-        this.modalType = 'error';
-        this.modalMessage = ERROR_MESSAGES.NO_COVERAGE;
+        // Show error InfoWindow
+        this.showCoverageInfoWindow(ERROR_MESSAGES.NO_COVERAGE, false);
       }
-
-      this.showModal = true;
     } catch (error) {
       console.error('Coverage validation error:', error);
-      this.modalType = 'error';
-      this.modalMessage = ERROR_MESSAGES.COVERAGE_ERROR;
-      this.showModal = true;
+      this.errorMessage = ERROR_MESSAGES.COVERAGE_ERROR;
+      this.showErrorModal = true;
     } finally {
       this.isValidating = false;
     }
   };
 
-  private handleModalContinue = () => {
+  /**
+   * Shows coverage result in InfoWindow on the marker (like TEL pattern)
+   * Styles match TEL: .info, .infoOn, .infoOff, .continue-map, .continue-button
+   */
+  private showCoverageInfoWindow(message: string, isSuccess: boolean): void {
+    // TEL-style InfoWindow content - width auto to fill parent container (600px set by maps.service)
+    const infoWindowContent = `
+      <div class="general-container" style="font-family: 'Open Sans', Arial, sans-serif; width: 100%; box-sizing: border-box;">
+        <div class="info ${isSuccess ? 'infoOn' : 'infoOff'}" style="
+          padding: ${isSuccess ? '20px' : '15px 20px'};
+          width: 100%;
+          height: auto;
+          box-sizing: border-box;
+          background: ${isSuccess ? '#1F97AF' : '#EE122C'};
+          color: #ffffff;
+          font-size: 14px;
+          line-height: 1.5;
+          white-space: normal;
+        ">
+          ${message}
+        </div>
+        <div class="continue-map" style="
+          width: 100%;
+          height: auto;
+          padding: 20px;
+          font-size: 16px;
+          text-align: center;
+          background: #ffffff;
+          color: #1F97AF;
+          cursor: pointer;
+          box-sizing: border-box;
+        ">
+          ${!isSuccess ? `
+            <div style="color: #333; margin-bottom: 8px;">
+              Actualmente usted se encuentra fuera del rango de cobertura.
+            </div>
+          ` : ''}
+          <div
+            id="infowindow-continue-btn"
+            class="no-link continue-button"
+            onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
+            style="
+              text-decoration: none;
+              color: #1F97AF;
+              font-size: 16px;
+              cursor: pointer;
+              font-weight: 600;
+            "
+          >
+            ${isSuccess ? 'Continuar' : 'Cerrar'}
+          </div>
+        </div>
+      </div>
+    `;
+
+    mapsService.showInfoWindow(infoWindowContent, () => {
+      if (isSuccess && this.locationData && this.locationData.isValid) {
+        this.handleInfoWindowContinue();
+      } else {
+        mapsService.closeInfoWindow();
+      }
+    });
+  }
+
+  /**
+   * Handles continue from InfoWindow (like TEL: goToRouter method)
+   */
+  private handleInfoWindowContinue = () => {
     if (this.locationData && this.locationData.isValid) {
+      // Close InfoWindow
+      mapsService.closeInfoWindow();
+
       // Store data in sessionStorage with Base64 encoding (like TEL)
       this.storeLocationInSession(this.locationData);
 
       // Set location in store
       flowActions.setLocation(this.locationData);
-      this.showModal = false;
       this.onNext?.();
-    } else {
-      this.showModal = false;
     }
   };
 
@@ -305,17 +366,16 @@ export class StepLocation {
       }
     } catch (error) {
       console.error('Geolocation error:', error);
-      this.modalType = 'error';
 
       if (error.message.includes('denied')) {
-        this.modalMessage = ERROR_MESSAGES.GEOLOCATION_DENIED;
+        this.errorMessage = ERROR_MESSAGES.GEOLOCATION_DENIED;
       } else if (error.message.includes('unavailable')) {
-        this.modalMessage = ERROR_MESSAGES.GEOLOCATION_UNAVAILABLE;
+        this.errorMessage = ERROR_MESSAGES.GEOLOCATION_UNAVAILABLE;
       } else {
-        this.modalMessage = ERROR_MESSAGES.GEOLOCATION_TIMEOUT;
+        this.errorMessage = ERROR_MESSAGES.GEOLOCATION_TIMEOUT;
       }
 
-      this.showModal = true;
+      this.showErrorModal = true;
     } finally {
       this.isGettingLocation = false;
     }
@@ -428,30 +488,20 @@ export class StepLocation {
             </div>
           </div>
 
-          {/* Modal */}
-          {this.showModal && (
+          {/* Error Modal (only for errors that can't be shown in InfoWindow) */}
+          {this.showErrorModal && (
             <div class="step-location__modal-backdrop">
-              <div class={`step-location__modal step-location__modal--${this.modalType}`}>
-                <button class="step-location__modal-close" onClick={() => this.showModal = false}>
+              <div class="step-location__modal step-location__modal--error">
+                <button class="step-location__modal-close" onClick={() => this.showErrorModal = false}>
                   ×
                 </button>
-                {this.modalType === 'success' && (
-                  <div class="step-location__modal-success-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                  </div>
-                )}
-                {this.modalType === 'error' && (
-                  <div class="step-location__modal-error-bar">¡Fuera de área!</div>
-                )}
-                <p class="step-location__modal-message">{this.modalMessage}</p>
+                <div class="step-location__modal-error-bar">Error</div>
+                <p class="step-location__modal-message">{this.errorMessage}</p>
                 <button
                   class="step-location__modal-btn"
-                  onClick={this.handleModalContinue}
+                  onClick={() => this.showErrorModal = false}
                 >
-                  {this.modalType === 'success' ? 'Continuar' : 'Cerrar'}
+                  Cerrar
                 </button>
               </div>
             </div>

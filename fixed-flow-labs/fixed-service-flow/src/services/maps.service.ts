@@ -47,6 +47,7 @@ class MapsService {
   private map: google.maps.Map | null = null;
   private marker: google.maps.marker.AdvancedMarkerElement | null = null;
   private autocomplete: google.maps.places.Autocomplete | null = null;
+  private infoWindow: google.maps.InfoWindow | null = null;
 
   // ------------------------------------------
   // INITIALIZATION
@@ -251,6 +252,96 @@ class MapsService {
       this.marker.map = null;
       this.marker = null;
     }
+  }
+
+  // ------------------------------------------
+  // INFOWINDOW (like TEL pattern)
+  // ------------------------------------------
+
+  /**
+   * Shows an InfoWindow at the marker position with custom HTML content
+   * Like TEL: this.infowindow.open(this.map, this.marker)
+   */
+  showInfoWindow(content: string, onContinueClick?: () => void): void {
+    if (!this.map || !this.marker) {
+      console.warn('Map or marker not initialized');
+      return;
+    }
+
+    // Close existing InfoWindow
+    this.closeInfoWindow();
+
+    // Override Google Maps InfoWindow styles - force wider width
+    const popStyle = `<style>
+      .gm-ui-hover-effect { display: none !important; }
+      .gm-style .gm-style-iw-c { padding: 0px !important; width: 600px !important; max-width: none !important; }
+      .gm-style .gm-style-iw-d { padding: 0px !important; overflow: unset !important; width: 100% !important; max-width: none !important; }
+      .gm-style .gm-style-iw-tc { display: none !important; }
+      .gm-style-iw { width: 600px !important; max-width: none !important; }
+    </style>`;
+
+    // Create InfoWindow with TEL config: maxWidth: 600
+    this.infoWindow = new google.maps.InfoWindow({
+      content: popStyle + content,
+      maxWidth: 600,
+    });
+
+    // Open InfoWindow at marker position
+    this.infoWindow.open({
+      anchor: this.marker,
+      map: this.map,
+    });
+
+    // Force wider InfoWindow after DOM is ready
+    this.infoWindow.addListener('domready', () => {
+      // Use setTimeout to ensure Google Maps has finished applying its styles
+      setTimeout(() => {
+        // Target the main InfoWindow container and set explicit width
+        const iwc = document.querySelector('.gm-style-iw-c') as HTMLElement;
+        const iwd = document.querySelector('.gm-style-iw-d') as HTMLElement;
+
+        if (iwc) {
+          iwc.style.setProperty('width', '600px', 'important');
+          iwc.style.setProperty('max-width', 'none', 'important');
+          iwc.style.setProperty('padding', '0', 'important');
+        }
+        if (iwd) {
+          iwd.style.setProperty('width', '100%', 'important');
+          iwd.style.setProperty('max-width', 'none', 'important');
+          iwd.style.setProperty('overflow', 'visible', 'important');
+        }
+
+        // Also target the general container
+        const gmiw = document.querySelector('.gm-style-iw') as HTMLElement;
+        if (gmiw) {
+          gmiw.style.setProperty('width', '600px', 'important');
+          gmiw.style.setProperty('max-width', 'none', 'important');
+        }
+      }, 50);
+    });
+
+    // Store callback reference for external access
+    if (onContinueClick) {
+      // Use a global callback that can be accessed from the InfoWindow content
+      (window as any).__infoWindowContinueCallback = onContinueClick;
+    }
+  }
+
+  /**
+   * Closes the InfoWindow
+   */
+  closeInfoWindow(): void {
+    if (this.infoWindow) {
+      this.infoWindow.close();
+      this.infoWindow = null;
+    }
+  }
+
+  /**
+   * Gets the current InfoWindow instance
+   */
+  getInfoWindow(): google.maps.InfoWindow | null {
+    return this.infoWindow;
   }
 
   // ------------------------------------------
@@ -501,6 +592,7 @@ class MapsService {
    * Cleans up map resources
    */
   destroy(): void {
+    this.closeInfoWindow();
     this.removeMarker();
     this.autocomplete = null;
     this.map = null;
