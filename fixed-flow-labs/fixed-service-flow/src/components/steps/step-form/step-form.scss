@@ -21,6 +21,8 @@
   &__header {
     @include flex-between;
     margin-bottom: $spacing-4;
+    padding-bottom: $spacing-4;
+    border-bottom: 1px solid $color-border-light;
   }
 
   &__title {
@@ -34,6 +36,17 @@
   }
 
   // ------------------------------------------
+  // FORM CONTAINER
+  // ------------------------------------------
+
+  form {
+    border: 1px solid $color-border-light;
+    border-radius: $border-radius-lg;
+    padding: $spacing-6;
+    background: white;
+  }
+
+  // ------------------------------------------
   // INSTRUCTIONS
   // ------------------------------------------
 
@@ -41,9 +54,8 @@
     @include font-body-small;
     color: $color-text-secondary;
     margin-bottom: $spacing-6;
-    padding: $spacing-4;
-    background: $color-gray-50;
-    border-radius: $border-radius-md;
+    padding: 0;
+    background: transparent;
   }
 
   // ------------------------------------------
@@ -52,12 +64,7 @@
 
   &__section {
     margin-bottom: $spacing-6;
-    padding-bottom: $spacing-6;
-    border-bottom: 1px solid $color-border-light;
-
-    &:last-of-type {
-      border-bottom: none;
-    }
+    padding-bottom: $spacing-2;
   }
 
   // ------------------------------------------
@@ -130,11 +137,12 @@
 
     @include breakpoint-up(md) {
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .step-form__input {
       flex: 1;
+      margin-top: 4px;
     }
   }
 
@@ -144,8 +152,9 @@
 
   &__radio-group {
     display: flex;
-    flex-direction: column;
-    gap: $spacing-2;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: $spacing-4;
 
     &--horizontal {
       flex-direction: row;
@@ -155,14 +164,19 @@
 
   &__radio {
     display: flex;
-    align-items: center;
-    gap: $spacing-2;
+    align-items: flex-start;
+    gap: $spacing-1;
     @include font-body-small;
     color: $color-text-primary;
     cursor: pointer;
+    max-width: 90px;
+    line-height: 1.2;
+    margin-top: 14px;
 
     input[type="radio"] {
       accent-color: $color-secondary;
+      margin-top: 2px;
+      flex-shrink: 0;
     }
   }
 
@@ -171,7 +185,9 @@
   // ------------------------------------------
 
   &__actions {
-    margin-top: $spacing-8;
+    margin-top: $spacing-6;
+    padding-top: $spacing-6;
+    border-top: 1px solid $color-border-light;
     text-align: center;
   }
 

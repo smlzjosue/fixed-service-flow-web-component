@@ -1,11 +1,12 @@
 // ============================================
 // STEP CONFIRMATION - Confirmation/Result Step
 // Fixed Service Flow Web Component
+// Supports both Internet and CLARO HOGAR catalogue flows
 // ============================================
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
 import { flowState, flowActions } from '../../../store/flow.store';
-import { requestService } from '../../../services';
+import { requestService, paymentService } from '../../../services';
 import { FlowCompleteEvent } from '../../../store/interfaces';
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '../../../utils/constants';
 
@@ -38,7 +39,79 @@ export class StepConfirmation {
   // ------------------------------------------
 
   async componentWillLoad() {
-    await this.submitRequest();
+    // Check if this is a catalogue flow (CLARO HOGAR) or internet flow
+    // Catalogue flow: has payment result but no contract/formData
+    // Internet flow: has contract and formData
+    const isCatalogueFlow = this.isCatalogueFlow();
+
+    if (isCatalogueFlow) {
+      await this.handleCatalogueFlowConfirmation();
+    } else {
+      await this.submitRequest();
+    }
+  }
+
+  /**
+   * Determines if this is a catalogue/equipment flow (CLARO HOGAR)
+   * vs an internet service flow
+   */
+  private isCatalogueFlow(): boolean {
+    // Catalogue flow has payment result stored but no contract/formData
+    const paymentResult = paymentService.getPaymentResult();
+    const hasContract = !!flowState.selectedContract;
+    const hasFormData = !!flowState.formData;
+
+    // If we have payment result but no contract/formData, it's catalogue flow
+    return !!paymentResult && !hasContract && !hasFormData;
+  }
+
+  /**
+   * Handles confirmation for catalogue/equipment flow (CLARO HOGAR)
+   * The purchase is already complete after payment - just show success
+   */
+  private async handleCatalogueFlowConfirmation() {
+    this.status = 'loading';
+
+    try {
+      const paymentResult = paymentService.getPaymentResult();
+
+      if (!paymentResult || !paymentResult.success) {
+        throw new Error('No se encontró información del pago');
+      }
+
+      // Get order BAN from payment service
+      const orderBan = paymentService.getOrderBan();
+
+      // For catalogue flow, the orderId comes from the payment process
+      this.orderId = orderBan || paymentResult.operationId || null;
+
+      console.log('[StepConfirmation] Catalogue flow - payment success:', {
+        orderId: this.orderId,
+        operationId: paymentResult.operationId,
+        authorizationNumber: paymentResult.authorizationNumber,
+      });
+
+      // Mark as success
+      this.status = 'success';
+
+      // Store result
+      flowActions.setOrderResult(this.orderId, null);
+
+      // Emit complete event with available data
+      this.onComplete?.({
+        orderId: this.orderId!,
+        plan: flowState.selectedPlan!,
+        contract: null as any, // Not applicable for catalogue flow
+        customer: null as any, // Customer data came from shipping form
+        location: flowState.location!,
+      });
+
+    } catch (error) {
+      console.error('[StepConfirmation] Catalogue flow error:', error);
+      this.status = 'error';
+      this.errorMessage = error.message || ERROR_MESSAGES.REQUEST_ERROR;
+      flowActions.setOrderResult(null, this.errorMessage);
+    }
   }
 
   // ------------------------------------------
@@ -222,11 +295,9 @@ export class StepConfirmation {
     return (
       <div class="step-confirmation__result step-confirmation__result--success">
         <div class="step-confirmation__icon step-confirmation__icon--success">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+          <img src="/assets/images/ok-check.svg" alt="Éxito" />
         </div>
-        <h2 class="step-confirmation__title">{SUCCESS_MESSAGES.REQUEST_SUCCESS}</h2>
+        <h2 class="step-confirmation__title step-confirmation__title--success">{SUCCESS_MESSAGES.REQUEST_SUCCESS}</h2>
         <p class="step-confirmation__message">{SUCCESS_MESSAGES.REQUEST_SUCCESS_SUBTITLE}</p>
         {displayOrderId && (
           <p class="step-confirmation__order-id">Número de orden: {displayOrderId}</p>
@@ -236,9 +307,6 @@ export class StepConfirmation {
             Se ha enviado un correo de confirmación a tu email.
           </p>
         )}
-        <button class="step-confirmation__btn" onClick={this.handleClose}>
-          Cerrar
-        </button>
       </div>
     );
   }
@@ -247,11 +315,7 @@ export class StepConfirmation {
     return (
       <div class="step-confirmation__result step-confirmation__result--error">
         <div class="step-confirmation__icon step-confirmation__icon--error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-          </svg>
+          <img src="/assets/images/error-check.svg" alt="Error" />
         </div>
         <h2 class="step-confirmation__title step-confirmation__title--error">
           ¡Lo sentimos, ha ocurrido un error en el proceso de solicitud!
@@ -261,9 +325,6 @@ export class StepConfirmation {
           <br />
           Por favor, inténtalo nuevamente.
         </p>
-        <button class="step-confirmation__btn step-confirmation__btn--error" onClick={this.handleRetry}>
-          Volver a intentar
-        </button>
       </div>
     );
   }
@@ -281,6 +342,22 @@ export class StepConfirmation {
             {this.status === 'success' && this.renderSuccess()}
             {this.status === 'error' && this.renderError()}
           </div>
+
+          {this.status === 'success' && (
+            <div class="step-confirmation__actions">
+              <button class="step-confirmation__btn" onClick={this.handleClose}>
+                Cerrar
+              </button>
+            </div>
+          )}
+
+          {this.status === 'error' && (
+            <div class="step-confirmation__actions">
+              <button class="step-confirmation__btn step-confirmation__btn--error" onClick={this.handleRetry}>
+                Volver a intentar
+              </button>
+            </div>
+          )}
         </div>
       </Host>
     );
