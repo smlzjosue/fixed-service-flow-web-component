@@ -37,8 +37,12 @@
 
   &__tabs {
     display: flex;
-    border-bottom: 2px solid $color-gray-200;
+    border-bottom: none;
     margin-bottom: $spacing-6;
+    background: $color-white;
+    border-radius: 0 0 $border-radius-lg $border-radius-lg;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
   }
 
   &__tab {
@@ -51,12 +55,17 @@
     position: relative;
     transition: all $transition-fast;
 
+    // Vertical separator between tabs
+    &:first-child {
+      border-right: 1px solid $color-gray-200;
+    }
+
     &::after {
       content: '';
       position: absolute;
-      bottom: -2px;
-      left: 0;
-      right: 0;
+      bottom: 0;
+      left: $spacing-6;
+      right: $spacing-6;
       height: 3px;
       background: transparent;
       transition: background-color $transition-fast;
@@ -65,10 +74,6 @@
     &--active {
       &::after {
         background: $color-secondary;
-      }
-
-      .step-contract__tab-title {
-        color: $color-secondary;
       }
     }
 
@@ -80,6 +85,7 @@
   &__tab-title {
     display: block;
     @include font-heading-4;
+    font-weight: $font-weight-bold;
     color: $color-text-primary;
     margin-bottom: $spacing-1;
   }
@@ -107,9 +113,8 @@
   }
 
   &__option {
-    flex: 0 1 auto;
-    width: 100%;
-    max-width: 340px;
+    flex: 0 0 auto;
+    width: 280px;
     display: flex;
     align-items: flex-start;
     padding: $spacing-4;
@@ -119,6 +124,11 @@
     transition: all $transition-fast;
     position: relative;
     overflow: hidden;
+
+    @include breakpoint-down(sm) {
+      width: 100%;
+      max-width: 320px;
+    }
 
     // Left side bar indicator
     &::before {
