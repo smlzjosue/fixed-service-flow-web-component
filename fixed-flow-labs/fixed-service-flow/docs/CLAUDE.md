@@ -21,11 +21,11 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Última actualización** | 2025-12-11 (Sesión 5) |
-| **Fase actual** | Fase 12 - Análisis de Sub-Flujos TEL |
-| **Próximo paso** | Implementar Sprint 1 (product.service, cart.service) |
+| **Última actualización** | 2025-12-11 (Sesión 6) |
+| **Fase actual** | Fase 12 - Refinamiento UX y Validación |
+| **Próximo paso** | Continuar pruebas E2E flujo CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | `f1a8815` - feat(step-plans): integrate addToCart API on plan selection |
+| **Último commit** | `f46fd13` - feat: add CLARO HOGAR catalogue flow and UX improvements |
 
 ### Progreso por Fases (Verificado 2025-12-11)
 
@@ -93,58 +93,30 @@
 - [x] Eventos (flowComplete, flowError, stepChange, flowCancel)
 - [x] Props (apiUrl, googleMapsKey, debug)
 
-### Notas de la Última Sesión (2025-12-11 - Sesión 5)
+### Notas de la Última Sesión (2025-12-11 - Sesión 6)
 
-- **FASE 12 Refinada** - Plan detallado con análisis profundo de cada sub-flujo TEL
-- **Patrones SCSS documentados** - Colores, mixins, breakpoints de TEL
-- **Estructura HTML exacta** - Para cada componente del flujo e-commerce
-- **APIs documentadas** - Request/Response completos para cada endpoint
-- **SessionStorage completo** - 25+ keys documentadas con su uso
+- **Selector de cantidad comentado** en step-product-detail
+- **Fondo blanco** aplicado al body (index.html)
+- **Flujo CLARO HOGAR validado** - Ubicación → Catálogo → Detalle de producto
 - **Ejecutar servidor**: `cd fixed-flow-labs/fixed-service-flow && npm start`
 - **Puerto de desarrollo**: http://localhost:3333
 
-### Cambios de Esta Sesión (2025-12-11 - Sesión 5)
+### Cambios de Esta Sesión (2025-12-11 - Sesión 6)
 
-**Refinamiento de PLAN-DE-TRABAJO-STENCIL.md - Análisis detallado de TEL:**
+**Mejoras UX en Detalle de Producto:**
 
-1. **Patrones SCSS (Sección nueva):**
-   - Colores: `#DA291C` (rojo), `#0097A9` (teal), `#44af69` (verde)
-   - Mixins: `btn-primary`, `input-field`, `card-container`, `grid-two-columns`
-   - Breakpoints: xs(320), sm(576), md(768), lg(992), xl(1200), xxl(1400)
+1. **Selector de Cantidad Comentado:**
+   - `step-product-detail.tsx` líneas 472-489: JSX comentado
+   - `step-product-detail.tsx` líneas 323-329: función handleQuantityChange() comentada
+   - Evita error TypeScript: `'handleQuantityChange' is declared but its value is never read`
 
-2. **12.1 Product Detail (Análisis completo):**
-   - Estructura HTML exacta de product-web.component
-   - SCSS con grid 2 columnas, color-circle, price-section
-   - SessionStorage keys: parentId, childrenId, color, indexColor, storage
-   - Flujo selectColor() y addToCart() documentados
+2. **Background Blanco:**
+   - `src/index.html`: `background-color: #f5f5f5` → `#ffffff`
 
-3. **12.5 Order Summary (Análisis completo):**
-   - Layout grid: `1fr 420px` (items | detalles)
-   - Sub-componentes: order-items-web, payment-detail-web
-   - SCSS para items con imagen 80px, precio, acciones
-   - Checkbox de términos y botón "Procesar orden"
-
-4. **12.6 Shipping (16 campos detallados):**
-   - Secciones: Personal, Contacto, Dirección, Autorizado
-   - Validaciones: email, teléfono (XXX) XXX-XXXX, zipcode PR
-   - Lista de 320+ códigos postales válidos de Puerto Rico
-   - API: POST api/Address/create con shipmentId response
-
-5. **12.9 Payment (iframe + postMessage):**
-   - Construcción de hubId y URL del iframe
-   - Método jsonData() con estructura completa
-   - Estados postMessage: dimensions, start, canceled, paymentResult
-   - PaymentItems: INSTALLMENT, DEPOSIT, DOWNPAYMENT, TAXES, PASTDUEONLY
-   - APIs: api/Payment/record, api/Payment/error
-
-6. **12.11 Confirmation (éxito/error):**
-   - UI de éxito: check verde, detalles orden, productos, email notice
-   - UI de error: warning rojo, operationId, retry/soporte
-   - Flujo: getOrder() → sendConfirmation() → sessionStorage.clear()
-
-7. **SessionStorage completo (25+ keys):**
-   - Token, Producto, Carrito, Plan, Envío, Orden, Pago, Ubicación
-   - Ejemplos de uso en Stencil.js
+**Validación del Flujo CLARO HOGAR:**
+- Ubicación: PRI-2, Corcovado, Hatillo (cobertura CLARO HOGAR)
+- Catálogo: 4 productos (D-LINK, Franklin R717, FRANKLIN RG1000 5G, PCD R402)
+- Detalle: PCD R402 WHITE sin selector de cantidad
 
 ### Tareas Críticas Pendientes
 
@@ -497,4 +469,4 @@ npm start  # http://localhost:3333
 
 ---
 
-*Última actualización: 2025-12-11 (Sesión 4)*
+*Última actualización: 2025-12-11 (Sesión 6)*

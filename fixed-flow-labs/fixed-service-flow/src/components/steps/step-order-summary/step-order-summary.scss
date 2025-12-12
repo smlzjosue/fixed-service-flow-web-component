@@ -22,6 +22,7 @@ $gray-400: $color-gray-400;
 $gray-500: $color-gray-500;
 $gray-600: $color-gray-600;
 $gray-700: $color-gray-700;
+$gray-800: $color-gray-800;
 $gray-900: $color-gray-900;
 $radius-sm: $border-radius-sm;
 $radius-md: $border-radius-md;
@@ -76,6 +77,7 @@ $spacing-xl: $spacing-8;
     font-size: $font-size-sm;
     cursor: pointer;
     padding: $spacing-xs;
+    transition: color 0.2s;
 
     svg {
       width: 20px;
@@ -83,8 +85,16 @@ $spacing-xl: $spacing-8;
     }
 
     &:hover {
+      color: darken($secondary-color, 10%);
       text-decoration: underline;
     }
+  }
+
+  &__title-group {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    flex: 1;
   }
 
   .title {
@@ -92,7 +102,6 @@ $spacing-xl: $spacing-8;
     font-weight: 700;
     color: $gray-900;
     margin: 0;
-    flex: 1;
   }
 
   .item-count {
@@ -101,64 +110,27 @@ $spacing-xl: $spacing-8;
     background: $gray-200;
     padding: $spacing-xs $spacing-sm;
     border-radius: $radius-full;
+    font-weight: 500;
   }
 }
 
 // ------------------------------------------
-// LOADING & ERROR & EMPTY
+// STATE CONTAINERS (Loading, Error, Empty)
 // ------------------------------------------
 
-.loading-container,
-.error-container,
-.empty-cart {
+.state-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 400px;
   text-align: center;
   background: white;
   border-radius: $radius-lg;
   padding: $spacing-xl;
-}
+  box-shadow: $shadow-sm;
 
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid $gray-200;
-  border-top-color: $primary-color;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: $spacing-md;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.error-container p {
-  color: $error-color;
-  margin-bottom: $spacing-md;
-}
-
-.btn-retry {
-  background: $primary-color;
-  color: white;
-  border: none;
-  padding: $spacing-sm $spacing-lg;
-  border-radius: $radius-full;
-  cursor: pointer;
-  font-weight: 600;
-
-  &:hover {
-    background: darken($primary-color, 10%);
-  }
-}
-
-.empty-cart {
-  .empty-icon {
+  .state-icon {
     width: 80px;
     height: 80px;
     color: $gray-400;
@@ -176,28 +148,80 @@ $spacing-xl: $spacing-8;
     margin: 0 0 $spacing-lg 0;
   }
 
-  .btn-back-catalog {
-    background: $secondary-color;
-    color: white;
-    border: none;
-    padding: $spacing-sm $spacing-lg;
-    border-radius: $radius-full;
-    cursor: pointer;
-    font-weight: 600;
+  &--error {
+    .state-icon {
+      color: $error-color;
+    }
 
-    &:hover {
-      background: darken($secondary-color, 10%);
+    p {
+      color: $error-color;
+    }
+  }
+
+  &--empty {
+    .state-icon {
+      color: $gray-300;
     }
   }
 }
 
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid $gray-200;
+  border-top-color: $primary-color;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: $spacing-md;
+}
+
+.spinner-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-retry,
+.btn-back-catalog {
+  background: $primary-color;
+  color: white;
+  border: none;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-full;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+  }
+}
+
+.btn-back-catalog {
+  background: $secondary-color;
+
+  &:hover {
+    background: darken($secondary-color, 10%);
+  }
+}
+
 // ------------------------------------------
-// CONTENT GRID
+// CONTENT LAYOUT
 // ------------------------------------------
 
-.content-grid {
+.content-layout {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 380px;
   gap: $spacing-lg;
 
   @media (max-width: 992px) {
@@ -205,29 +229,59 @@ $spacing-xl: $spacing-8;
   }
 }
 
-// ------------------------------------------
-// CART ITEMS SECTION
-// ------------------------------------------
-
-.cart-items-section {
+.products-column {
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
 }
 
-.cart-item {
-  display: grid;
-  grid-template-columns: 100px 1fr auto auto;
+.summary-column {
+  display: flex;
+  flex-direction: column;
   gap: $spacing-md;
-  align-items: center;
+
+  @media (max-width: 992px) {
+    order: -1;
+  }
+}
+
+// ------------------------------------------
+// PRODUCT CARD (Equipment & Plans)
+// ------------------------------------------
+
+.product-card {
   background: white;
   border-radius: $radius-lg;
-  padding: $spacing-md;
   box-shadow: $shadow-sm;
+  overflow: hidden;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: auto auto;
+  &__badge {
+    display: flex;
+    gap: $spacing-xs;
+    padding: $spacing-sm $spacing-md;
+    background: $gray-50;
+    border-bottom: 1px solid $gray-100;
+  }
+
+  &__main {
+    display: grid;
+    grid-template-columns: 100px 1fr auto auto;
+    gap: $spacing-md;
+    padding: $spacing-md;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 80px 1fr auto;
+      grid-template-rows: auto auto;
+    }
+
+    &--plan {
+      grid-template-columns: 60px 1fr auto auto;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 60px 1fr auto;
+      }
+    }
   }
 
   &__image {
@@ -246,9 +300,22 @@ $spacing-xl: $spacing-8;
     }
 
     img {
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 90%;
+      max-height: 90%;
       object-fit: contain;
+    }
+
+    &--plan {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 15%) 100%);
+      border-radius: $radius-md;
+
+      img {
+        filter: brightness(0) invert(1);
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 
@@ -256,19 +323,6 @@ $spacing-xl: $spacing-8;
     display: flex;
     flex-direction: column;
     gap: $spacing-xs;
-
-    .item-name {
-      font-size: $font-size-base;
-      font-weight: 600;
-      color: $gray-900;
-      margin: 0;
-    }
-
-    .item-variant,
-    .item-qty {
-      font-size: $font-size-sm;
-      color: $gray-600;
-    }
   }
 
   &__pricing {
@@ -278,166 +332,575 @@ $spacing-xl: $spacing-8;
     gap: $spacing-xs;
 
     @media (max-width: 768px) {
-      grid-column: 1 / -1;
+      grid-column: 2 / -1;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-    }
-
-    .monthly-price,
-    .total-price {
-      text-align: right;
-
-      .label {
-        font-size: $font-size-xs;
-        color: $gray-500;
-        display: block;
-      }
-
-      .value {
-        font-size: $font-size-base;
-        font-weight: 600;
-        color: $gray-900;
-      }
-    }
-
-    .monthly-price .value {
-      color: $primary-color;
-    }
-
-    .installments {
-      font-size: $font-size-xs;
-      color: $gray-500;
+      width: 100%;
     }
   }
 
-  &__remove {
-    background: none;
-    border: none;
-    color: $gray-400;
-    cursor: pointer;
-    padding: $spacing-xs;
-    transition: color 0.2s;
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
 
-    &:hover {
-      color: $error-color;
+  &--plan {
+    .product-card__main {
+      grid-template-columns: 60px 1fr auto auto;
     }
+  }
+}
+
+// ------------------------------------------
+// SECTION HEADERS (Equipment & Plan identifiers)
+// ------------------------------------------
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1px solid $gray-100;
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     svg {
       width: 20px;
       height: 20px;
     }
   }
+
+  &__text {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    flex: 1;
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  &__badge {
+    font-size: $font-size-xs;
+    font-weight: 600;
+    padding: 2px $spacing-sm;
+    border-radius: $radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  // Equipment Style - Blue theme
+  &--equipment {
+    background: linear-gradient(135deg, rgba($secondary-color, 0.08) 0%, rgba($secondary-color, 0.02) 100%);
+    border-left: 4px solid $secondary-color;
+
+    .section-header__icon {
+      background: $secondary-color;
+      color: white;
+    }
+
+    .section-header__label {
+      color: $secondary-color;
+    }
+
+    .section-header__badge {
+      background: rgba($primary-color, 0.15);
+      color: $primary-color;
+    }
+  }
+
+  // Plan Style - Red theme
+  &--plan {
+    background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($primary-color, 0.02) 100%);
+    border-left: 4px solid $primary-color;
+
+    .section-header__icon {
+      background: $primary-color;
+      color: white;
+    }
+
+    .section-header__label {
+      color: $primary-color;
+    }
+  }
 }
 
 // ------------------------------------------
-// SUMMARY SECTION
+// BADGES (Legacy - keeping for compatibility)
 // ------------------------------------------
 
-.summary-section {
-  background: white;
-  border-radius: $radius-lg;
-  padding: $spacing-lg;
-  box-shadow: $shadow-md;
-  height: fit-content;
-  position: sticky;
-  top: $spacing-lg;
-}
-
-.section-title {
-  font-size: $font-size-base;
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $spacing-sm;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
   font-weight: 600;
-  color: $gray-900;
-  margin: 0 0 $spacing-md 0;
-}
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
-// ------------------------------------------
-// PROMO CODE
-// ------------------------------------------
-
-.promo-section {
-  margin-bottom: $spacing-lg;
-  padding-bottom: $spacing-lg;
-  border-bottom: 1px solid $gray-200;
-}
-
-.promo-input-group {
-  display: flex;
-  gap: $spacing-sm;
-}
-
-.promo-input {
-  flex: 1;
-  height: 44px;
-  border: 1px solid $gray-300;
-  border-radius: $radius-md;
-  padding: 0 $spacing-md;
-  font-size: $font-size-sm;
-  transition: border-color 0.2s;
-
-  &:focus {
-    outline: none;
-    border-color: $secondary-color;
+  &--equipment {
+    background: rgba($secondary-color, 0.15);
+    color: $secondary-color;
   }
 
-  &.error {
-    border-color: $error-color;
+  &--main {
+    background: rgba($primary-color, 0.15);
+    color: $primary-color;
   }
 
-  &.success {
-    border-color: $success-color;
-  }
-
-  &:disabled {
-    background: $gray-100;
-    cursor: not-allowed;
-  }
-}
-
-.promo-button {
-  height: 44px;
-  padding: 0 $spacing-lg;
-  background: $gray-200;
-  color: $gray-700;
-  border: none;
-  border-radius: $radius-md;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-
-  &:hover:not(:disabled) {
-    background: $gray-300;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-.promo-message {
-  display: block;
-  font-size: $font-size-sm;
-  margin-top: $spacing-xs;
-
-  &.error {
-    color: $error-color;
-  }
-
-  &.success {
+  &--plan {
+    background: rgba($success-color, 0.15);
     color: $success-color;
   }
 }
 
 // ------------------------------------------
-// PAYMENT DETAILS
+// PRODUCT DETAILS
 // ------------------------------------------
 
-.payment-details {
-  margin-bottom: $spacing-lg;
-  padding-bottom: $spacing-lg;
-  border-bottom: 1px solid $gray-200;
+.product-name {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.product-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  align-items: center;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.spec-label {
+  font-size: $font-size-sm;
+  color: $gray-600;
+}
+
+.plan-type {
+  font-size: $font-size-sm;
+  color: $gray-500;
+}
+
+// ------------------------------------------
+// FINANCING INFO (shown below equipment specs)
+// ------------------------------------------
+
+.financing-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: $spacing-xs;
+  padding-top: $spacing-xs;
+  border-top: 1px dashed $gray-200;
+}
+
+.financing-label {
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $gray-700;
+}
+
+.financing-detail {
+  font-size: $font-size-xs;
+  color: $gray-500;
+}
+
+// ------------------------------------------
+// COLOR CIRCLE (TEL style)
+// ------------------------------------------
+
+.color-circle {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid $gray-200;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+// ------------------------------------------
+// STORAGE BADGE (TEL style)
+// ------------------------------------------
+
+.storage-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px $spacing-xs;
+  background: $gray-100;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: 600;
+  color: $gray-700;
+}
+
+// ------------------------------------------
+// QUANTITY LABEL
+// ------------------------------------------
+
+.qty-label {
+  font-size: $font-size-sm;
+  color: $gray-500;
+}
+
+// ------------------------------------------
+// PRICING
+// ------------------------------------------
+
+.price-financing,
+.price-single {
+  text-align: right;
+
+  @media (max-width: 768px) {
+    text-align: left;
+  }
+}
+
+.price-monthly {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $primary-color;
+}
+
+.price-period {
+  font-size: $font-size-sm;
+  color: $gray-500;
+}
+
+.price-installments {
+  display: block;
+  font-size: $font-size-xs;
+  color: $gray-500;
+  margin-top: 2px;
+}
+
+.price-total {
+  font-size: $font-size-lg;
+  font-weight: 700;
+  color: $gray-900;
+}
+
+.price-full {
+  display: flex;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+
+  .label {
+    color: $gray-500;
+  }
+
+  .value {
+    font-weight: 600;
+    color: $gray-700;
+  }
+}
+
+// ------------------------------------------
+// ACTION BUTTONS
+// ------------------------------------------
+
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &--delete {
+    color: $gray-400;
+    border-radius: $radius-md;
+
+    &:hover:not(:disabled) {
+      color: $error-color;
+      background: rgba($error-color, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &--delete-small {
+    color: $gray-400;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+      color: $error-color;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ------------------------------------------
+// PLAN SECTION (Associated with Equipment)
+// ------------------------------------------
+
+.plan-section {
+  border-top: none;
+
+  // Use the section-header styling for plan inside equipment card
+  .section-header--plan {
+    margin: 0;
+    border-radius: 0;
+    border-left-width: 0;
+    padding-left: calc($spacing-lg + 4px); // Compensate for removed border
+    border-top: 1px dashed $gray-200;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-md $spacing-lg;
+    background: linear-gradient(to right, rgba($primary-color, 0.03), white);
+  }
+
+  .plan-label {
+    font-size: $font-size-xs;
+    color: $gray-500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .plan-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .plan-name {
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $gray-800;
+  }
+
+  .plan-type {
+    font-size: $font-size-xs;
+    color: $gray-500;
+  }
+
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+
+    .price {
+      font-size: $font-size-lg;
+      font-weight: 700;
+      color: $primary-color;
+    }
+
+    .period {
+      font-size: $font-size-sm;
+      color: $gray-500;
+    }
+  }
+}
+
+// ------------------------------------------
+// SUMMARY CARD
+// ------------------------------------------
+
+.summary-card {
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-sm;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    font-size: $font-size-sm;
+    font-weight: 600;
+    color: $gray-700;
+    margin: 0 0 $spacing-md 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      color: $gray-400;
+    }
+  }
+}
+
+// ------------------------------------------
+// PROMO SECTION
+// ------------------------------------------
+
+.promo-section {
+  .promo-input-group {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  .promo-input {
+    flex: 1;
+    height: 44px;
+    border: 1px solid $gray-300;
+    border-radius: $radius-md;
+    padding: 0 $spacing-md;
+    font-size: $font-size-sm;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $secondary-color;
+    }
+
+    &.error {
+      border-color: $error-color;
+    }
+
+    &.success {
+      border-color: $success-color;
+    }
+
+    &:disabled {
+      background: $gray-100;
+      cursor: not-allowed;
+    }
+  }
+
+  .promo-button {
+    height: 44px;
+    padding: 0 $spacing-lg;
+    background: $gray-200;
+    color: $gray-700;
+    border: none;
+    border-radius: $radius-md;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    min-width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      background: $gray-300;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .promo-message {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-sm;
+    margin-top: $spacing-sm;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    &.error {
+      color: $error-color;
+    }
+
+    &.success {
+      color: $success-color;
+    }
+  }
+}
+
+// ------------------------------------------
+// PAYMENT SUMMARY
+// ------------------------------------------
+
+.payment-summary {
+  padding: 0;
+  overflow: hidden;
+}
+
+// ------------------------------------------
+// RENT SECTION (TEL style - Monthly)
+// ------------------------------------------
+
+.rent-section {
+  background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 10%) 100%);
+  padding: $spacing-lg;
+  color: white;
+
+  .rent-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rent-label {
+    font-size: $font-size-base;
+    font-weight: 500;
+  }
+
+  .rent-value {
+    font-size: $font-size-2xl;
+    font-weight: 700;
+  }
+
+  .rent-note {
+    font-size: $font-size-xs;
+    opacity: 0.8;
+    margin: $spacing-xs 0 0 0;
+  }
+}
+
+// ------------------------------------------
+// PAYMENT BREAKDOWN
+// ------------------------------------------
+
+.payment-breakdown {
+  padding: $spacing-lg;
+
+  .detail-rows {
+    margin-bottom: $spacing-md;
+  }
 }
 
 .detail-row {
@@ -445,6 +908,11 @@ $spacing-xl: $spacing-8;
   justify-content: space-between;
   align-items: center;
   padding: $spacing-sm 0;
+  border-bottom: 1px solid $gray-100;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   .label {
     font-size: $font-size-sm;
@@ -452,33 +920,65 @@ $spacing-xl: $spacing-8;
   }
 
   .value {
-    font-size: $font-size-base;
+    font-size: $font-size-sm;
+    font-weight: 500;
     color: $gray-900;
-  }
 
-  &.total {
-    padding-top: $spacing-md;
-    border-top: 1px solid $gray-200;
-    margin-top: $spacing-sm;
-
-    .label {
-      font-weight: 600;
-      color: $gray-900;
-    }
-
-    .value {
-      font-size: $font-size-lg;
+    &--free {
+      color: $success-color;
       font-weight: 700;
-      color: $primary-color;
+      font-size: $font-size-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
   }
 
-  &.monthly {
+  &--discount {
+    .label {
+      color: $success-color;
+    }
+
     .value {
-      color: $secondary-color;
+      color: $success-color;
       font-weight: 600;
     }
   }
+
+  &--shipping {
+    background: rgba($success-color, 0.05);
+    margin: 0 (-$spacing-lg);
+    padding: $spacing-sm $spacing-lg;
+    border-bottom: none;
+  }
+}
+
+// ------------------------------------------
+// TOTAL SECTION (TEL style - "Paga hoy")
+// ------------------------------------------
+
+.total-section {
+  background: $gray-50;
+  margin: 0 (-$spacing-lg) (-$spacing-lg);
+  padding: $spacing-lg;
+  border-top: 2px solid $gray-200;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total-label {
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.total-value {
+  font-size: $font-size-2xl;
+  font-weight: 700;
+  color: $primary-color;
 }
 
 // ------------------------------------------
@@ -486,7 +986,10 @@ $spacing-xl: $spacing-8;
 // ------------------------------------------
 
 .terms-section {
-  margin-bottom: $spacing-lg;
+  background: white;
+  border-radius: $radius-lg;
+  padding: $spacing-md $spacing-lg;
+  box-shadow: $shadow-sm;
 }
 
 .terms-checkbox {
@@ -500,8 +1003,8 @@ $spacing-xl: $spacing-8;
   }
 
   .checkmark {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border: 2px solid $gray-300;
     border-radius: $radius-sm;
     flex-shrink: 0;
@@ -509,15 +1012,12 @@ $spacing-xl: $spacing-8;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    background: white;
 
-    &::after {
-      content: '';
-      width: 10px;
-      height: 6px;
-      border: 2px solid white;
-      border-top: none;
-      border-right: none;
-      transform: rotate(-45deg);
+    svg {
+      width: 14px;
+      height: 14px;
+      stroke: white;
       opacity: 0;
       transition: opacity 0.2s;
     }
@@ -527,7 +1027,7 @@ $spacing-xl: $spacing-8;
     background: $secondary-color;
     border-color: $secondary-color;
 
-    &::after {
+    svg {
       opacity: 1;
     }
   }
@@ -535,11 +1035,12 @@ $spacing-xl: $spacing-8;
   .terms-text {
     font-size: $font-size-sm;
     color: $gray-600;
-    line-height: 1.4;
+    line-height: 1.5;
 
     a {
       color: $secondary-color;
       text-decoration: none;
+      font-weight: 500;
 
       &:hover {
         text-decoration: underline;
@@ -553,8 +1054,12 @@ $spacing-xl: $spacing-8;
 // ------------------------------------------
 
 .btn-proceed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
   width: 100%;
-  height: 52px;
+  height: 56px;
   background: $primary-color;
   color: white;
   border: none;
@@ -563,14 +1068,31 @@ $spacing-xl: $spacing-8;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+
+  svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s;
+  }
 
   &:hover:not(:disabled) {
     background: darken($primary-color, 10%);
+    box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+
+    svg {
+      transform: translateX(4px);
+    }
   }
 
   &:disabled,
   &.disabled {
     background: $gray-300;
+    box-shadow: none;
     cursor: not-allowed;
+
+    svg {
+      transform: none;
+    }
   }
 }

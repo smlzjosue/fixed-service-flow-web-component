@@ -427,6 +427,7 @@ export interface ProductDetail {
   brandName?: string;
   imgUrl: string;
   detailImage?: string;
+  images?: string[]; // Array of product images for carousel
   shortDescription?: string;
   longDescription?: string;
   regular_price: number;
@@ -441,6 +442,7 @@ export interface ProductDetail {
   features?: string[];
   catalogId?: number;
   home?: boolean; // Flag for CLARO HOGAR products
+  stock?: number; // Stock quantity for availability check
 }
 
 export interface ProductColorDetail {

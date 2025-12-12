@@ -1471,4 +1471,101 @@ confirmation-web.component.scss → Estados éxito/error
 
 ---
 
-*Última actualización: 2025-12-11 (Sesión 5)*
+## Fecha: 2025-12-11 (Sesión 6)
+
+---
+
+## 31. Mejoras UX en Detalle de Producto
+
+### 31.1 Comentar Selector de Cantidad
+
+**Solicitud del usuario:** Ocultar el selector de cantidad de equipos en el detalle de producto.
+
+**Cambios realizados:**
+
+1. **`step-product-detail.tsx`** (líneas 472-489):
+   - Se comentó el JSX del selector de cantidad
+   - El `<div class="selector-section">` queda vacío pero existe para mantener estructura
+
+2. **`step-product-detail.tsx`** (líneas 323-329):
+   - Se comentó la función `handleQuantityChange()` para evitar error de TypeScript
+   - Error: `'handleQuantityChange' is declared but its value is never read`
+
+**Código comentado:**
+```tsx
+// JSX comentado
+{/* <h4 class="selector-title">Cantidad</h4>
+<div class="quantity-selector">
+  <button class="qty-button" onClick={() => this.handleQuantityChange(-1)} disabled={this.quantity <= 1}>-</button>
+  <span class="qty-value">{this.quantity}</span>
+  <button class="qty-button" onClick={() => this.handleQuantityChange(1)} disabled={this.quantity >= 5}>+</button>
+</div> */}
+
+// Función comentada
+// private handleQuantityChange = (delta: number) => {
+//   const newQty = this.quantity + delta;
+//   if (newQty >= 1 && newQty <= 5) {
+//     this.quantity = newQty;
+//   }
+// };
+```
+
+**Resultado:** El detalle de producto ahora muestra solo:
+- Carrusel de imágenes
+- Nombre y disponibilidad
+- Selector de plazos de pago
+- Sección de precios
+- Botones de acción
+
+---
+
+## 32. Cambio de Fondo del Body
+
+### 32.1 Background Blanco
+
+**Solicitud del usuario:** Cambiar el color de fondo del body a blanco.
+
+**Archivo modificado:** `src/index.html`
+
+**Cambio:**
+```css
+/* Antes */
+background-color: #f5f5f5;
+
+/* Después */
+background-color: #ffffff;
+```
+
+**Resultado:** El fondo de la aplicación ahora es completamente blanco en lugar del gris claro anterior.
+
+---
+
+## 33. Archivos Modificados (Sesión 6)
+
+| Archivo | Cambios |
+|---------|---------|
+| `step-product-detail.tsx` | Comentar selector cantidad y función handleQuantityChange |
+| `src/index.html` | Cambiar background-color de #f5f5f5 a #ffffff |
+
+---
+
+## 34. Estado del Proyecto (Sesión 6)
+
+### Flujo CLARO HOGAR Validado
+
+Se validó el flujo completo de CLARO HOGAR:
+1. ✅ Ubicación con cobertura CLARO HOGAR (PRI-2, Corcovado, Hatillo)
+2. ✅ Catálogo con 4 productos (D-LINK, Franklin R717, FRANKLIN RG1000 5G, PCD R402)
+3. ✅ Detalle de producto (PCD R402 WHITE) sin selector de cantidad
+4. ✅ Background blanco aplicado
+
+### Componentes Actualizados
+
+| Componente | Cambio | Estado |
+|------------|--------|--------|
+| `step-product-detail` | Sin selector cantidad | ✅ |
+| `index.html` | Fondo blanco | ✅ |
+
+---
+
+*Última actualización: 2025-12-11 (Sesión 6)*

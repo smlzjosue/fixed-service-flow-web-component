@@ -60,10 +60,20 @@ export class StepProductDetail {
   @State() selectedInstallments: number = 36;
   @State() quantity: number = 1;
 
+  // Availability state
+  @State() isAvailable: boolean = true;
+  @State() showUnavailableAlert: boolean = false;
+
   // Parsed options
   @State() colorOptions: ColorOption[] = [];
   @State() storageOptions: StorageOption[] = [];
   @State() installmentOptions: InstallmentOption[] = [];
+
+  // Product images for carousel
+  @State() productImages: string[] = [];
+
+  // Stock threshold (TEL uses entryBarrier = 1, so stock > 1 means available)
+  private readonly ENTRY_BARRIER = 1;
 
   // ------------------------------------------
   // LIFECYCLE
@@ -108,6 +118,12 @@ export class StepProductDetail {
       this.parseColorOptions();
       this.parseStorageOptions();
       this.parseInstallmentOptions();
+
+      // Build images array for carousel
+      this.buildProductImages();
+
+      // Check product availability (TEL pattern: stock > entryBarrier)
+      this.checkAvailability();
 
       // Store in session
       productService.storeSelectedProduct(this.product);
@@ -192,6 +208,84 @@ export class StepProductDetail {
     this.selectedInstallments = defaultInstallments;
   }
 
+  /**
+   * Builds the product images array for the carousel
+   * Following TEL pattern: combines main image, detail image, and any additional images
+   */
+  private buildProductImages() {
+    if (!this.product) {
+      this.productImages = [];
+      return;
+    }
+
+    const images: string[] = [];
+
+    // Add images from product.images if available (already processed by service)
+    if (this.product.images?.length) {
+      images.push(...this.product.images);
+    }
+    // Fallback: use single imgUrl if no images array
+    else if (this.product.imgUrl) {
+      images.push(this.product.imgUrl);
+    }
+
+    // Add color-specific images if available
+    if (this.colorOptions?.length > 0) {
+      this.colorOptions.forEach(color => {
+        if (color.imgUrl && !images.includes(color.imgUrl)) {
+          images.push(color.imgUrl);
+        }
+      });
+    }
+
+    this.productImages = images;
+    console.log('[StepProductDetail] Product images:', this.productImages.length);
+  }
+
+  /**
+   * Checks product availability based on stock quantity
+   * Following TEL pattern: hasStock = stock > entryBarrier
+   *
+   * TEL's product.service.ts uses:
+   *   - entryBarrier = 1
+   *   - hasStock = (stock > entryBarrier)
+   *
+   * The stock value comes from colors[].storages[].products[0].stock in the API response
+   * which is now extracted by productService.getEquipmentDetail()
+   */
+  private checkAvailability() {
+    if (!this.product) {
+      this.isAvailable = false;
+      this.showUnavailableAlert = true;
+      return;
+    }
+
+    // TEL Pattern: stock > entryBarrier (where entryBarrier = 1)
+    // If stock is undefined, it means the colors structure wasn't present or no products found
+    // In that case, we check if product has valid basic data and assume available
+    if (this.product.stock === undefined || this.product.stock === null) {
+      // No stock info from nested structure - assume available if product has basic data
+      this.isAvailable = true;
+      console.log('[StepProductDetail] Availability check - stock undefined (no colors structure), assuming available');
+    } else {
+      // TEL Pattern: hasStock = stock > entryBarrier (1)
+      this.isAvailable = this.product.stock > this.ENTRY_BARRIER;
+      console.log('[StepProductDetail] Availability check (TEL pattern) - stock:', this.product.stock, '> entryBarrier:', this.ENTRY_BARRIER, '=', this.isAvailable);
+
+      if (!this.isAvailable) {
+        this.showUnavailableAlert = true;
+      }
+    }
+  }
+
+  /**
+   * Handles dismissing the unavailable alert and going back
+   */
+  private handleGoBackFromAlert = () => {
+    this.showUnavailableAlert = false;
+    this.onBack?.();
+  };
+
   private handleColorSelect = (index: number) => {
     this.selectedColorIndex = index;
     const color = this.colorOptions[index];
@@ -226,12 +320,13 @@ export class StepProductDetail {
     this.selectedInstallments = months;
   };
 
-  private handleQuantityChange = (delta: number) => {
-    const newQty = this.quantity + delta;
-    if (newQty >= 1 && newQty <= 5) {
-      this.quantity = newQty;
-    }
-  };
+  // Quantity selector commented out - keeping function for future use
+  // private handleQuantityChange = (delta: number) => {
+  //   const newQty = this.quantity + delta;
+  //   if (newQty >= 1 && newQty <= 5) {
+  //     this.quantity = newQty;
+  //   }
+  // };
 
   private handleAddToCart = async () => {
     if (!this.product || this.isAddingToCart) return;
@@ -375,7 +470,7 @@ export class StepProductDetail {
   private renderQuantitySelector() {
     return (
       <div class="selector-section">
-        <h4 class="selector-title">Cantidad</h4>
+        {/* <h4 class="selector-title">Cantidad</h4>
         <div class="quantity-selector">
           <button
             class="qty-button"
@@ -392,7 +487,7 @@ export class StepProductDetail {
           >
             +
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -419,6 +514,63 @@ export class StepProductDetail {
     );
   }
 
+  /**
+   * Renders the availability status indicator (TEL pattern)
+   */
+  private renderAvailabilityStatus() {
+    return (
+      <div class="availability-status">
+        {this.isAvailable ? (
+          <div class="availability-status--available">
+            <svg class="availability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span>Disponible</span>
+          </div>
+        ) : (
+          <div class="availability-status--unavailable">
+            <svg class="availability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span>No disponible</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /**
+   * Renders the unavailable product alert modal
+   */
+  private renderUnavailableAlert() {
+    if (!this.showUnavailableAlert) return null;
+
+    return (
+      <div class="unavailable-alert-overlay">
+        <div class="unavailable-alert">
+          <div class="unavailable-alert__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <h3 class="unavailable-alert__title">Producto no disponible</h3>
+          <p class="unavailable-alert__message">
+            Lo sentimos, este equipo no está disponible actualmente.
+            Por favor seleccione otro equipo del catálogo.
+          </p>
+          <button class="unavailable-alert__btn" onClick={this.handleGoBackFromAlert}>
+            Volver al catálogo
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // ------------------------------------------
   // RENDER
   // ------------------------------------------
@@ -427,6 +579,9 @@ export class StepProductDetail {
     return (
       <Host>
         <div class="step-product-detail">
+          {/* Unavailable Alert Modal */}
+          {this.renderUnavailableAlert()}
+
           {/* Loading */}
           {this.isLoading && (
             <div class="loading-container">
@@ -456,15 +611,15 @@ export class StepProductDetail {
 
               {/* Main Content Grid */}
               <div class="product-grid">
-                {/* Left Column: Image */}
+                {/* Left Column: Image Carousel */}
                 <div class="product-image-section">
-                  <div class="image-container">
-                    <img
-                      src={this.product.imgUrl}
-                      alt={this.product.productName}
-                      class="product-image"
-                    />
-                  </div>
+                  <ui-image-carousel
+                    images={this.productImages}
+                    loop={true}
+                    showNavigation={this.productImages.length > 1}
+                    showIndicators={this.productImages.length > 1}
+                    autoplayInterval={0}
+                  ></ui-image-carousel>
                 </div>
 
                 {/* Right Column: Details */}
@@ -481,6 +636,9 @@ export class StepProductDetail {
                       {productService.cleanDescription(this.product.shortDescription)}
                     </p>
                   )}
+
+                  {/* Availability Status Indicator */}
+                  {this.renderAvailabilityStatus()}
 
                   {/* Color Selector */}
                   {this.renderColorSelector()}
@@ -502,15 +660,18 @@ export class StepProductDetail {
                     class={{
                       'btn-add-to-cart': true,
                       'loading': this.isAddingToCart,
+                      'disabled': !this.isAvailable,
                     }}
                     onClick={this.handleAddToCart}
-                    disabled={this.isAddingToCart}
+                    disabled={this.isAddingToCart || !this.isAvailable}
                   >
                     {this.isAddingToCart ? (
                       <span class="loading-text">
                         <span class="spinner-small"></span>
                         Agregando...
                       </span>
+                    ) : !this.isAvailable ? (
+                      'No disponible'
                     ) : (
                       'Continuar'
                     )}
