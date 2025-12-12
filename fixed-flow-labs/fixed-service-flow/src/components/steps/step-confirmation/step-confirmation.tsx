@@ -6,7 +6,7 @@
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
 import { flowState, flowActions } from '../../../store/flow.store';
-import { requestService, paymentService } from '../../../services';
+import { requestService, paymentService, cartService, productService, shippingService, plansService } from '../../../services';
 import { FlowCompleteEvent } from '../../../store/interfaces';
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from '../../../utils/constants';
 
@@ -226,11 +226,67 @@ export class StepConfirmation {
 
   /**
    * Clears all flow-related sessionStorage keys
-   * Source: TEL - frontend/src/app/internet/components/result/result.component.ts
+   * Calls clear methods from all services and removes all known keys
    */
   private clearSessionStorage() {
+    console.log('[StepConfirmation] Clearing all sessionStorage data');
+
+    // Clear using service methods (they handle their own keys)
+    try {
+      cartService.clearCartSession();
+      productService.clearProductSession();
+      shippingService.clearShippingData();
+      paymentService.clearPaymentData();
+      plansService.clearPlan();
+      flowActions.clearToken();
+    } catch (e) {
+      console.warn('[StepConfirmation] Error clearing service data:', e);
+    }
+
+    // Also clear all known keys directly to ensure complete cleanup
     const keysToRemove = [
-      // Location data
+      // Token/Auth
+      'token',
+      'correlationId',
+      // Location data (Base64 encoded)
+      'latitud',
+      'longitud',
+      'planCodeInternet',
+      // Plan data
+      'plan',
+      'planId',
+      'planPrice',
+      // Contract data
+      'typeContractId',
+      'contractInstallment',
+      'contractInstallation',
+      'contractActivation',
+      'contractModen',
+      // Cart data
+      'cart',
+      'cartId',
+      'cartTotal',
+      'cartProducts',
+      'mainId',
+      'discountCoupon',
+      // Product data
+      'selectedProduct',
+      'productId',
+      'subcatalogId',
+      'selectedColor',
+      'selectedStorage',
+      'childrenId',
+      'parentId',
+      'deviceType',
+      // Shipping data
+      'shipmentId',
+      'zipCode',
+      'shippingAddress',
+      'deliveryMethod',
+      // Payment data
+      'orderBan',
+      'paymentResult',
+      // Legacy keys (TEL pattern)
       'serviceLatitude',
       'serviceLongitude',
       'serviceAddress',
@@ -238,19 +294,9 @@ export class StepConfirmation {
       'serviceZipCode',
       'serviceType',
       'serviceMessage',
-      // Plan data
-      'planId',
       'planName',
       'planSoc',
-      'planPrice',
       'planFeatures',
-      // Contract data
-      'typeContractId',
-      'contractInstallment',
-      'contractInstallation',
-      'contractActivation',
-      'contractModen',
-      // Form data
       'customerFirstName',
       'customerSecondName',
       'customerLastName',
@@ -265,14 +311,14 @@ export class StepConfirmation {
       'businessName',
       'businessPosition',
       'isExistingCustomer',
-      // Cart data
-      'cartId',
       'shoppingCart',
     ];
 
     keysToRemove.forEach(key => {
       sessionStorage.removeItem(key);
     });
+
+    console.log('[StepConfirmation] SessionStorage cleared successfully');
   }
 
   // ------------------------------------------
