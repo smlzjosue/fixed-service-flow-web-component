@@ -1,0 +1,65 @@
+// ============================================
+// TYPESCRIPT INTERFACES
+// Fixed Service Flow Web Component
+// ============================================
+// ------------------------------------------
+// CONSTANTS
+// ------------------------------------------
+/**
+ * Valor base del modem (usado en cálculos de Sin Contrato)
+ * Fuente: TEL/frondend/src/app/shared/const/appConst.ts
+ */
+/**
+ * Opciones de contrato para servicio de internet fijo
+ * Fuente: TEL/frondend/src/app/shared/const/appConst.ts (INTERNET constant)
+ *
+ * CON CONTRATO:
+ * - 24 meses: Todo sin costo (instalación, activación, modem)
+ * - 12 meses: Instalación $25, Activación $20, Modem sin costo
+ *
+ * SIN CONTRATO:
+ * - Instalación $50, Activación $40, Modem $40
+ */
+const CONTRACT_OPTIONS = [
+    {
+        typeId: 1,
+        type: 'Con Contrato',
+        contract: [
+            {
+                contractId: 3,
+                deadlines: 24,
+                installation: 0,
+                activation: 0,
+                modem: 0,
+            },
+            {
+                contractId: 2,
+                deadlines: 12,
+                installation: 25,
+                activation: 20, // Corregido: era 25, debe ser 20 (según TEL)
+                modem: 0,
+            },
+        ],
+    },
+    {
+        typeId: 0,
+        type: 'Sin Contrato',
+        contract: [
+            {
+                contractId: 1,
+                deadlines: 0,
+                installation: 50,
+                activation: 40, // Corregido: era 0, debe ser 40 (según TEL)
+                modem: 40,
+            },
+        ],
+    },
+];
+const SERVICE_MESSAGES = {
+    NO_COVERAGE: '¡Fuera de área! Por el momento no contamos con cobertura en tu zona.',
+};
+
+export { CONTRACT_OPTIONS as C, SERVICE_MESSAGES as S };
+//# sourceMappingURL=p-CwWwm_QF.js.map
+
+//# sourceMappingURL=p-CwWwm_QF.js.map

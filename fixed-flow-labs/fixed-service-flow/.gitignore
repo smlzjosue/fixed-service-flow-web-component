@@ -1,6 +1,6 @@
-dist/
+# dist/ - Committed for CDN access
+# loader/ - Committed for CDN access
 www/
-loader/
 
 *~
 *.sw[mnpcod]
