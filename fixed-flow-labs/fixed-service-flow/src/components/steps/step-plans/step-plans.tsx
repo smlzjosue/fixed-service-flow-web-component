@@ -6,7 +6,7 @@
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
 import { flowState, flowActions } from '../../../store/flow.store';
-import { plansService } from '../../../services';
+import { plansService, productService } from '../../../services';
 import { Plan } from '../../../store/interfaces';
 import { formatPrice } from '../../../utils/formatters';
 
@@ -61,7 +61,16 @@ export class StepPlans {
 
     try {
       const serviceType = flowState.location?.serviceType || 'GPON';
-      this.plans = await plansService.getPlans(serviceType);
+
+      // For CLARO HOGAR, get subcatalogId from productService (stored when product was selected)
+      let catalogId = 0;
+      if (serviceType === 'CLARO HOGAR') {
+        // Use subcatalogId from session (set in step-catalogue when product was selected)
+        catalogId = productService.getSubcatalogId();
+        console.log('[StepPlans] CLARO HOGAR - using subcatalogId:', catalogId);
+      }
+
+      this.plans = await plansService.getPlans(serviceType, catalogId);
       this.plans = plansService.sortByPrice(this.plans);
     } catch (err) {
       this.error = 'Error al cargar los planes';
@@ -260,21 +269,23 @@ export class StepPlans {
 
           {/* Sticky Footer */}
           <footer class="step-plans__footer">
-            <div class="step-plans__footer-info">
-              <div class="step-plans__footer-item">
-                <span class="step-plans__footer-label">Pago mensual</span>
-                <span class="step-plans__footer-value">{formatPrice(monthlyPayment)}</span>
+            <div class="step-plans__footer-left">
+              <div class="step-plans__footer-info">
+                <div class="step-plans__footer-item">
+                  <span class="step-plans__footer-label">Pago mensual</span>
+                  <span class="step-plans__footer-value">{formatPrice(monthlyPayment)}</span>
+                </div>
+                <div class="step-plans__footer-item step-plans__footer-item--separator">
+                  <span class="step-plans__footer-label">Paga hoy</span>
+                  <span class="step-plans__footer-value step-plans__footer-value--highlight">
+                    {formatPrice(totalToday)}
+                  </span>
+                </div>
               </div>
-              <div class="step-plans__footer-item">
-                <span class="step-plans__footer-label">Paga hoy</span>
-                <span class="step-plans__footer-value step-plans__footer-value--highlight">
-                  {formatPrice(totalToday)}
-                </span>
-              </div>
+              <p class="step-plans__footer-note">
+                Renta mensual aproximada no incluye cargos estatales, federales, ni otros impuestos.
+              </p>
             </div>
-            <p class="step-plans__footer-note">
-              Precio mensual aproximado no incluye cargos estatales, federales, ni otros impuestos.
-            </p>
             <button
               class="step-plans__footer-btn"
               onClick={this.handleContinue}
