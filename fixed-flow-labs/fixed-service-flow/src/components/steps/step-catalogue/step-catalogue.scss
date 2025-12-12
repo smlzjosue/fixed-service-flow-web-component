@@ -586,3 +586,129 @@
     color: $color-white;
   }
 }
+
+// ============================================
+// DETAIL MODAL (TEL pattern: see-more-modal)
+// ============================================
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  position: relative;
+  background: $color-white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: #3c3c3c;
+  }
+
+  &:hover {
+    background: #f0f0f0;
+  }
+}
+
+.modal-title {
+  padding: 20px;
+  padding-right: 50px;
+  border-bottom: 1px solid #dbdbdb;
+  color: #3c3c3c;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  .modal-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c6c6c;
+    margin-bottom: 8px;
+  }
+
+  @include breakpoint-down(sm) {
+    font-size: 18px;
+    padding: 16px;
+    padding-right: 45px;
+  }
+}
+
+.modal-body {
+  padding: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+
+  // Hide scrollbar but keep functionality
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+  }
+}
+
+.modal-text {
+  margin: 0;
+  color: #3c3c3c;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: justify;
+
+  @include breakpoint-down(sm) {
+    font-size: 14px;
+  }
+}

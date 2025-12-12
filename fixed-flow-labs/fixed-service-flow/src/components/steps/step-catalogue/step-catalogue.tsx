@@ -5,7 +5,7 @@
 // ============================================
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
-import { catalogueService } from '../../../services';
+import { catalogueService, productService } from '../../../services';
 import { CatalogueProduct, CatalogueFilter } from '../../../store/interfaces';
 
 @Component({
@@ -33,6 +33,11 @@ export class StepCatalogue {
   @State() selectedFilter: string = '';
   @State() showFilters: boolean = true;
   @State() filterOptions: CatalogueFilter[] = [];
+
+  // Modal state (TEL pattern: seeMoreModal)
+  @State() showDetailModal: boolean = false;
+  @State() modalTitle: string = '';
+  @State() modalContent: string = '';
 
   // ------------------------------------------
   // LIFECYCLE
@@ -109,9 +114,11 @@ export class StepCatalogue {
   };
 
   private handleViewMore = (product: CatalogueProduct) => {
-    // Store selected product and continue to next step
+    // Store selected product and subcatalog ID for plans API
+    const subcatalogId = parseInt(this.selectedFilter, 10);
     catalogueService.storeProductInSession(product);
-    console.log('[StepCatalogue] Product selected:', product.productName);
+    productService.storeSelectedProduct(product, subcatalogId);
+    console.log('[StepCatalogue] Product selected:', product.productName, 'subcatalogId:', subcatalogId);
     this.onNext?.();
   };
 
@@ -122,6 +129,27 @@ export class StepCatalogue {
   private getSelectedFilterCount(): number {
     return this.selectedFilter ? 1 : 0;
   }
+
+  /**
+   * Opens the detail modal with product description
+   * TEL pattern: seeMore() -> modalProvider.seeMoreModal()
+   */
+  private handleSeeDetail = (product: CatalogueProduct) => {
+    const fullDescription = this.cleanHTML(product.shortDescription || '');
+    this.modalTitle = product.productName;
+    this.modalContent = fullDescription;
+    this.showDetailModal = true;
+  };
+
+  /**
+   * Closes the detail modal
+   * TEL pattern: closeModal() -> modalController.dismiss()
+   */
+  private closeDetailModal = () => {
+    this.showDetailModal = false;
+    this.modalTitle = '';
+    this.modalContent = '';
+  };
 
   // ------------------------------------------
   // RENDER HELPERS
@@ -221,7 +249,9 @@ export class StepCatalogue {
             <span class="description-text">
               {truncatedDesc}
               {description.length > 80 && (
-                <a class="see-detail">Ver detalle</a>
+                <a class="see-detail" onClick={(e) => { e.stopPropagation(); this.handleSeeDetail(product); }}>
+                  Ver detalle
+                </a>
               )}
             </span>
           ) : (
@@ -326,6 +356,32 @@ export class StepCatalogue {
             </button>
           </div>
         </div>
+
+        {/* Detail Modal (TEL pattern: see-more-modal) */}
+        {this.showDetailModal && (
+          <div class="modal-overlay" onClick={this.closeDetailModal}>
+            <div class="modal-content" onClick={(e) => e.stopPropagation()}>
+              {/* Close Button */}
+              <button class="modal-close" onClick={this.closeDetailModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+
+              {/* Modal Title */}
+              <div class="modal-title">
+                <div class="modal-subtitle">Descripción completa</div>
+                {this.modalTitle}
+              </div>
+
+              {/* Modal Content */}
+              <div class="modal-body">
+                <p class="modal-text">{this.modalContent}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </Host>
     );
   }
