@@ -1,7 +1,7 @@
 // ============================================
 // STEP SHIPPING - SCSS Styles
 // Fixed Service Flow Web Component
-// Design based on TEL shipment-web.component
+// Design based on datos-envio.png reference
 // ============================================
 
 @import '../../../global/variables';
@@ -41,7 +41,7 @@ $spacing-xl: $spacing-8;
   display: block;
   width: 100%;
   min-height: 100%;
-  background-color: $gray-50;
+  background-color: white;
 }
 
 // ------------------------------------------
@@ -50,50 +50,20 @@ $spacing-xl: $spacing-8;
 
 .step-shipping {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: $spacing-lg;
+  padding: $spacing-lg $spacing-md;
 }
 
 // ------------------------------------------
-// HEADER
+// INFO MESSAGE
 // ------------------------------------------
 
-.header {
-  display: flex;
-  align-items: center;
-  gap: $spacing-md;
-  margin-bottom: $spacing-lg;
-  flex-wrap: wrap;
-
-  .btn-back {
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-    background: none;
-    border: none;
-    color: $secondary-color;
-    font-size: $font-size-sm;
-    cursor: pointer;
-    padding: $spacing-xs;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .title {
-    font-size: $font-size-2xl;
-    font-weight: 700;
-    color: $gray-900;
-    margin: 0;
-    flex: 1;
-  }
+.info-message {
+  font-size: $font-size-sm;
+  color: $gray-600;
+  margin: 0 0 $spacing-lg 0;
+  line-height: 1.5;
 }
 
 // ------------------------------------------
@@ -123,39 +93,7 @@ $spacing-xl: $spacing-8;
 // ------------------------------------------
 
 .form-container {
-  background: white;
-  border-radius: $radius-lg;
-  padding: $spacing-lg;
-  box-shadow: $shadow-md;
-}
-
-// ------------------------------------------
-// FORM SECTION
-// ------------------------------------------
-
-.form-section {
-  margin-bottom: $spacing-lg;
-  padding-bottom: $spacing-lg;
-  border-bottom: 1px solid $gray-200;
-
-  &:last-of-type {
-    border-bottom: none;
-    margin-bottom: $spacing-md;
-    padding-bottom: 0;
-  }
-
-  .section-title {
-    font-size: $font-size-lg;
-    font-weight: 600;
-    color: $gray-900;
-    margin: 0 0 $spacing-md 0;
-  }
-
-  .section-note {
-    font-size: $font-size-sm;
-    color: $gray-500;
-    margin: -$spacing-sm 0 $spacing-md 0;
-  }
+  width: 100%;
 }
 
 // ------------------------------------------
@@ -165,23 +103,20 @@ $spacing-xl: $spacing-8;
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $spacing-md;
+  gap: $spacing-md $spacing-lg;
+  margin-bottom: $spacing-xs;
 
-  @media (max-width: 600px) {
+  @media (max-width: 700px) {
     grid-template-columns: 1fr;
-  }
-
-  &--three {
-    grid-template-columns: 1fr 1fr 100px;
-
-    @media (max-width: 600px) {
-      grid-template-columns: 1fr;
-    }
   }
 }
 
 .form-group {
   margin-bottom: $spacing-md;
+
+  &.existing-customer {
+    margin-top: $spacing-sm;
+  }
 }
 
 .form-label {
@@ -192,20 +127,21 @@ $spacing-xl: $spacing-8;
   margin-bottom: $spacing-xs;
 
   .required {
-    color: $error-color;
+    color: $gray-700;
+    margin-right: 2px;
   }
 }
 
-.form-input,
-.form-textarea {
+.form-input {
   width: 100%;
-  padding: $spacing-sm $spacing-md;
+  padding: 10px 12px;
   border: 1px solid $gray-300;
-  border-radius: $radius-md;
-  font-size: $font-size-base;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
   color: $gray-900;
   background: white;
   transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
 
   &::placeholder {
     color: $gray-400;
@@ -214,7 +150,7 @@ $spacing-xl: $spacing-8;
   &:focus {
     outline: none;
     border-color: $secondary-color;
-    box-shadow: 0 0 0 3px rgba($secondary-color, 0.1);
+    box-shadow: 0 0 0 2px rgba($secondary-color, 0.1);
   }
 
   &:disabled {
@@ -227,14 +163,21 @@ $spacing-xl: $spacing-8;
     border-color: $error-color;
 
     &:focus {
-      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+      box-shadow: 0 0 0 2px rgba($error-color, 0.1);
     }
   }
 }
 
-.form-textarea {
-  resize: vertical;
-  min-height: 80px;
+// Date input
+input[type='date'] {
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
+
+.date-input-wrapper {
+  position: relative;
 }
 
 .error-message {
@@ -245,98 +188,84 @@ $spacing-xl: $spacing-8;
 }
 
 // ------------------------------------------
-// CHECKBOXES
+// IDENTIFICATION FIELD
 // ------------------------------------------
 
-.checkbox-label {
+.id-field {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: $spacing-sm;
-  cursor: pointer;
-  margin-bottom: $spacing-sm;
+  flex-wrap: wrap;
 
-  input[type='checkbox'] {
+  .radio-group {
+    display: flex;
+    gap: $spacing-sm;
+    flex-shrink: 0;
+  }
+
+  .id-input {
+    flex: 1;
+    min-width: 150px;
+  }
+}
+
+// ------------------------------------------
+// RADIO BUTTONS
+// ------------------------------------------
+
+.radio-group {
+  display: flex;
+  gap: $spacing-md;
+
+  &.horizontal {
+    flex-direction: row;
+  }
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: $font-size-sm;
+
+  input[type='radio'] {
     display: none;
   }
 
-  .checkmark {
-    width: 20px;
-    height: 20px;
-    border: 2px solid $gray-300;
-    border-radius: $radius-sm;
-    flex-shrink: 0;
+  .radio-custom {
+    width: 16px;
+    height: 16px;
+    border: 2px solid $gray-400;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    margin-top: 2px;
+    flex-shrink: 0;
 
     &::after {
       content: '';
-      width: 10px;
-      height: 6px;
-      border: 2px solid white;
-      border-top: none;
-      border-right: none;
-      transform: rotate(-45deg);
-      opacity: 0;
-      transition: opacity 0.2s;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s;
     }
   }
 
-  input[type='checkbox']:checked + .checkmark {
-    background: $secondary-color;
-    border-color: $secondary-color;
+  input[type='radio']:checked + .radio-custom {
+    border-color: $gray-600;
 
     &::after {
-      opacity: 1;
+      background: $gray-600;
     }
   }
 
-  .checkbox-text {
-    font-size: $font-size-sm;
-    color: $gray-600;
-    line-height: 1.4;
-
-    a {
-      color: $secondary-color;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  &.error {
-    .checkmark {
-      border-color: $error-color;
-    }
-  }
-}
-
-// ------------------------------------------
-// AUTHORIZED PERSON
-// ------------------------------------------
-
-.authorized-person {
-  margin-top: $spacing-md;
-  padding: $spacing-md;
-  background: $gray-50;
-  border-radius: $radius-md;
-}
-
-// ------------------------------------------
-// TERMS SECTION
-// ------------------------------------------
-
-.terms-section {
-  .checkbox-label {
-    margin-bottom: $spacing-md;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
+  .radio-text {
+    color: $gray-700;
+    font-size: $font-size-xs;
+    white-space: nowrap;
   }
 }
 
@@ -344,23 +273,31 @@ $spacing-xl: $spacing-8;
 // SUBMIT BUTTON
 // ------------------------------------------
 
+.btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-md;
+}
+
 .btn-submit {
-  width: 100%;
-  height: 52px;
-  background: $primary-color;
+  min-width: 200px;
+  height: 44px;
+  background: $gray-600;
   color: white;
   border: none;
   border-radius: $radius-full;
-  font-size: $font-size-base;
-  font-weight: 600;
+  font-size: $font-size-sm;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 $spacing-xl;
 
   &:hover:not(:disabled) {
-    background: darken($primary-color, 10%);
+    background: $gray-700;
   }
 
   &:disabled {
@@ -380,8 +317,8 @@ $spacing-xl: $spacing-8;
 }
 
 .spinner {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border: 2px solid rgba(white, 0.3);
   border-top-color: white;
   border-radius: 50%;
@@ -391,5 +328,28 @@ $spacing-xl: $spacing-8;
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+// ------------------------------------------
+// RESPONSIVE
+// ------------------------------------------
+
+@media (max-width: 500px) {
+  .step-shipping {
+    padding: $spacing-md;
+  }
+
+  .id-field {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .radio-group {
+      margin-bottom: $spacing-xs;
+    }
+
+    .id-input {
+      width: 100%;
+    }
   }
 }
