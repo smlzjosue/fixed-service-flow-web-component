@@ -233,6 +233,7 @@
   // Mobile back button (below Continue)
   &__btn-back-mobile {
     display: none; // Hidden on desktop
+    width: 100%;
     margin-top: $spacing-4;
     padding: $spacing-2;
     background: transparent;
@@ -241,6 +242,7 @@
     font-size: $font-size-base;
     cursor: pointer;
     text-decoration: none;
+    text-align: center;
 
     &:hover {
       text-decoration: underline;
