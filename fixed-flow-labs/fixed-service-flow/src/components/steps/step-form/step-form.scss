@@ -36,6 +36,20 @@
   }
 
   // ------------------------------------------
+  // STEPPER (Mobile only)
+  // ------------------------------------------
+
+  &__stepper {
+    display: none;
+    margin-bottom: $spacing-6;
+    padding: $spacing-4 0;
+
+    @media (max-width: $breakpoint-md - 1) {
+      display: block;
+    }
+  }
+
+  // ------------------------------------------
   // FORM CONTAINER
   // ------------------------------------------
 
@@ -143,6 +157,7 @@
     .step-form__input {
       flex: 1;
       margin-top: 4px;
+      height: $input-height-md; // Ensure same height as other inputs
     }
   }
 
@@ -209,6 +224,64 @@
         background-color: $color-gray-400;
         border-color: $color-gray-400;
       }
+    }
+
+    // Mobile: full width button
+    @media (max-width: $breakpoint-md - 1) {
+      width: 100%;
+      min-width: auto;
+    }
+  }
+}
+
+// ------------------------------------------
+// MOBILE RESPONSIVE ADJUSTMENTS
+// ------------------------------------------
+
+@media (max-width: $breakpoint-md - 1) {
+  .step-form {
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-3;
+
+      .step-form__title {
+        font-size: $font-size-lg;
+        order: 1;
+      }
+
+      .step-form__btn-back {
+        order: 2;
+        align-self: flex-start;
+        height: auto;
+        padding: $spacing-2 0;
+        border: none;
+        background: transparent;
+        color: $color-secondary;
+        font-size: $font-size-sm;
+
+        &:hover {
+          background: transparent;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    form {
+      padding: $spacing-4;
+    }
+
+    &__instructions {
+      font-size: $font-size-sm;
+    }
+
+    &__row {
+      grid-template-columns: 1fr;
+    }
+
+    &__actions {
+      padding-top: $spacing-4;
+      margin-top: $spacing-4;
     }
   }
 }
