@@ -1,0 +1,187 @@
+// ============================================
+// UI-STEPPER - Step Progress Indicator Styles
+// Fixed Service Flow Web Component
+// ============================================
+
+@import '../../../global/variables';
+
+// ------------------------------------------
+// COMPONENT VARIABLES
+// ------------------------------------------
+
+$stepper-circle-size-md: 32px;
+$stepper-circle-size-sm: 24px;
+$stepper-connector-height: 2px;
+$stepper-connector-width: 40px;
+
+// ------------------------------------------
+// BASE STYLES
+// ------------------------------------------
+
+.ui-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+
+  // ------------------------------------------
+  // STEP CONTAINER
+  // ------------------------------------------
+
+  &__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  // ------------------------------------------
+  // INDICATOR (CIRCLE + CONNECTOR)
+  // ------------------------------------------
+
+  &__indicator {
+    display: flex;
+    align-items: center;
+  }
+
+  // ------------------------------------------
+  // CIRCLE
+  // ------------------------------------------
+
+  &__circle {
+    width: $stepper-circle-size-md;
+    height: $stepper-circle-size-md;
+    border-radius: $border-radius-full;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    transition: all $transition-normal;
+    flex-shrink: 0;
+
+    // Pending state (default)
+    &--pending {
+      background-color: $color-gray-200;
+      color: $color-gray-500;
+      border: 2px solid $color-gray-300;
+    }
+
+    // Active state
+    &--active {
+      background-color: $color-secondary;
+      color: $color-white;
+      border: 2px solid $color-secondary;
+      box-shadow: 0 2px 8px rgba($color-secondary, 0.3);
+    }
+
+    // Completed state
+    &--completed {
+      background-color: $color-secondary;
+      color: $color-white;
+      border: 2px solid $color-secondary;
+    }
+  }
+
+  // ------------------------------------------
+  // NUMBER INSIDE CIRCLE
+  // ------------------------------------------
+
+  &__number {
+    line-height: 1;
+  }
+
+  // ------------------------------------------
+  // CHECK ICON
+  // ------------------------------------------
+
+  &__check {
+    width: 16px;
+    height: 16px;
+  }
+
+  // ------------------------------------------
+  // CONNECTOR LINE
+  // ------------------------------------------
+
+  &__connector {
+    width: $stepper-connector-width;
+    height: $stepper-connector-height;
+    background-color: $color-gray-300;
+    transition: background-color $transition-normal;
+
+    &--completed {
+      background-color: $color-secondary;
+    }
+  }
+
+  // ------------------------------------------
+  // LABEL
+  // ------------------------------------------
+
+  &__label {
+    margin-top: $spacing-2;
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    text-align: center;
+    transition: color $transition-normal;
+    white-space: nowrap;
+
+    // Pending state
+    &--pending {
+      color: $color-gray-500;
+    }
+
+    // Active state
+    &--active {
+      color: $color-secondary;
+      font-weight: $font-weight-semibold;
+    }
+
+    // Completed state
+    &--completed {
+      color: $color-secondary;
+    }
+  }
+
+  // ------------------------------------------
+  // SIZE VARIANTS
+  // ------------------------------------------
+
+  &--sm {
+    .ui-stepper__circle {
+      width: $stepper-circle-size-sm;
+      height: $stepper-circle-size-sm;
+      font-size: $font-size-xs;
+    }
+
+    .ui-stepper__check {
+      width: 12px;
+      height: 12px;
+    }
+
+    .ui-stepper__connector {
+      width: 30px;
+    }
+
+    .ui-stepper__label {
+      font-size: 10px;
+    }
+  }
+}
+
+// ------------------------------------------
+// RESPONSIVE ADJUSTMENTS
+// ------------------------------------------
+
+@media (max-width: $breakpoint-sm) {
+  .ui-stepper {
+    &__connector {
+      width: 30px;
+    }
+
+    &__label {
+      font-size: 11px;
+    }
+  }
+}
