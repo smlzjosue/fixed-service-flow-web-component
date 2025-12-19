@@ -358,14 +358,13 @@ export const VALUE_MODEM = 40;
 
 /**
  * Opciones de contrato para servicio de internet fijo
- * Fuente: TEL/frondend/src/app/shared/const/appConst.ts (INTERNET constant)
  *
  * CON CONTRATO:
- * - 24 meses: Todo sin costo (instalación, activación, modem)
- * - 12 meses: Instalación $25, Activación $20, Modem sin costo
+ * - 12 meses: Instalación $80.00
+ * - 24 meses: Instalación $0.00 (sin costo)
  *
  * SIN CONTRATO:
- * - Instalación $50, Activación $40, Modem $40
+ * - Instalación $160.00
  */
 export const CONTRACT_OPTIONS: ContractType[] = [
   {
@@ -375,8 +374,8 @@ export const CONTRACT_OPTIONS: ContractType[] = [
       {
         contractId: 2,
         deadlines: 12,
-        installation: 25,
-        activation: 20,
+        installation: 80,
+        activation: 0,
         modem: 0,
       },
       {
@@ -395,9 +394,9 @@ export const CONTRACT_OPTIONS: ContractType[] = [
       {
         contractId: 1,
         deadlines: 0,
-        installation: 50,
-        activation: 40, // Corregido: era 0, debe ser 40 (según TEL)
-        modem: 40,
+        installation: 160,
+        activation: 0,
+        modem: 0,
       },
     ],
   },
