@@ -12,7 +12,8 @@
 $stepper-circle-size-md: 32px;
 $stepper-circle-size-sm: 24px;
 $stepper-connector-height: 2px;
-$stepper-connector-width: 60px;
+$stepper-connector-width: 80px;
+$stepper-connector-gap: 8px; // Gap between circle and connector line
 
 // ------------------------------------------
 // BASE STYLES
@@ -109,6 +110,8 @@ $stepper-connector-width: 60px;
     height: $stepper-connector-height;
     background-color: $color-gray-300;
     transition: background-color $transition-normal;
+    margin-left: $stepper-connector-gap;
+    margin-right: $stepper-connector-gap;
 
     &--completed {
       background-color: $color-secondary;
@@ -177,7 +180,7 @@ $stepper-connector-width: 60px;
 @media (max-width: $breakpoint-sm) {
   .ui-stepper {
     &__connector {
-      width: 50px;
+      width: 60px;
     }
 
     &__label {
