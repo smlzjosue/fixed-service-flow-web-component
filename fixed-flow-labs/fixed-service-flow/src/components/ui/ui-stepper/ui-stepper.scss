@@ -12,7 +12,7 @@
 $stepper-circle-size-md: 32px;
 $stepper-circle-size-sm: 24px;
 $stepper-connector-height: 2px;
-$stepper-connector-width: 80px;
+$stepper-connector-width: 120px;
 $stepper-connector-gap: 8px; // Gap between circle and connector line
 
 // ------------------------------------------
@@ -61,25 +61,24 @@ $stepper-connector-gap: 8px; // Gap between circle and connector line
     transition: all $transition-normal;
     flex-shrink: 0;
 
-    // Pending state (default)
+    // Pending state (default) - outline style
     &--pending {
-      background-color: $color-gray-200;
-      color: $color-gray-500;
+      background-color: $color-white;
+      color: $color-gray-400;
       border: 2px solid $color-gray-300;
     }
 
-    // Active state
+    // Active state - outline style with cyan border
     &--active {
-      background-color: $color-secondary;
-      color: $color-white;
+      background-color: $color-white;
+      color: $color-secondary;
       border: 2px solid $color-secondary;
-      box-shadow: 0 2px 8px rgba($color-secondary, 0.3);
     }
 
-    // Completed state
+    // Completed state - outline style with cyan border
     &--completed {
-      background-color: $color-secondary;
-      color: $color-white;
+      background-color: $color-white;
+      color: $color-secondary;
       border: 2px solid $color-secondary;
     }
   }
@@ -180,7 +179,7 @@ $stepper-connector-gap: 8px; // Gap between circle and connector line
 @media (max-width: $breakpoint-sm) {
   .ui-stepper {
     &__connector {
-      width: 60px;
+      width: 80px;
     }
 
     &__label {
