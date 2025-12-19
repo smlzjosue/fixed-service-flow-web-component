@@ -152,12 +152,37 @@
     @include breakpoint-up(md) {
       flex-direction: row;
       align-items: flex-start;
+
+      input[type="text"].step-form__input {
+        flex: 1;
+      }
     }
 
-    .step-form__input {
-      flex: 1;
+    input[type="text"].step-form__input {
       margin-top: 4px;
-      height: $input-height-md; // Ensure same height as other inputs
+      width: 100%;
+      height: $input-height-md;
+      min-height: $input-height-md;
+      padding: 0 $spacing-4;
+      font-family: $font-family-primary;
+      font-size: $font-size-base;
+      color: $color-text-primary;
+      background-color: $color-white;
+      border: 1px solid $color-border-default;
+      border-radius: $border-radius-md;
+      box-sizing: border-box;
+      appearance: none;
+      -webkit-appearance: none;
+
+      &::placeholder {
+        color: $color-text-placeholder;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: $color-secondary;
+        box-shadow: 0 0 0 3px rgba($color-secondary, 0.15);
+      }
     }
   }
 
@@ -232,6 +257,25 @@
       min-width: auto;
     }
   }
+
+  // Mobile back button (below Continue)
+  &__btn-back-mobile {
+    display: none; // Hidden on desktop
+    width: 100%;
+    margin-top: $spacing-4;
+    padding: $spacing-2;
+    background: transparent;
+    border: none;
+    color: $color-secondary;
+    font-size: $font-size-base;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 // ------------------------------------------
@@ -279,9 +323,29 @@
       grid-template-columns: 1fr;
     }
 
+    // ID row mobile: stack vertically and fix input height
+    &__id-row {
+      flex-direction: column;
+      gap: $spacing-3;
+
+      .step-form__input {
+        width: 100%;
+        margin-top: 0;
+      }
+    }
+
     &__actions {
       padding-top: $spacing-4;
       margin-top: $spacing-4;
+    }
+
+    &__btn-back-mobile {
+      display: block;
+    }
+
+    // Hide header back button on mobile (use bottom one instead)
+    &__btn-back {
+      display: none;
     }
   }
 }

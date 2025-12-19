@@ -12,7 +12,7 @@
 $stepper-circle-size-md: 32px;
 $stepper-circle-size-sm: 24px;
 $stepper-connector-height: 2px;
-$stepper-connector-width: 40px;
+$stepper-connector-width: 60px;
 
 // ------------------------------------------
 // BASE STYLES
@@ -177,7 +177,7 @@ $stepper-connector-width: 40px;
 @media (max-width: $breakpoint-sm) {
   .ui-stepper {
     &__connector {
-      width: 30px;
+      width: 50px;
     }
 
     &__label {
