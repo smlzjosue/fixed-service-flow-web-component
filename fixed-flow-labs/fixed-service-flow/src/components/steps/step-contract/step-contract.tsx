@@ -5,8 +5,8 @@
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
 import { flowState, flowActions } from '../../../store/flow.store';
-import { CONTRACT_OPTIONS, SelectedContract, ContractTypeId } from '../../../store/interfaces';
-import { formatPrice, formatContractDuration } from '../../../utils/formatters';
+import { CONTRACT_OPTIONS, SelectedContract, ContractTypeId, ContractOption } from '../../../store/interfaces';
+import { formatPrice } from '../../../utils/formatters';
 
 @Component({
   tag: 'step-contract',
@@ -108,6 +108,23 @@ export class StepContract {
     }
   };
 
+  /**
+   * Calcula el costo total de instalación (instalación + activación + modem)
+   * Este es el valor que se muestra en la UI según el diseño de referencia
+   */
+  private getTotalInstallationCost(option: ContractOption): number {
+    return option.installation + option.activation + option.modem;
+  }
+
+  /**
+   * Formatea la duración del contrato para mostrar en la card
+   * Ej: "12 Meses de Contrato", "24 Meses de Contrato", "Sin contrato"
+   */
+  private formatContractLabel(months: number): string {
+    if (months === 0) return 'Sin contrato';
+    return `${months} Meses de Contrato`;
+  }
+
   // ------------------------------------------
   // RENDER
   // ------------------------------------------
@@ -147,7 +164,7 @@ export class StepContract {
               onClick={() => this.handleTabChange(0)}
             >
               <span class="step-contract__tab-title">Sin contrato</span>
-              <span class="step-contract__tab-subtitle">Sin verificación de crédito<br/>1 mes de plan por adelantado</span>
+              <span class="step-contract__tab-subtitle">Plan mensual con pago por adelantado</span>
             </button>
           </div>
 
@@ -155,65 +172,67 @@ export class StepContract {
           <div class="step-contract__content">
             {this.activeTab === 1 && withContract && (
               <div class="step-contract__options">
-                {withContract.contract.map((option) => (
-                  <label
-                    class={{
-                      'step-contract__option': true,
-                      'step-contract__option--selected':
-                        this.selectedOption?.deadlines === option.deadlines &&
-                        this.selectedOption?.typeId === 1,
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="contract"
-                      checked={
-                        this.selectedOption?.deadlines === option.deadlines &&
-                        this.selectedOption?.typeId === 1
-                      }
-                      onChange={() => this.handleSelectOption(1, option)}
-                    />
-                    <div class="step-contract__option-content">
-                      <span class="step-contract__option-title">
-                        {formatContractDuration(option.deadlines)}
-                      </span>
-                      <div class="step-contract__option-details">
-                        <span>Instalación: {option.installation > 0 ? formatPrice(option.installation) : 'Sin Costo'}</span>
-                        <span>Activación: {option.activation > 0 ? formatPrice(option.activation) : 'Sin Costo'}</span>
-                        <span>Modem: {option.modem > 0 ? formatPrice(option.modem) : 'Sin Costo'}</span>
+                {withContract.contract.map((option) => {
+                  const totalCost = this.getTotalInstallationCost(option);
+                  return (
+                    <label
+                      class={{
+                        'step-contract__option': true,
+                        'step-contract__option--selected':
+                          this.selectedOption?.deadlines === option.deadlines &&
+                          this.selectedOption?.typeId === 1,
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="contract"
+                        checked={
+                          this.selectedOption?.deadlines === option.deadlines &&
+                          this.selectedOption?.typeId === 1
+                        }
+                        onChange={() => this.handleSelectOption(1, option)}
+                      />
+                      <div class="step-contract__option-content">
+                        <span class="step-contract__option-title">
+                          {this.formatContractLabel(option.deadlines)}
+                        </span>
+                        <span class="step-contract__option-price">
+                          Instalación: {totalCost > 0 ? formatPrice(totalCost) : '$0.00'}
+                        </span>
                       </div>
-                    </div>
-                  </label>
-                ))}
+                    </label>
+                  );
+                })}
               </div>
             )}
 
             {this.activeTab === 0 && withoutContract && (
-              <div class="step-contract__options">
-                {withoutContract.contract.map((option) => (
-                  <label
-                    class={{
-                      'step-contract__option': true,
-                      'step-contract__option--selected':
-                        this.selectedOption?.typeId === 0,
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="contract"
-                      checked={this.selectedOption?.typeId === 0}
-                      onChange={() => this.handleSelectOption(0, option)}
-                    />
-                    <div class="step-contract__option-content">
-                      <span class="step-contract__option-title">Sin contrato</span>
-                      <div class="step-contract__option-details">
-                        <span>Activación: {option.activation > 0 ? formatPrice(option.activation) : 'Sin Costo'}</span>
-                        <span>Modem: {formatPrice(option.modem)}</span>
-                        <span>Instalación: {formatPrice(option.installation)}</span>
+              <div class="step-contract__options step-contract__options--single">
+                {withoutContract.contract.map((option) => {
+                  const totalCost = this.getTotalInstallationCost(option);
+                  return (
+                    <label
+                      class={{
+                        'step-contract__option': true,
+                        'step-contract__option--selected':
+                          this.selectedOption?.typeId === 0,
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="contract"
+                        checked={this.selectedOption?.typeId === 0}
+                        onChange={() => this.handleSelectOption(0, option)}
+                      />
+                      <div class="step-contract__option-content">
+                        <span class="step-contract__option-title">Sin contrato</span>
+                        <span class="step-contract__option-price">
+                          Instalación: {formatPrice(totalCost)}
+                        </span>
                       </div>
-                    </div>
-                  </label>
-                ))}
+                    </label>
+                  );
+                })}
               </div>
             )}
           </div>

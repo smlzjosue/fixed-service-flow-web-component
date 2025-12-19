@@ -18,7 +18,10 @@
 
   &__header {
     @include flex-between;
-    margin-bottom: $spacing-6;
+    padding-bottom: $spacing-4;
+    margin-bottom: $spacing-4;
+    border-bottom: 1px solid $color-gray-300;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   &__title {
@@ -37,7 +40,6 @@
 
   &__tabs {
     display: flex;
-    border-bottom: none;
     margin-bottom: $spacing-6;
     background: $color-white;
     border-radius: 0 0 $border-radius-lg $border-radius-lg;
@@ -47,7 +49,7 @@
 
   &__tab {
     flex: 1;
-    padding: $spacing-4;
+    padding: $spacing-5 $spacing-4;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -60,13 +62,14 @@
       border-right: 1px solid $color-gray-200;
     }
 
+    // Indicador de tab activo (línea cyan debajo)
     &::after {
       content: '';
       position: absolute;
       bottom: 0;
-      left: $spacing-6;
-      right: $spacing-6;
-      height: 3px;
+      left: 0;
+      right: 0;
+      height: 4px;
       background: transparent;
       transition: background-color $transition-fast;
     }
@@ -84,7 +87,7 @@
 
   &__tab-title {
     display: block;
-    @include font-heading-4;
+    font-size: $font-size-base;
     font-weight: $font-weight-bold;
     color: $color-text-primary;
     margin-bottom: $spacing-1;
@@ -92,8 +95,9 @@
 
   &__tab-subtitle {
     display: block;
-    @include font-caption;
+    font-size: $font-size-sm;
     color: $color-text-secondary;
+    line-height: $line-height-normal;
   }
 
   // ------------------------------------------
@@ -110,14 +114,20 @@
       flex-direction: row;
       justify-content: center;
     }
+
+    // Cuando hay una sola opción, centrarla
+    &--single {
+      justify-content: center;
+    }
   }
 
   &__option {
     flex: 0 0 auto;
     width: 280px;
     display: flex;
-    align-items: flex-start;
-    padding: $spacing-4;
+    align-items: center;
+    padding: $spacing-4 $spacing-5;
+    background: $color-white;
     border: 1px solid $color-border-default;
     border-radius: $border-radius-lg;
     cursor: pointer;
@@ -130,7 +140,7 @@
       max-width: 320px;
     }
 
-    // Left side bar indicator
+    // Left side bar indicator (gris por defecto, cyan cuando seleccionado)
     &::before {
       content: '';
       position: absolute;
@@ -144,9 +154,11 @@
     }
 
     input[type="radio"] {
+      width: 20px;
+      height: 20px;
       margin-right: $spacing-3;
-      margin-top: $spacing-1;
       accent-color: $color-secondary;
+      flex-shrink: 0;
     }
 
     &:hover {
@@ -154,8 +166,6 @@
     }
 
     &--selected {
-      border-color: $color-border-default;
-
       &::before {
         background: $color-secondary;
       }
@@ -164,23 +174,27 @@
 
   &__option-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
   }
 
   &__option-title {
     display: block;
-    @include font-heading-4;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
     color: $color-text-primary;
-    margin-bottom: $spacing-2;
+    line-height: $line-height-snug;
   }
 
-  &__option-details {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-1;
+  &__option-price {
+    display: block;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
 
-    span {
-      @include font-body-small;
-      color: $color-text-secondary;
+    // Hacer el precio en negrita
+    strong, b {
+      font-weight: $font-weight-semibold;
     }
   }
 

@@ -21,11 +21,11 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Última actualización** | 2025-12-12 (Sesión 7) |
+| **Última actualización** | 2025-12-19 (Sesión 8) |
 | **Fase actual** | Fase 11 - Revisión y Correcciones UX |
 | **Próximo paso** | Pruebas E2E flujo completo GPON + CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | `fccb497` - style: update form and confirmation views to match reference design |
+| **Último commit** | Pendiente - style: update step-contract to match reference design |
 
 ### Progreso por Fases (Verificado 2025-12-12)
 
@@ -93,15 +93,43 @@
 - [x] Eventos (flowComplete, flowError, stepChange, flowCancel)
 - [x] Props (apiUrl, googleMapsKey, debug)
 
-### Notas de la Última Sesión (2025-12-12 - Sesión 7)
+### Notas de la Última Sesión (2025-12-19 - Sesión 8)
 
-- **Refinamiento visual de step-form** según captura datos-envio.png
-- **Vista confirmación éxito** actualizada según captura 9.png
-- **Vista confirmación error** actualizada según captura 10.png
+- **Refinamiento visual de step-contract** según capturas 1.png y 2.png
 - **Ejecutar servidor**: `cd fixed-flow-labs/fixed-service-flow && npm start`
 - **Puerto de desarrollo**: http://localhost:3333
 
-### Cambios de Esta Sesión (2025-12-12 - Sesión 7)
+### Cambios de Esta Sesión (2025-12-19 - Sesión 8)
+
+**Mejoras UX en step-contract:**
+
+1. **Subtítulo tab "Sin contrato":**
+   - Cambiado de "Sin verificación de crédito / 1 mes de plan por adelantado"
+   - A: "Plan mensual con pago por adelantado"
+
+2. **Formato simplificado de cards:**
+   - Eliminados campos separados (Instalación, Activación, Modem)
+   - Ahora solo muestra "Instalación: $X" (suma total de los 3 costos)
+
+3. **Labels de opciones:**
+   - Cambiado de "1 año" / "2 años"
+   - A: "12 Meses de Contrato" / "24 Meses de Contrato"
+
+4. **Línea divisoria header:**
+   - Agregada línea gris con sombra debajo del título
+   - `border-bottom: 1px solid $color-gray-300; box-shadow: 0 1px 2px rgba(0,0,0,0.05);`
+
+5. **Barra lateral en cards:**
+   - Agregada barra gris (`$color-gray-300`) en cards no seleccionadas
+   - Barra cyan (`$color-secondary`) en card seleccionada
+
+6. **Orden de opciones:**
+   - Invertido orden en CONTRACT_OPTIONS (interfaces.ts)
+   - Ahora: 12 meses primero, 24 meses segundo
+
+---
+
+### Historial - Sesión 7 (2025-12-12)
 
 **Mejoras UX en step-form:**
 
