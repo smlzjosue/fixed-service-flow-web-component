@@ -25,7 +25,7 @@
 | **Fase actual** | Fase 11 - Revisión y Correcciones UX |
 | **Próximo paso** | Pruebas E2E flujo completo GPON + CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | Pendiente - style: update step-contract to match reference design |
+| **Último commit** | `198c9ed` - style(step-contract): update UI to match reference design |
 
 ### Progreso por Fases (Verificado 2025-12-12)
 
