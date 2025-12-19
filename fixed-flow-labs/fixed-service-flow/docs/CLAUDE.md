@@ -136,6 +136,11 @@
    - Aplicados los mismos estilos de botón (ancho, alto, pill)
    - Estilo gris para estado deshabilitado
 
+**Mejoras UX en step-location:**
+
+9. **Border-radius de barra de búsqueda:**
+   - Aumentado de 4px a 10px para esquinas más redondeadas
+
 ---
 
 ### Historial - Sesión 8 (2025-12-19)
