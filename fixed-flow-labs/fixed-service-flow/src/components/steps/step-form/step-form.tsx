@@ -115,8 +115,8 @@ export class StepForm {
     return result;
   }
 
-  private validateForm(): boolean {
-    const fieldsToValidate = [
+  private getFieldsToValidate() {
+    return [
       { field: 'firstName', value: this.formData.personal.firstName },
       { field: 'lastName', value: this.formData.personal.lastName },
       { field: 'secondLastName', value: this.formData.personal.secondLastName },
@@ -130,6 +130,27 @@ export class StepForm {
       { field: 'city', value: this.formData.address.city },
       { field: 'zipCode', value: this.formData.address.zipCode },
     ];
+  }
+
+  /**
+   * Verifica si el formulario es válido sin modificar el estado de errores.
+   * Se usa para habilitar/deshabilitar el botón Continuar.
+   */
+  private isFormValid(): boolean {
+    for (const { field, value } of this.getFieldsToValidate()) {
+      const validator = fieldValidators[field];
+      if (validator) {
+        const result = validator(value);
+        if (!result.isValid) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  private validateForm(): boolean {
+    const fieldsToValidate = this.getFieldsToValidate();
 
     let isValid = true;
     const newErrors: Record<string, string> = {};
@@ -194,8 +215,8 @@ export class StepForm {
     return (
       <div class="step-form__field">
         <label class="step-form__label">
-          {label}
           {required && <span class="step-form__required">*</span>}
+          {label}:
         </label>
         <input
           type={type}
@@ -258,7 +279,7 @@ export class StepForm {
               <div class="step-form__row">
                 <div class="step-form__field step-form__field--id">
                   <label class="step-form__label">
-                    Identificación<span class="step-form__required">*</span>
+                    <span class="step-form__required">*</span>Identificación:
                   </label>
                   <div class="step-form__id-row">
                     <div class="step-form__radio-group">
@@ -316,8 +337,8 @@ export class StepForm {
             {/* Business Information */}
             <div class="step-form__section">
               <div class="step-form__row">
-                {this.renderInput('Nombre del Negocio', 'businessName', 'business', this.formData.business.businessName, {
-                  placeholder: 'Ingrese nombre del negocio',
+                {this.renderInput('Nombre legal de Empresa (según IRS)', 'businessName', 'business', this.formData.business.businessName, {
+                  placeholder: 'Ingresar nombre legal de empresa',
                   required: true,
                 })}
                 {this.renderInput('Posición en la Empresa', 'position', 'business', this.formData.business.position, {
@@ -357,7 +378,7 @@ export class StepForm {
             <div class="step-form__section">
               <div class="step-form__field">
                 <label class="step-form__label">
-                  Cliente existente de Claro PR<span class="step-form__required">*</span>
+                  <span class="step-form__required">*</span>Cliente existente de Claro PR:
                 </label>
                 <div class="step-form__radio-group step-form__radio-group--horizontal">
                   <label class="step-form__radio">
@@ -384,7 +405,11 @@ export class StepForm {
 
             {/* Submit */}
             <div class="step-form__actions">
-              <button type="submit" class="step-form__btn-submit">
+              <button
+                type="submit"
+                class="step-form__btn-submit"
+                disabled={!this.isFormValid()}
+              >
                 Continuar
               </button>
             </div>

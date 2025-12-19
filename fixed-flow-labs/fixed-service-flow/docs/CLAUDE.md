@@ -21,11 +21,11 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Última actualización** | 2025-12-19 (Sesión 8) |
+| **Última actualización** | 2025-12-19 (Sesión 9) |
 | **Fase actual** | Fase 11 - Revisión y Correcciones UX |
 | **Próximo paso** | Pruebas E2E flujo completo GPON + CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | `198c9ed` - style(step-contract): update UI to match reference design |
+| **Último commit** | `pending` - style(step-form): update UI to match reference design |
 
 ### Progreso por Fases (Verificado 2025-12-12)
 
@@ -93,13 +93,52 @@
 - [x] Eventos (flowComplete, flowError, stepChange, flowCancel)
 - [x] Props (apiUrl, googleMapsKey, debug)
 
-### Notas de la Última Sesión (2025-12-19 - Sesión 8)
+### Notas de la Última Sesión (2025-12-19 - Sesión 9)
 
-- **Refinamiento visual de step-contract** según capturas 1.png y 2.png
+- **Refinamiento visual de step-form** según captura 3.png
 - **Ejecutar servidor**: `cd fixed-flow-labs/fixed-service-flow && npm start`
 - **Puerto de desarrollo**: http://localhost:3333
 
-### Cambios de Esta Sesión (2025-12-19 - Sesión 8)
+### Cambios de Esta Sesión (2025-12-19 - Sesión 9)
+
+**Mejoras UX en step-form:**
+
+1. **Asteriscos al inicio de labels:**
+   - Cambiado de `Nombre *` a `*Nombre:`
+   - Aplicado a todos los campos requeridos
+
+2. **Dos puntos en labels:**
+   - Agregados dos puntos al final de cada label
+
+3. **Label de empresa actualizado:**
+   - Cambiado de "Nombre del Negocio"
+   - A: "Nombre legal de Empresa (según IRS)"
+
+4. **Teléfono 2 opcional:**
+   - Removido asterisco (ya no es campo requerido)
+
+5. **Botón Continuar deshabilitado:**
+   - El botón solo se habilita cuando el formulario es válido
+   - Método `isFormValid()` verifica todos los campos requeridos
+
+6. **Estilo del botón deshabilitado:**
+   - Color gris (`$color-gray-400`) cuando está deshabilitado
+   - `cursor: not-allowed`
+
+7. **Dimensiones del botón Continuar:**
+   - Más ancho: `min-width: 280px`
+   - Menos alto: `height: 44px`
+   - Estilo pill: `border-radius: 22px`
+
+**Mejoras UX en step-contract:**
+
+8. **Botón Continuar con mismos estilos:**
+   - Aplicados los mismos estilos de botón (ancho, alto, pill)
+   - Estilo gris para estado deshabilitado
+
+---
+
+### Historial - Sesión 8 (2025-12-19)
 
 **Mejoras UX en step-contract:**
 
@@ -117,15 +156,13 @@
 
 4. **Línea divisoria header:**
    - Agregada línea gris con sombra debajo del título
-   - `border-bottom: 1px solid $color-gray-300; box-shadow: 0 1px 2px rgba(0,0,0,0.05);`
 
 5. **Barra lateral en cards:**
-   - Agregada barra gris (`$color-gray-300`) en cards no seleccionadas
-   - Barra cyan (`$color-secondary`) en card seleccionada
+   - Agregada barra gris en cards no seleccionadas
+   - Barra cyan en card seleccionada
 
 6. **Orden de opciones:**
-   - Invertido orden en CONTRACT_OPTIONS (interfaces.ts)
-   - Ahora: 12 meses primero, 24 meses segundo
+   - Invertido orden: 12 meses primero, 24 meses segundo
 
 ---
 
