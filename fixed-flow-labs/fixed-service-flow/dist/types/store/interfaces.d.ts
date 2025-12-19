@@ -264,14 +264,13 @@ export interface StepChangeEvent {
 export declare const VALUE_MODEM = 40;
 /**
  * Opciones de contrato para servicio de internet fijo
- * Fuente: TEL/frondend/src/app/shared/const/appConst.ts (INTERNET constant)
  *
  * CON CONTRATO:
- * - 24 meses: Todo sin costo (instalación, activación, modem)
- * - 12 meses: Instalación $25, Activación $20, Modem sin costo
+ * - 12 meses: Instalación $80.00
+ * - 24 meses: Instalación $0.00 (sin costo)
  *
  * SIN CONTRATO:
- * - Instalación $50, Activación $40, Modem $40
+ * - Instalación $160.00
  */
 export declare const CONTRACT_OPTIONS: ContractType[];
 export declare const SERVICE_MESSAGES: Record<string, string>;
