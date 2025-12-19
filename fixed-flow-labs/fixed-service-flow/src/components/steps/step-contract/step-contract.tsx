@@ -246,6 +246,13 @@ export class StepContract {
             >
               Continuar
             </button>
+            <button
+              type="button"
+              class="step-contract__btn-back-mobile"
+              onClick={this.onBack}
+            >
+              Regresar
+            </button>
           </div>
         </div>
       </Host>
