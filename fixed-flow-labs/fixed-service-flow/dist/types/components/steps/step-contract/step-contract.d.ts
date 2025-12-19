@@ -13,5 +13,15 @@ export declare class StepContract {
     private handleTabChange;
     private handleSelectOption;
     private handleContinue;
+    /**
+     * Calcula el costo total de instalación (instalación + activación + modem)
+     * Este es el valor que se muestra en la UI según el diseño de referencia
+     */
+    private getTotalInstallationCost;
+    /**
+     * Formatea la duración del contrato para mostrar en la card
+     * Ej: "12 Meses de Contrato", "24 Meses de Contrato", "Sin contrato"
+     */
+    private formatContractLabel;
     render(): any;
 }

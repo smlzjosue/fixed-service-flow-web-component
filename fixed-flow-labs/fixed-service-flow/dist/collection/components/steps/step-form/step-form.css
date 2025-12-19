@@ -136,7 +136,7 @@
 }
 .step-form__required {
   color: #DA291C;
-  margin-left: 0.25rem;
+  margin-right: 0.25rem;
 }
 .step-form__input {
   width: 100%;
@@ -260,5 +260,19 @@
   background-color: rgb(163.7658536585, 30.8, 21.0341463415);
 }
 .step-form__btn-submit {
-  min-width: 200px;
+  min-width: 280px;
+  height: 44px;
+  padding: 0 2rem;
+  border-radius: 22px;
+  font-size: 1rem;
+}
+.step-form__btn-submit:disabled {
+  background-color: #999999;
+  border-color: #999999;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.step-form__btn-submit:disabled:hover {
+  background-color: #999999;
+  border-color: #999999;
 }

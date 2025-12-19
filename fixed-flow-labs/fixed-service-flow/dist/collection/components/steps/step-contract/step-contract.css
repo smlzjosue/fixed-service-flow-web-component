@@ -35,7 +35,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #CCCCCC;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 .step-contract__title {
   font-size: 1.75rem;
@@ -80,7 +83,6 @@
 }
 .step-contract__tabs {
   display: flex;
-  border-bottom: none;
   margin-bottom: 1.5rem;
   background: #FFFFFF;
   border-radius: 0 0 0.75rem 0.75rem;
@@ -89,7 +91,7 @@
 }
 .step-contract__tab {
   flex: 1;
-  padding: 1rem;
+  padding: 1.25rem 1rem;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -104,9 +106,9 @@
   content: "";
   position: absolute;
   bottom: 0;
-  left: 1.5rem;
-  right: 1.5rem;
-  height: 3px;
+  left: 0;
+  right: 0;
+  height: 4px;
   background: transparent;
   transition: background-color 150ms ease;
 }
@@ -118,19 +120,16 @@
 }
 .step-contract__tab-title {
   display: block;
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.35;
+  font-size: 1rem;
   font-weight: 700;
   color: #333333;
   margin-bottom: 0.25rem;
 }
 .step-contract__tab-subtitle {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.5;
+  font-size: 0.875rem;
   color: #666666;
+  line-height: 1.5;
 }
 .step-contract__options {
   display: flex;
@@ -144,12 +143,16 @@
     justify-content: center;
   }
 }
+.step-contract__options--single {
+  justify-content: center;
+}
 .step-contract__option {
   flex: 0 0 auto;
   width: 280px;
   display: flex;
-  align-items: flex-start;
-  padding: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: #FFFFFF;
   border: 1px solid #CCCCCC;
   border-radius: 0.75rem;
   cursor: pointer;
@@ -175,40 +178,38 @@
   transition: background-color 150ms ease;
 }
 .step-contract__option input[type=radio] {
+  width: 20px;
+  height: 20px;
   margin-right: 0.75rem;
-  margin-top: 0.25rem;
   accent-color: #0097A9;
+  flex-shrink: 0;
 }
 .step-contract__option:hover {
   border-color: #999999;
-}
-.step-contract__option--selected {
-  border-color: #CCCCCC;
 }
 .step-contract__option--selected::before {
   background: #0097A9;
 }
 .step-contract__option-content {
   flex: 1;
-}
-.step-contract__option-title {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.35;
-  color: #333333;
-  margin-bottom: 0.5rem;
-}
-.step-contract__option-details {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
-.step-contract__option-details span {
+.step-contract__option-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333333;
+  line-height: 1.35;
+}
+.step-contract__option-price {
+  display: block;
   font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
   color: #666666;
+}
+.step-contract__option-price strong, .step-contract__option-price b {
+  font-weight: 600;
 }
 .step-contract__actions {
   margin-top: 1.5rem;
@@ -248,5 +249,19 @@
   background-color: rgb(163.7658536585, 30.8, 21.0341463415);
 }
 .step-contract__btn-continue {
-  min-width: 200px;
+  min-width: 280px;
+  height: 44px;
+  padding: 0 2rem;
+  border-radius: 22px;
+  font-size: 1rem;
+}
+.step-contract__btn-continue:disabled {
+  background-color: #999999;
+  border-color: #999999;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.step-contract__btn-continue:disabled:hover {
+  background-color: #999999;
+  border-color: #999999;
 }

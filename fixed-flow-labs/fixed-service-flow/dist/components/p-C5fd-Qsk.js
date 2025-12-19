@@ -46,25 +46,8 @@ const formatPhone = (value) => {
 const unformatPhone = (value) => {
     return value.replace(/\D/g, '').slice(0, 10);
 };
-// ------------------------------------------
-// CONTRACT FORMATTING
-// ------------------------------------------
-/**
- * Formats contract duration
- */
-const formatContractDuration = (months) => {
-    if (months === 0)
-        return 'Sin plazo fijo';
-    if (months === 1)
-        return '1 mes';
-    if (months === 12)
-        return '1 año';
-    if (months === 24)
-        return '2 años';
-    return `${months} meses`;
-};
 
-export { formatPrice as a, formatPhone as b, formatContractDuration as f, unformatPhone as u };
-//# sourceMappingURL=p-jNHbU7wj.js.map
+export { formatPhone as a, formatPrice as f, unformatPhone as u };
+//# sourceMappingURL=p-C5fd-Qsk.js.map
 
-//# sourceMappingURL=p-jNHbU7wj.js.map
+//# sourceMappingURL=p-C5fd-Qsk.js.map

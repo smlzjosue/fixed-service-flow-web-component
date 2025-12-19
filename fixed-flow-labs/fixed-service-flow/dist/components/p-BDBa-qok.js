@@ -26,17 +26,17 @@ const CONTRACT_OPTIONS = [
         type: 'Con Contrato',
         contract: [
             {
+                contractId: 2,
+                deadlines: 12,
+                installation: 25,
+                activation: 20,
+                modem: 0,
+            },
+            {
                 contractId: 3,
                 deadlines: 24,
                 installation: 0,
                 activation: 0,
-                modem: 0,
-            },
-            {
-                contractId: 2,
-                deadlines: 12,
-                installation: 25,
-                activation: 20, // Corregido: era 25, debe ser 20 (según TEL)
                 modem: 0,
             },
         ],
@@ -60,6 +60,6 @@ const SERVICE_MESSAGES = {
 };
 
 export { CONTRACT_OPTIONS as C, SERVICE_MESSAGES as S };
-//# sourceMappingURL=p-CwWwm_QF.js.map
+//# sourceMappingURL=p-BDBa-qok.js.map
 
-//# sourceMappingURL=p-CwWwm_QF.js.map
+//# sourceMappingURL=p-BDBa-qok.js.map
