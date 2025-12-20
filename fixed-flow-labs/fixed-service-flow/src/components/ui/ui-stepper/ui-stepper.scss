@@ -106,13 +106,14 @@ $stepper-connector-gap: 8px; // Gap between circle and connector line
   // ------------------------------------------
 
   &__connector {
-    // Fixed width that works well at mobile viewport
-    width: 180px;
+    // Fixed width for mobile viewport
+    width: 220px;
     height: $stepper-connector-height;
     background-color: $color-gray-300;
     transition: background-color $transition-normal;
+    // Equal gaps on both sides of the connector line
     margin-left: $stepper-connector-gap;
-    margin-right: 0; // No margin right, the gap comes from step container spacing
+    margin-right: $stepper-connector-gap;
 
     &--completed {
       background-color: $color-secondary;
