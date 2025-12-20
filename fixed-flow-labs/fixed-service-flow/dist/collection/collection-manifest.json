@@ -4,6 +4,7 @@
     "components/ui/ui-carousel/ui-carousel.js",
     "components/ui/ui-input/ui-input.js",
     "components/ui/ui-select/ui-select.js",
+    "components/ui/ui-stepper/ui-stepper.js",
     "components/fixed-service-flow/fixed-service-flow.js",
     "components/steps/step-catalogue/step-catalogue.js",
     "components/steps/step-confirmation/step-confirmation.js",

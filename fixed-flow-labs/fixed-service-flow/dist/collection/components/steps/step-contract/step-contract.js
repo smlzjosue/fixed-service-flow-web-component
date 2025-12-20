@@ -106,13 +106,13 @@ export class StepContract {
     render() {
         const withContract = CONTRACT_OPTIONS.find(c => c.typeId === 1);
         const withoutContract = CONTRACT_OPTIONS.find(c => c.typeId === 0);
-        return (h(Host, { key: '29cf3d679c2803ea1fb5529f32a39b1a8f186003' }, h("div", { key: '994e15bc052c3be582ad3d7579898a7a26581049', class: "step-contract" }, h("header", { key: '5bddb4e258c2c1f838893ae8f150ec797c628917', class: "step-contract__header" }, h("h1", { key: 'e9127bb729aed221bc75a3e9d20e407c5cd5748b', class: "step-contract__title" }, "Selecciona un tipo de contrato"), h("button", { key: '94071b93852ac46d1edf123239a0a5e7939808ef', class: "step-contract__btn-back", onClick: this.onBack }, "Regresar")), h("div", { key: '269d9627d831b10e781b6d91d6b287ae84e82eeb', class: "step-contract__tabs" }, h("button", { key: '3301c449db74fdffdc7c5dc9f8127c44a6b4ab1a', class: {
+        return (h(Host, { key: '73b98b5cf5d386bb18c0b9a87de1ee94f522ae06' }, h("div", { key: 'da718e5fa4e5e9bd81c9e8c36b3535678d49b205', class: "step-contract" }, h("header", { key: '40fda6a530e609dda8a9b20bdcbf64d765767491', class: "step-contract__header" }, h("h1", { key: '8c1ff3fd242f2a6cb27e01a987a6df0ef4199b00', class: "step-contract__title" }, "Selecciona un tipo de contrato"), h("button", { key: 'bf9aa661368be724e6b1521663289fbfa3b9d433', class: "step-contract__btn-back", onClick: this.onBack }, "Regresar")), h("div", { key: '7fef8469c756a814a1d233c00f090e545c487c96', class: "step-contract__tabs" }, h("button", { key: '949bd4bc3bbb1ccbaf5bf29e6fde2f49bbbf15a7', class: {
                 'step-contract__tab': true,
                 'step-contract__tab--active': this.activeTab === 1,
-            }, onClick: () => this.handleTabChange(1) }, h("span", { key: 'f2a2e40945863a78571c9b58b6f80949fbb4d79f', class: "step-contract__tab-title" }, "Con contrato"), h("span", { key: 'bae82158d5c45aa2aaf2ea343333b60709d8286e', class: "step-contract__tab-subtitle" }, "12 y 24 meses de contrato")), h("button", { key: 'ee4e9bfc3f250456330e43f0043360918e1808b3', class: {
+            }, onClick: () => this.handleTabChange(1) }, h("span", { key: '54a89fcfdb912495a4955c73cd62ac25fd71c69e', class: "step-contract__tab-title" }, "Con contrato"), h("span", { key: '1daa33b5cb332fc2feb94f80694405f560b6b1eb', class: "step-contract__tab-subtitle" }, "12 y 24 meses de contrato")), h("button", { key: 'f701fb3b4d46661df2e1ca2d0016926b4507e356', class: {
                 'step-contract__tab': true,
                 'step-contract__tab--active': this.activeTab === 0,
-            }, onClick: () => this.handleTabChange(0) }, h("span", { key: 'a1238ac61cd15563f582d1d4eaf10244788d1a75', class: "step-contract__tab-title" }, "Sin contrato"), h("span", { key: '86c1e3e51c3e487243a2da65446dffababaeeb69', class: "step-contract__tab-subtitle" }, "Plan mensual con pago por adelantado"))), h("div", { key: '1ca6835907555e07c7088dfbcb0a8a8354ff436f', class: "step-contract__content" }, this.activeTab === 1 && withContract && (h("div", { key: 'f741a4f0224c6b84e32697be48f11808f1a65874', class: "step-contract__options" }, withContract.contract.map((option) => {
+            }, onClick: () => this.handleTabChange(0) }, h("span", { key: '5ac2103a653ebf3cc0d64d29b351c5ebe27ff855', class: "step-contract__tab-title" }, "Sin contrato"), h("span", { key: '5f959ccb57f11053f15f68f2ce3fb23805a0188b', class: "step-contract__tab-subtitle" }, "Plan mensual con pago por adelantado"))), h("div", { key: 'c19ec6ec322d7547eb1afcbb860297ee4912d172', class: "step-contract__content" }, this.activeTab === 1 && withContract && (h("div", { key: 'fa0e33d74261a223ede9a349330420eb02b7afe9', class: "step-contract__options" }, withContract.contract.map((option) => {
             const totalCost = this.getTotalInstallationCost(option);
             return (h("label", { class: {
                     'step-contract__option': true,
@@ -120,13 +120,13 @@ export class StepContract {
                         this.selectedOption?.typeId === 1,
                 } }, h("input", { type: "radio", name: "contract", checked: this.selectedOption?.deadlines === option.deadlines &&
                     this.selectedOption?.typeId === 1, onChange: () => this.handleSelectOption(1, option) }), h("div", { class: "step-contract__option-content" }, h("span", { class: "step-contract__option-title" }, this.formatContractLabel(option.deadlines)), h("span", { class: "step-contract__option-price" }, "Instalaci\u00F3n: ", totalCost > 0 ? formatPrice(totalCost) : '$0.00'))));
-        }))), this.activeTab === 0 && withoutContract && (h("div", { key: 'ea88719ac616f6d0495ffeb627a413d27e949813', class: "step-contract__options step-contract__options--single" }, withoutContract.contract.map((option) => {
+        }))), this.activeTab === 0 && withoutContract && (h("div", { key: '960c31f56eb79aee44ece402f81bce7aae7563fc', class: "step-contract__options step-contract__options--single" }, withoutContract.contract.map((option) => {
             const totalCost = this.getTotalInstallationCost(option);
             return (h("label", { class: {
                     'step-contract__option': true,
                     'step-contract__option--selected': this.selectedOption?.typeId === 0,
                 } }, h("input", { type: "radio", name: "contract", checked: this.selectedOption?.typeId === 0, onChange: () => this.handleSelectOption(0, option) }), h("div", { class: "step-contract__option-content" }, h("span", { class: "step-contract__option-title" }, "Sin contrato"), h("span", { class: "step-contract__option-price" }, "Instalaci\u00F3n: ", formatPrice(totalCost)))));
-        })))), h("div", { key: '031b0a7d971f934de6078801d809538352d621f8', class: "step-contract__actions" }, h("button", { key: 'ebfb477a49e9c19f29201ba2e89dc59c706f4b3a', class: "step-contract__btn-continue", onClick: this.handleContinue, disabled: !this.selectedOption }, "Continuar")))));
+        })))), h("div", { key: 'c4a7e733a3059a8240741de67386417fedc53dc6', class: "step-contract__actions" }, h("button", { key: '27ba1b393678129d75dd67bef3d08346e5d6a718', class: "step-contract__btn-continue", onClick: this.handleContinue, disabled: !this.selectedOption }, "Continuar"), h("button", { key: '629f3ae675dee5c469bc381123d6f42c805b54a9', type: "button", class: "step-contract__btn-back-mobile", onClick: this.onBack }, "Regresar")))));
     }
     static get is() { return "step-contract"; }
     static get encapsulation() { return "shadow"; }

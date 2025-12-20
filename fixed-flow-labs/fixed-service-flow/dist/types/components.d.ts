@@ -10,11 +10,13 @@ import { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 import { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 import { InputType } from "./components/ui/ui-input/ui-input";
 import { SelectOption } from "./components/ui/ui-select/ui-select";
+import { StepItem } from "./components/ui/ui-stepper/ui-stepper";
 export { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
 export { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 export { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 export { InputType } from "./components/ui/ui-input/ui-input";
 export { SelectOption } from "./components/ui/ui-select/ui-select";
+export { StepItem } from "./components/ui/ui-stepper/ui-stepper";
 export namespace Components {
     interface FixedServiceFlow {
         /**
@@ -438,6 +440,23 @@ export namespace Components {
          */
         "value": string;
     }
+    interface UiStepper {
+        /**
+          * Current active step (1-indexed)
+          * @default 1
+         */
+        "currentStep": number;
+        /**
+          * Size variant
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * Array of step items with labels
+          * @default []
+         */
+        "steps": StepItem[];
+    }
 }
 export interface FixedServiceFlowCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -690,6 +709,12 @@ declare global {
         prototype: HTMLUiSelectElement;
         new (): HTMLUiSelectElement;
     };
+    interface HTMLUiStepperElement extends Components.UiStepper, HTMLStencilElement {
+    }
+    var HTMLUiStepperElement: {
+        prototype: HTMLUiStepperElement;
+        new (): HTMLUiStepperElement;
+    };
     interface HTMLElementTagNameMap {
         "fixed-service-flow": HTMLFixedServiceFlowElement;
         "step-catalogue": HTMLStepCatalogueElement;
@@ -711,6 +736,7 @@ declare global {
         "ui-radio": HTMLUiRadioElement;
         "ui-radio-card": HTMLUiRadioCardElement;
         "ui-select": HTMLUiSelectElement;
+        "ui-stepper": HTMLUiStepperElement;
     }
 }
 declare namespace LocalJSX {
@@ -1208,6 +1234,23 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    interface UiStepper {
+        /**
+          * Current active step (1-indexed)
+          * @default 1
+         */
+        "currentStep"?: number;
+        /**
+          * Size variant
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * Array of step items with labels
+          * @default []
+         */
+        "steps"?: StepItem[];
+    }
     interface IntrinsicElements {
         "fixed-service-flow": FixedServiceFlow;
         "step-catalogue": StepCatalogue;
@@ -1229,6 +1272,7 @@ declare namespace LocalJSX {
         "ui-radio": UiRadio;
         "ui-radio-card": UiRadioCard;
         "ui-select": UiSelect;
+        "ui-stepper": UiStepper;
     }
 }
 export { LocalJSX as JSX };
@@ -1255,6 +1299,7 @@ declare module "@stencil/core" {
             "ui-radio": LocalJSX.UiRadio & JSXBase.HTMLAttributes<HTMLUiRadioElement>;
             "ui-radio-card": LocalJSX.UiRadioCard & JSXBase.HTMLAttributes<HTMLUiRadioCardElement>;
             "ui-select": LocalJSX.UiSelect & JSXBase.HTMLAttributes<HTMLUiSelectElement>;
+            "ui-stepper": LocalJSX.UiStepper & JSXBase.HTMLAttributes<HTMLUiStepperElement>;
         }
     }
 }

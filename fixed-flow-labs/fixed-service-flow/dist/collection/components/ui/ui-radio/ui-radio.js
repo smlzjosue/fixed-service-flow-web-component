@@ -51,7 +51,7 @@ export class UiRadio {
             'ui-radio--checked': this.checked,
             'ui-radio--disabled': this.disabled,
         };
-        return (h(Host, { key: '5d5286f41587a3aff01cc9cf4be0f8318091fc0e' }, h("label", { key: '67b47a9d98e10c15154687a79b82e6f8fe46e719', class: classes }, h("input", { key: '02e70e192a3245cfb8d89465ba817a7acf969aa4', type: "radio", class: "ui-radio__input", name: this.name, value: this.value, checked: this.checked, disabled: this.disabled, onChange: this.handleChange }), h("span", { key: '68de4357faddabc39f8129eb241c3c1b6c803d75', class: "ui-radio__indicator" }), this.label && h("span", { key: '0cdbf7e6b6bec132828f7f58cc9cbe6ffbbd26cd', class: "ui-radio__label" }, this.label), h("slot", { key: 'ecb70d06f09bb104a3c9ec9fab5d99f67e0ed1e7' }))));
+        return (h(Host, { key: 'da8fad750b8b09cd272f8bef14938b2ba2ebeb79' }, h("label", { key: 'ec9e38353af9618f385694f2fc435812a304b5f5', class: classes }, h("input", { key: '32c12be448288ba2c68118d7eedc8cee79d57d32', type: "radio", class: "ui-radio__input", name: this.name, value: this.value, checked: this.checked, disabled: this.disabled, onChange: this.handleChange }), h("span", { key: 'a2f3c8c0bda6de388921104419483984879ac4fb', class: "ui-radio__indicator" }), this.label && h("span", { key: '26de83538fa5201be553054dc5c08ad5f5538c50', class: "ui-radio__label" }, this.label), h("slot", { key: 'c38ec451b275857078275c414a9db693473e755f' }))));
     }
     static get is() { return "ui-radio"; }
     static get encapsulation() { return "shadow"; }

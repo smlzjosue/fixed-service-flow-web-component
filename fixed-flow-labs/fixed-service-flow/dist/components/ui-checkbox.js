@@ -45,11 +45,11 @@ const UiCheckbox$1 = /*@__PURE__*/ proxyCustomElement(class UiCheckbox extends H
         this.checkboxChange.emit(this.checked);
     };
     render() {
-        return (h(Host, { key: '8bfd47168b95fd9ab276c8f9ea2cab01529a99d0' }, h("label", { key: '0492a7c0cfe36fa999a30ebdf2ff35a8b1c48e5c', class: {
+        return (h(Host, { key: 'ff5968bb6e59836932b8204b034937339d9b6b6b' }, h("label", { key: 'c32b386ccee6f0e87f7fdabcdd5a5c5c49426018', class: {
                 'checkbox-container': true,
                 'checkbox-container--disabled': this.disabled,
                 'checkbox-container--error': this.hasError,
-            } }, h("input", { key: 'ef4fceb8c3b333b9bc73dbad6d22d4dc9d908a1d', type: "checkbox", name: this.name, checked: this.checked, disabled: this.disabled, onChange: this.handleChange, class: "checkbox-input" }), h("span", { key: 'ece99c1b23c8e2aa329e52d84cb175d744cf51a6', class: "checkbox-checkmark" }, h("svg", { key: '3c0b057f20cea04ae2d23192d72e512b22650011', class: "checkbox-icon", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "3", "stroke-linecap": "round", "stroke-linejoin": "round" }, h("polyline", { key: '3cc6b439b0176e4ee32d1aebebf03646250b8176', points: "20 6 9 17 4 12" }))), this.label && h("span", { key: '911f84b767bde496b61ca738b99a6395e6768387', class: "checkbox-label" }, this.label)), this.hasError && this.errorMessage && (h("span", { key: 'e21c969dd38c67fea70d4a8467810ba714918b4d', class: "checkbox-error" }, this.errorMessage))));
+            } }, h("input", { key: '815aa71c5b0f684bb5486883183da9c18b34aa7a', type: "checkbox", name: this.name, checked: this.checked, disabled: this.disabled, onChange: this.handleChange, class: "checkbox-input" }), h("span", { key: 'b6cc09e864d6f7deb1c2ed54c3b3ab7586436466', class: "checkbox-checkmark" }, h("svg", { key: '441e30e7177119c46852af30e889b30148b90b53', class: "checkbox-icon", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "3", "stroke-linecap": "round", "stroke-linejoin": "round" }, h("polyline", { key: '220e428b4f0558fd407037cae97df00ba4fdee5c', points: "20 6 9 17 4 12" }))), this.label && h("span", { key: '5602fd774fbb215629363528499db3e8f201249b', class: "checkbox-label" }, this.label)), this.hasError && this.errorMessage && (h("span", { key: 'f76c3e7ca98aa262b05ca29bbf100e04d3af5dfd', class: "checkbox-error" }, this.errorMessage))));
     }
     static get style() { return uiCheckboxCss(); }
 }, [769, "ui-checkbox", {
