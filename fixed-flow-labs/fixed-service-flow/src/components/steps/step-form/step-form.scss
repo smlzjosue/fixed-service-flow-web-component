@@ -120,7 +120,7 @@
   }
 
   &__required {
-    color: $color-error;
+    color: $color-text-primary; // Black asterisk for required fields
     margin-right: $spacing-1;
   }
 
