@@ -21,11 +21,11 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Última actualización** | 2025-12-19 (Sesión 9) |
+| **Última actualización** | 2025-12-19 (Sesión 10) |
 | **Fase actual** | Fase 11 - Revisión y Correcciones UX |
 | **Próximo paso** | Pruebas E2E flujo completo GPON + CLARO HOGAR |
 | **Bloqueadores** | Ninguno |
-| **Último commit** | `2dd18f5` - style(step-form): update UI to match reference design |
+| **Último commit** | `1e61026` - fix(ui-stepper): equalize gaps on both sides of connector line |
 
 ### Progreso por Fases (Verificado 2025-12-12)
 
@@ -93,13 +93,53 @@
 - [x] Eventos (flowComplete, flowError, stepChange, flowCancel)
 - [x] Props (apiUrl, googleMapsKey, debug)
 
-### Notas de la Última Sesión (2025-12-19 - Sesión 9)
+### Notas de la Última Sesión (2025-12-19 - Sesión 10)
 
-- **Refinamiento visual de step-form** según captura 3.png
+- **Mejoras mobile responsive** en step-form y ui-stepper
 - **Ejecutar servidor**: `cd fixed-flow-labs/fixed-service-flow && npm start`
-- **Puerto de desarrollo**: http://localhost:3333
+- **Puerto de desarrollo**: http://localhost:3335
 
-### Cambios de Esta Sesión (2025-12-19 - Sesión 9)
+### Cambios de Esta Sesión (2025-12-19 - Sesión 10)
+
+**Correcciones Mobile en step-form:**
+
+1. **ID input height fix:**
+   - El input de número de identificación tenía height: 20px en lugar de 44px
+   - Causa: `flex: 1` en contenedor flex columna causaba colapso de altura
+   - Solución: Removido flex property, agregado height/min-height explícitos
+   - Commit: `606dd10`
+
+**Mejoras UX en ui-stepper (mobile):**
+
+2. **Círculos estilo outline:**
+   - Cambiado de fondo sólido a estilo outline
+   - Background: blanco, Border: 2px solid (color según estado)
+   - Active/Completed: borde cyan (`$color-secondary`)
+   - Pending: borde gris (`$color-gray-300`)
+
+3. **Línea conectora más ancha:**
+   - Incrementado de 60px → 220px
+   - Mejor separación visual entre pasos
+
+4. **Gaps iguales en ambos lados:**
+   - Problema: gap izquierdo 8px, derecho 0px (asimétrico)
+   - Solución: `margin-left: 8px` y `margin-right: 8px`
+   - Ambos círculos tienen la misma distancia de la línea
+
+5. **Labels centrados bajo círculos:**
+   - Los textos "Identificación" y "Contacto" ahora se centran bajo sus círculos
+   - Técnica: `left: calc(circle-size / 2)` + `transform: translateX(-50%)`
+   - Ya no se centran bajo el indicador completo (círculo + línea)
+
+**Commits de la sesión:**
+- `606dd10` - fix(step-form): fix ID input height on mobile
+- `6e43e57` - style(ui-stepper): increase step separation and use outline style
+- `00d6b3e` - style(ui-stepper): improve mobile stepper layout and centering
+- `1e61026` - fix(ui-stepper): equalize gaps on both sides of connector line
+
+---
+
+### Historial - Sesión 9 (2025-12-19)
 
 **Mejoras UX en step-form:**
 
@@ -559,4 +599,4 @@ npm start  # http://localhost:3333
 
 ---
 
-*Última actualización: 2025-12-12 (Sesión 7)*
+*Última actualización: 2025-12-19 (Sesión 10)*
