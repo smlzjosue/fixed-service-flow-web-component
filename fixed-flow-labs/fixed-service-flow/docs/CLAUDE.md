@@ -131,11 +131,15 @@
    - Técnica: `left: calc(circle-size / 2)` + `transform: translateX(-50%)`
    - Ya no se centran bajo el indicador completo (círculo + línea)
 
+6. **Asteriscos negros:**
+   - Cambiado color de asteriscos de rojo (`$color-error`) a negro (`$color-text-primary`)
+
 **Commits de la sesión:**
 - `606dd10` - fix(step-form): fix ID input height on mobile
 - `6e43e57` - style(ui-stepper): increase step separation and use outline style
 - `00d6b3e` - style(ui-stepper): improve mobile stepper layout and centering
 - `1e61026` - fix(ui-stepper): equalize gaps on both sides of connector line
+- `ae82e8f` - style(step-form): change required asterisks to black color
 
 ---
 
