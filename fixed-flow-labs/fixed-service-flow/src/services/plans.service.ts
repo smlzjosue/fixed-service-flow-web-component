@@ -55,20 +55,35 @@ class PlansService {
   /**
    * Fetches available internet plans for a service type
    * Endpoint: POST api/Plans/getPlansInternet
+   *
+   * For CLARO HOGAR, the type should be "internet" (following TEL pattern)
    */
   async getPlans(serviceType: string, catalogId: number = 0): Promise<Plan[]> {
     // Ensure token exists before making the call
     await tokenService.ensureToken();
 
+    // Map service type to API type parameter
+    // TEL uses 'internet' for CLARO HOGAR products
+    let apiType = serviceType;
+    if (serviceType === 'CLARO HOGAR') {
+      apiType = 'internet';
+    }
+
+    console.log('[PlansService] Fetching plans for type:', apiType, 'catalogId:', catalogId);
+
     const response = await httpService.post<PlansResponse>('api/Plans/getPlansInternet', {
       catalogID: catalogId,
-      type: serviceType,
+      type: apiType,
     });
 
+    console.log('[PlansService] Response:', response);
+
     if (response.hasError) {
+      console.error('[PlansService] API error:', response.message);
       throw new Error(response.message || 'Failed to fetch plans');
     }
 
+    console.log('[PlansService] Plans found:', response.planList?.length || 0);
     return response.planList || [];
   }
 

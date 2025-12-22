@@ -287,9 +287,12 @@ export class ShippingService {
 
   /**
    * Create shipping address
+   * TEL Pattern: userId comes from wBCUserID or defaults to '0' for new clients
+   * flowId 6 = CLARO HOGAR flow
    */
-  async createAddress(address: ShippingAddress, flowId: string = '5'): Promise<ShippingCreateResponse> {
-    const userId = storageUtils.get('wBCUserID') || '';
+  async createAddress(address: ShippingAddress, flowId: string = '6'): Promise<ShippingCreateResponse> {
+    // TEL Pattern: userId from wBCUserID or '0' for new clients (line 102 shipment.page.ts)
+    const userId = storageUtils.get('wBCUserID') || '0';
     const token = tokenService.getToken();
 
     const formData = new FormData();

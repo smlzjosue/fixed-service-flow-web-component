@@ -70,9 +70,14 @@ Product detail view component for CLARO HOGAR e-commerce flow. Displays detailed
 
  - [fixed-service-flow](../../fixed-service-flow)
 
+### Depends on
+
+- [ui-image-carousel](../../ui/ui-image-carousel)
+
 ### Graph
 ```mermaid
 graph TD;
+  step-product-detail --> ui-image-carousel
   fixed-service-flow --> step-product-detail
   style step-product-detail fill:#f9f,stroke:#333,stroke-width:4px
 ```

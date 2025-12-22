@@ -63,7 +63,12 @@ $spacing-xl: $spacing-8;
   font-size: $font-size-sm;
   color: $gray-600;
   margin: 0 0 $spacing-lg 0;
+  padding: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
   line-height: 1.5;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
 // ------------------------------------------
@@ -199,7 +204,9 @@ input[type='date'] {
 
   .radio-group {
     display: flex;
-    gap: $spacing-sm;
+    flex-direction: row;
+    align-items: center;
+    gap: $spacing-md;
     flex-shrink: 0;
   }
 
@@ -215,6 +222,8 @@ input[type='date'] {
 
 .radio-group {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: $spacing-md;
 
   &.horizontal {

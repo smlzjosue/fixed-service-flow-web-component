@@ -9,7 +9,6 @@ import { tokenService } from './token.service';
 import {
   CartResponse,
   CartItem,
-  AddToCartRequest,
   AddToCartResponse,
   DeleteCartItemRequest,
   ProductDetail,
@@ -104,6 +103,9 @@ class CartService {
    * Adds a product to the cart
    * Endpoint: POST api/Card/addToCart
    *
+   * IMPORTANT: The backend expects `cartItems` as a JSON string array, not an object.
+   * See TEL: card.service.ts pushAddToCart() and CardController.cs addToCart()
+   *
    * @param product - Product to add
    * @param installments - Number of installments
    * @param quantity - Quantity to add (default 1)
@@ -122,12 +124,13 @@ class CartService {
       await tokenService.ensureToken();
       const token = tokenService.getToken() || '';
 
-      const request: AddToCartRequest = {
+      // Build cart item object (following TEL pushAddToCart format)
+      const cartItem = {
         token: token,
-        productId: product.productId,
+        productId: String(product.productId),
         notificationDetailID: 0,
-        chvSource: 'web',
-        promoCode: this.getDiscountCoupon() || '',
+        chvSource: '',
+        promoCode: '',
         installments: installments,
         decPrice: product.update_price || 0,
         decDeposit: 0,
@@ -147,7 +150,16 @@ class CartService {
         delicuency: false,
       };
 
+      // Backend expects cartItems as a JSON STRING of array, not an object
+      // See: CardController.cs line 52: "{\"cartItems\": " + data.cartItems + "}"
+      const cartItemsString = JSON.stringify([cartItem]);
+
+      const request = {
+        cartItems: cartItemsString,
+      };
+
       console.log('[CartService] Adding to cart:', product.productName);
+      console.log('[CartService] Request payload:', request);
 
       const response = await httpService.post<AddToCartResponse>('api/Card/addToCart', request);
 
@@ -182,6 +194,8 @@ class CartService {
   /**
    * Adds a plan to the cart
    * Plans have special handling with parentCartId linking to the equipment
+   *
+   * IMPORTANT: Backend expects `cartItems` as a JSON string array
    */
   async addPlanToCart(
     plan: Plan,
@@ -192,12 +206,13 @@ class CartService {
       await tokenService.ensureToken();
       const token = tokenService.getToken() || '';
 
-      const request: AddToCartRequest = {
+      // Build cart item for plan (following TEL format)
+      const cartItem = {
         token: token,
-        productId: plan.planId,
+        productId: String(plan.planId),
         notificationDetailID: 0,
-        chvSource: 'web',
-        promoCode: this.getDiscountCoupon() || '',
+        chvSource: '',
+        promoCode: '',
         installments: 1, // Plans are monthly
         decPrice: plan.decSalePrice || plan.decPrice,
         decDeposit: 0,
@@ -215,6 +230,13 @@ class CartService {
         acceletartedAmount: 0,
         pastDueAmount: 0,
         delicuency: false,
+      };
+
+      // Backend expects cartItems as JSON string
+      const cartItemsString = JSON.stringify([cartItem]);
+
+      const request = {
+        cartItems: cartItemsString,
       };
 
       console.log('[CartService] Adding plan to cart:', plan.planName);

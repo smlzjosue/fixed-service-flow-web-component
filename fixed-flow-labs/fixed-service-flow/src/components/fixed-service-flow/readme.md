@@ -55,6 +55,8 @@ graph TD;
   fixed-service-flow --> step-shipping
   fixed-service-flow --> step-payment
   step-plans --> ui-carousel
+  step-form --> ui-stepper
+  step-product-detail --> ui-image-carousel
   style fixed-service-flow fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

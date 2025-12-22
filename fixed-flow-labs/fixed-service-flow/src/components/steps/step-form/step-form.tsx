@@ -624,6 +624,13 @@ export class StepForm {
               >
                 Continuar
               </button>
+              <button
+                type="button"
+                class="step-form__btn-back-mobile"
+                onClick={this.handleBack}
+              >
+                Regresar
+              </button>
             </div>
           </form>
         </div>

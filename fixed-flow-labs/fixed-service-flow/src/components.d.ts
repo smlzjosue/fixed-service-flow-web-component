@@ -5,16 +5,18 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { FlowCompleteEvent, FlowErrorEvent, StepChangeEvent } from "./store/interfaces";
+import { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
 import { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 import { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 import { InputType } from "./components/ui/ui-input/ui-input";
 import { SelectOption } from "./components/ui/ui-select/ui-select";
-export { FlowCompleteEvent, FlowErrorEvent, StepChangeEvent } from "./store/interfaces";
+import { StepItem } from "./components/ui/ui-stepper/ui-stepper";
+export { FlowCompleteEvent, FlowErrorEvent, FlowStep, StepChangeEvent } from "./store/interfaces";
 export { ButtonSize, ButtonVariant } from "./components/ui/ui-button/ui-button";
 export { CarouselBreakpoint } from "./components/ui/ui-carousel/ui-carousel";
 export { InputType } from "./components/ui/ui-input/ui-input";
 export { SelectOption } from "./components/ui/ui-select/ui-select";
+export { StepItem } from "./components/ui/ui-stepper/ui-stepper";
 export namespace Components {
     interface FixedServiceFlow {
         /**
@@ -240,6 +242,38 @@ export namespace Components {
          */
         "value": string;
     }
+    interface UiImageCarousel {
+        /**
+          * Auto-play interval in milliseconds (0 = disabled)
+          * @default 0
+         */
+        "autoplayInterval": number;
+        /**
+          * Fallback image URL when image fails to load
+          * @default ''
+         */
+        "fallbackImage": string;
+        /**
+          * Array of image URLs to display
+          * @default []
+         */
+        "images": string[];
+        /**
+          * Enable circular/loop mode
+          * @default true
+         */
+        "loop": boolean;
+        /**
+          * Show indicator dots
+          * @default true
+         */
+        "showIndicators": boolean;
+        /**
+          * Show navigation arrows
+          * @default true
+         */
+        "showNavigation": boolean;
+    }
     interface UiInput {
         /**
           * Autocomplete attribute
@@ -405,6 +439,23 @@ export namespace Components {
           * @default ''
          */
         "value": string;
+    }
+    interface UiStepper {
+        /**
+          * Current active step (1-indexed)
+          * @default 1
+         */
+        "currentStep": number;
+        /**
+          * Size variant
+          * @default 'md'
+         */
+        "size": 'sm' | 'md';
+        /**
+          * Array of step items with labels
+          * @default []
+         */
+        "steps": StepItem[];
     }
 }
 export interface FixedServiceFlowCustomEvent<T> extends CustomEvent<T> {
@@ -579,6 +630,12 @@ declare global {
         prototype: HTMLUiDatePickerElement;
         new (): HTMLUiDatePickerElement;
     };
+    interface HTMLUiImageCarouselElement extends Components.UiImageCarousel, HTMLStencilElement {
+    }
+    var HTMLUiImageCarouselElement: {
+        prototype: HTMLUiImageCarouselElement;
+        new (): HTMLUiImageCarouselElement;
+    };
     interface HTMLUiInputElementEventMap {
         "valueChange": string;
         "inputEvent": InputEvent;
@@ -652,6 +709,12 @@ declare global {
         prototype: HTMLUiSelectElement;
         new (): HTMLUiSelectElement;
     };
+    interface HTMLUiStepperElement extends Components.UiStepper, HTMLStencilElement {
+    }
+    var HTMLUiStepperElement: {
+        prototype: HTMLUiStepperElement;
+        new (): HTMLUiStepperElement;
+    };
     interface HTMLElementTagNameMap {
         "fixed-service-flow": HTMLFixedServiceFlowElement;
         "step-catalogue": HTMLStepCatalogueElement;
@@ -668,10 +731,12 @@ declare global {
         "ui-carousel": HTMLUiCarouselElement;
         "ui-checkbox": HTMLUiCheckboxElement;
         "ui-date-picker": HTMLUiDatePickerElement;
+        "ui-image-carousel": HTMLUiImageCarouselElement;
         "ui-input": HTMLUiInputElement;
         "ui-radio": HTMLUiRadioElement;
         "ui-radio-card": HTMLUiRadioCardElement;
         "ui-select": HTMLUiSelectElement;
+        "ui-stepper": HTMLUiStepperElement;
     }
 }
 declare namespace LocalJSX {
@@ -935,6 +1000,38 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    interface UiImageCarousel {
+        /**
+          * Auto-play interval in milliseconds (0 = disabled)
+          * @default 0
+         */
+        "autoplayInterval"?: number;
+        /**
+          * Fallback image URL when image fails to load
+          * @default ''
+         */
+        "fallbackImage"?: string;
+        /**
+          * Array of image URLs to display
+          * @default []
+         */
+        "images"?: string[];
+        /**
+          * Enable circular/loop mode
+          * @default true
+         */
+        "loop"?: boolean;
+        /**
+          * Show indicator dots
+          * @default true
+         */
+        "showIndicators"?: boolean;
+        /**
+          * Show navigation arrows
+          * @default true
+         */
+        "showNavigation"?: boolean;
+    }
     interface UiInput {
         /**
           * Autocomplete attribute
@@ -1137,6 +1234,23 @@ declare namespace LocalJSX {
          */
         "value"?: string;
     }
+    interface UiStepper {
+        /**
+          * Current active step (1-indexed)
+          * @default 1
+         */
+        "currentStep"?: number;
+        /**
+          * Size variant
+          * @default 'md'
+         */
+        "size"?: 'sm' | 'md';
+        /**
+          * Array of step items with labels
+          * @default []
+         */
+        "steps"?: StepItem[];
+    }
     interface IntrinsicElements {
         "fixed-service-flow": FixedServiceFlow;
         "step-catalogue": StepCatalogue;
@@ -1153,10 +1267,12 @@ declare namespace LocalJSX {
         "ui-carousel": UiCarousel;
         "ui-checkbox": UiCheckbox;
         "ui-date-picker": UiDatePicker;
+        "ui-image-carousel": UiImageCarousel;
         "ui-input": UiInput;
         "ui-radio": UiRadio;
         "ui-radio-card": UiRadioCard;
         "ui-select": UiSelect;
+        "ui-stepper": UiStepper;
     }
 }
 export { LocalJSX as JSX };
@@ -1178,10 +1294,12 @@ declare module "@stencil/core" {
             "ui-carousel": LocalJSX.UiCarousel & JSXBase.HTMLAttributes<HTMLUiCarouselElement>;
             "ui-checkbox": LocalJSX.UiCheckbox & JSXBase.HTMLAttributes<HTMLUiCheckboxElement>;
             "ui-date-picker": LocalJSX.UiDatePicker & JSXBase.HTMLAttributes<HTMLUiDatePickerElement>;
+            "ui-image-carousel": LocalJSX.UiImageCarousel & JSXBase.HTMLAttributes<HTMLUiImageCarouselElement>;
             "ui-input": LocalJSX.UiInput & JSXBase.HTMLAttributes<HTMLUiInputElement>;
             "ui-radio": LocalJSX.UiRadio & JSXBase.HTMLAttributes<HTMLUiRadioElement>;
             "ui-radio-card": LocalJSX.UiRadioCard & JSXBase.HTMLAttributes<HTMLUiRadioCardElement>;
             "ui-select": LocalJSX.UiSelect & JSXBase.HTMLAttributes<HTMLUiSelectElement>;
+            "ui-stepper": LocalJSX.UiStepper & JSXBase.HTMLAttributes<HTMLUiStepperElement>;
         }
     }
 }

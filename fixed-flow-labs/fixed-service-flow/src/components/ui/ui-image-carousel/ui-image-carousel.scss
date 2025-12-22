@@ -1,0 +1,256 @@
+// ============================================
+// UI-IMAGE-CAROUSEL - Styles
+// Based on TEL's image-carousel-web design
+// ============================================
+
+@import '../../../global/variables';
+
+// Local aliases
+$primary-color: $color-primary;
+$secondary-color: $color-secondary;
+$gray-100: $color-gray-100;
+$gray-200: $color-gray-200;
+$gray-300: $color-gray-300;
+$gray-400: $color-gray-400;
+$gray-500: $color-gray-500;
+$radius-md: $border-radius-md;
+$radius-lg: $border-radius-lg;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-image-carousel {
+  position: relative;
+  width: 100%;
+
+  // ------------------------------------------
+  // MAIN IMAGE CONTAINER
+  // ------------------------------------------
+
+  &__main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: $gray-100;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // ------------------------------------------
+  // TRACK (slides container)
+  // ------------------------------------------
+
+  &__track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.4s ease-out;
+    will-change: transform;
+  }
+
+  &__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-4;
+    box-sizing: border-box;
+  }
+
+  // ------------------------------------------
+  // IMAGE
+  // ------------------------------------------
+
+  &__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &--loaded {
+      opacity: 1;
+    }
+  }
+
+  // ------------------------------------------
+  // NAVIGATION ARROWS
+  // ------------------------------------------
+
+  &__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid $gray-200;
+    color: $gray-500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+      background: $primary-color;
+      border-color: $primary-color;
+      color: white;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    &--prev {
+      left: $spacing-2;
+    }
+
+    &--next {
+      right: $spacing-2;
+    }
+
+    &--disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    @media (max-width: 599px) {
+      width: 32px;
+      height: 32px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  // ------------------------------------------
+  // INDICATOR DOTS
+  // ------------------------------------------
+
+  &__indicators {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-2;
+    margin-top: $spacing-3;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: $gray-300;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $gray-400;
+    }
+
+    &--active {
+      background: $primary-color;
+      width: 24px;
+      border-radius: 4px;
+    }
+  }
+
+  // ------------------------------------------
+  // THUMBNAILS
+  // ------------------------------------------
+
+  &__thumbnails {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-2;
+    margin-top: $spacing-3;
+    padding: 0 $spacing-2;
+    overflow-x: auto;
+
+    // Hide scrollbar
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  &__thumbnail {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: $radius-md;
+    border: 2px solid $gray-200;
+    background: $gray-100;
+    cursor: pointer;
+    padding: 4px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    &:hover {
+      border-color: $secondary-color;
+    }
+
+    &--active {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+
+    @media (max-width: 599px) {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  // ------------------------------------------
+  // PLACEHOLDER (no images)
+  // ------------------------------------------
+
+  &__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    background: $gray-100;
+    border-radius: $radius-lg;
+    color: $gray-400;
+
+    svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: $spacing-2;
+    }
+
+    span {
+      font-size: $font-size-sm;
+    }
+  }
+}

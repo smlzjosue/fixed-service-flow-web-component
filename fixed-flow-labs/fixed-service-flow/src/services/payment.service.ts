@@ -247,11 +247,12 @@ export class PaymentService {
 
   /**
    * Get payment iframe URL
+   * TEL uses: api/Payment/getPaymentIframe (NOT getIframe)
    */
   async getPaymentIframe(request: PaymentIframeRequest): Promise<PaymentIframeResponse> {
     try {
       const response = await httpService.post<PaymentIframeResponse>(
-        'api/Payment/getIframe',
+        'api/Payment/getPaymentIframe',
         request
       );
       return response;

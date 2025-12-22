@@ -10,16 +10,10 @@ import {
   FlowCompleteEvent,
   FlowErrorEvent,
   StepChangeEvent,
+  FlowStep,
 } from '../../store/interfaces';
 // @ts-ignore: STEP_TITLES reserved for future use (step header rendering)
 import { STEP_TITLES as _STEP_TITLES } from '../../utils/constants';
-
-/**
- * Flow step definitions
- * Standard Flow (GPON/VRAD): 1-5
- * CLARO HOGAR Flow: 1-8
- */
-type FlowStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 /**
  * CLARO HOGAR step names for clarity
