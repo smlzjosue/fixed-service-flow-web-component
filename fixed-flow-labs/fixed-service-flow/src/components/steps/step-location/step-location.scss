@@ -96,12 +96,18 @@
   &__controls {
     position: absolute;
     top: 3.5rem;
-    left: 120px; // Leave space for Map/Satellite buttons on the left
-    right: 50px; // Leave space for zoom controls on the right
+    left: $spacing-3;
+    right: $spacing-3;
     z-index: 1;
     display: flex;
     flex-direction: column;
     gap: $spacing-2;
+
+    // Mobile: barra de búsqueda ocupa casi todo el ancho
+    @include breakpoint-up(sm) {
+      left: 120px;
+      right: 50px;
+    }
 
     @include breakpoint-up(md) {
       top: 3.5rem;
