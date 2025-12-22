@@ -1,4 +1,4 @@
-import { S as StepProductDetail$1, d as defineCustomElement$1 } from './p-CkOWl121.js';
+import { S as StepProductDetail$1, d as defineCustomElement$1 } from './p-BD1RYLUu.js';
 
 const StepProductDetail = StepProductDetail$1;
 const defineCustomElement = defineCustomElement$1;
