@@ -363,6 +363,7 @@ export class UiCarousel {
             ::slotted(*) {
               flex: 0 0 calc(${slideWidth}% - ${this.gap * (this.currentSlidesPerView - 1) / this.currentSlidesPerView}px);
               max-width: calc(${slideWidth}% - ${this.gap * (this.currentSlidesPerView - 1) / this.currentSlidesPerView}px);
+              /* height handled by align-items: stretch on track */
             }
           `}
         </style>

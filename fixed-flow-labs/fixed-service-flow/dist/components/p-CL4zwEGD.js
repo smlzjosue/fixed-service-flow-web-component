@@ -1,13 +1,20 @@
-// ============================================
-// STEP PLANS - Plan Selection Step Component
-// Fixed Service Flow Web Component
-// Design based on docs/capturas/4.png + Carousel
-// ============================================
-import { h, Host } from "@stencil/core";
-import { flowState, flowActions } from "../../../store/flow.store";
-import { plansService, productService } from "../../../services";
-import { formatPrice } from "../../../utils/formatters";
-export class StepPlans {
+import { t as transformTag, p as proxyCustomElement, H, h, d as Host } from './p-BTqKKAHI.js';
+import { f as flowActions, s as state } from './p-1rCYjdXc.js';
+import { p as plansService } from './p-BnwnDOjS.js';
+import { p as productService } from './p-CDUi1inA.js';
+import { f as formatPrice } from './p-C5fd-Qsk.js';
+import { d as defineCustomElement$1 } from './p-DGspzOV2.js';
+
+const stepPlansCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block}.step-plans{width:100%;min-height:100vh;padding:1.5rem;padding-bottom:180px}@media (min-width: 768px){.step-plans{padding:2rem;padding-bottom:140px}}.step-plans__header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;margin-bottom:1.5rem;position:relative}.step-plans__header::after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100vw;height:1px;background:#E5E5E5}.step-plans__title{font-size:1.5rem;font-weight:700;color:#333333;margin:0}@media (min-width: 768px){.step-plans__title{font-size:1.75rem}}.step-plans__btn-back{background:#FFFFFF;border:2px solid #0097A9;color:#0097A9;padding:0.5rem 1.5rem;border-radius:9999px;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.2s ease}.step-plans__btn-back:hover{background:#0097A9;color:#FFFFFF}.step-plans__loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;color:#666666}.step-plans__spinner{width:40px;height:40px;border:3px solid #E5E5E5;border-top-color:#0097A9;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}.step-plans__error{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;color:#DA291C}.step-plans__error button{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-plans__error button:disabled{opacity:0.5;cursor:not-allowed}.step-plans__error button{height:48px;background-color:transparent;color:#0097A9;border:2px solid #0097A9}.step-plans__error button:hover:not(:disabled){background-color:rgba(0, 151, 169, 0.1)}.step-plans__error button:active:not(:disabled){background-color:rgba(0, 151, 169, 0.2)}.step-plans__error button{margin-top:1rem}.step-plans__carousel-container{padding:1rem 0 3rem}.step-plans__empty{display:flex;align-items:center;justify-content:center;padding:3rem;color:#666666}.step-plans__footer{position:fixed;bottom:0;left:0;right:0;background:#FFFFFF;border-top:1px solid #E5E5E5;padding:0.75rem 1.5rem;z-index:200;box-shadow:0 -4px 12px rgba(0, 0, 0, 0.1);display:flex;align-items:center;justify-content:space-between}@media (max-width: 767px){.step-plans__footer{flex-direction:column;gap:0.75rem;padding:1rem}}.step-plans__footer-left{display:flex;flex-direction:column}@media (max-width: 767px){.step-plans__footer-left{width:100%}}.step-plans__footer-info{display:flex;gap:1.5rem}.step-plans__footer-item{display:flex;flex-direction:column}.step-plans__footer-item--separator{padding-left:1.5rem;border-left:1px solid #E5E5E5}.step-plans__footer-label{font-size:0.75rem;color:#666666}.step-plans__footer-value{font-size:1.25rem;font-weight:700;color:#333333}.step-plans__footer-value--highlight{color:#DA291C}.step-plans__footer-note{font-size:0.75rem;color:#808080;margin:0.25rem 0 0}.step-plans__footer-btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-plans__footer-btn:disabled{opacity:0.5;cursor:not-allowed}.step-plans__footer-btn{height:48px;background-color:#DA291C;color:#FFFFFF}.step-plans__footer-btn:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.step-plans__footer-btn:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}.step-plans__footer-btn{min-width:160px}@media (max-width: 767px){.step-plans__footer-btn{width:100%}}.plan-card{background:#FFFFFF;border-radius:16px;border:2px solid #0097A9;box-shadow:0 2px 12px rgba(0, 0, 0, 0.1);overflow:hidden;cursor:pointer;transition:all 0.2s ease;display:flex;flex-direction:column;min-height:340px}.plan-card:hover{box-shadow:0 6px 20px rgba(0, 151, 169, 0.25);transform:translateY(-2px)}.plan-card--selected{border-color:#0097A9;box-shadow:0 6px 24px rgba(0, 151, 169, 0.3)}.plan-card--processing{pointer-events:none;opacity:0.8}.plan-card__header{display:flex;justify-content:center;padding-top:0}.plan-card__name{background:#1a1a1a;color:#FFFFFF;font-size:0.875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;line-height:1.3;padding:0.75rem 1rem;width:70%;text-align:center;border-radius:0 0 12px 12px}.plan-card__body{flex:1;padding:1.25rem 1rem;text-align:center;display:flex;flex-direction:column}.plan-card__includes-label{font-size:1rem;color:#666666;margin:0 0 0.75rem;font-weight:500}.plan-card__features{list-style:none;padding:0;margin:0 0 1rem;text-align:center;flex:1}.plan-card__feature{margin-bottom:0.5rem;font-size:0.875rem;color:#333333;font-weight:600}.plan-card__feature:last-child{margin-bottom:0}.plan-card__price{font-size:1.75rem;font-weight:700;color:#0097A9;margin:1rem 0 0}.plan-card__footer{padding:1rem}.plan-card__btn{width:100%;padding:0.75rem 1rem;border-radius:25px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s ease;background:#FFFFFF;color:#0097A9;border:2px solid #0097A9}.plan-card__btn:hover{background:rgba(0, 151, 169, 0.1)}.plan-card__btn--selected{background:#0097A9;color:#FFFFFF;border-color:#0097A9}.plan-card__btn--selected:hover{background:rgb(0, 114.5455621302, 128.2)}.plan-card__btn--loading{cursor:wait;opacity:0.8}.plan-card__btn:disabled{cursor:not-allowed;opacity:0.6}.plan-card__btn-loading{display:inline-flex;align-items:center;gap:0.5rem}.plan-card__btn-spinner{width:14px;height:14px;border:2px solid rgba(255, 255, 255, 0.3);border-top-color:#FFFFFF;border-radius:50%;animation:spin 0.8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}`;
+
+const StepPlans = /*@__PURE__*/ proxyCustomElement(class StepPlans extends H {
+    constructor(registerHost) {
+        super();
+        if (registerHost !== false) {
+            this.__registerHost();
+        }
+        this.__attachShadow();
+    }
     // ------------------------------------------
     // PROPS
     // ------------------------------------------
@@ -43,7 +50,7 @@ export class StepPlans {
         this.isLoading = true;
         this.error = null;
         try {
-            const serviceType = flowState.location?.serviceType || 'GPON';
+            const serviceType = state.location?.serviceType || 'GPON';
             // For CLARO HOGAR, get subcatalogId from productService (stored when product was selected)
             let catalogId = 0;
             if (serviceType === 'CLARO HOGAR') {
@@ -144,64 +151,37 @@ export class StepPlans {
                 { minWidth: 1100, slidesPerView: 4 },
             ] }, this.plans.map((plan) => this.renderPlanCard(plan))))), !this.isLoading && !this.error && this.plans.length === 0 && (h("div", { key: 'f2307ae3051846e8856bc79357c1e0484c932230', class: "step-plans__empty" }, h("p", { key: '5aac2fe50868431fadc98608ffaaaee27e8a949f' }, "No hay planes disponibles para tu \u00E1rea."))), h("footer", { key: '946020db3fcb9988b69c917e47eafb3d4e0c3580', class: "step-plans__footer" }, h("div", { key: '38d5db323807e7dee0e81802f2a74b3ece20f22a', class: "step-plans__footer-left" }, h("div", { key: '55a16f53a716352a46a05d5978ae1fcc922aeaa8', class: "step-plans__footer-info" }, h("div", { key: 'dfce819c5772d8a823242afe30d58f0f7c2d2638', class: "step-plans__footer-item" }, h("span", { key: '6906f80d9838041847a6c9243522ff2da5ae0f3e', class: "step-plans__footer-label" }, "Pago mensual"), h("span", { key: 'ad72c7c7777399ae3bf8fc8511fce1ba0aebce54', class: "step-plans__footer-value" }, formatPrice(monthlyPayment))), h("div", { key: 'ac4e5f57aa18cb7cae2687b663be7bd5d2c44b81', class: "step-plans__footer-item step-plans__footer-item--separator" }, h("span", { key: 'e6e40cd9ef813aa8400a01f639d93e71c77e3454', class: "step-plans__footer-label" }, "Paga hoy"), h("span", { key: '71af6c8f8b90dd23f539188c4a41977c4fb3c423', class: "step-plans__footer-value step-plans__footer-value--highlight" }, formatPrice(totalToday)))), h("p", { key: 'ce00ab6c4a85cc7e76b426d685398282a90478ff', class: "step-plans__footer-note" }, "Renta mensual aproximada no incluye cargos estatales, federales, ni otros impuestos.")), h("button", { key: 'e1cc610390e28136802f93cc1e2f0a86836fa2f1', class: "step-plans__footer-btn", onClick: this.handleContinue, disabled: !this.selectedPlan || this.isAddingToCart }, this.isAddingToCart ? 'Procesando...' : 'Continuar')))));
     }
-    static get is() { return "step-plans"; }
-    static get encapsulation() { return "shadow"; }
-    static get originalStyleUrls() {
-        return {
-            "$": ["step-plans.scss"]
-        };
+    static get style() { return stepPlansCss(); }
+}, [769, "step-plans", {
+        "onNext": [16],
+        "onBack": [16],
+        "plans": [32],
+        "selectedPlan": [32],
+        "isLoading": [32],
+        "error": [32],
+        "isAddingToCart": [32]
+    }]);
+function defineCustomElement() {
+    if (typeof customElements === "undefined") {
+        return;
     }
-    static get styleUrls() {
-        return {
-            "$": ["step-plans.css"]
-        };
-    }
-    static get properties() {
-        return {
-            "onNext": {
-                "type": "unknown",
-                "mutable": false,
-                "complexType": {
-                    "original": "() => void",
-                    "resolved": "() => void",
-                    "references": {}
-                },
-                "required": false,
-                "optional": false,
-                "docs": {
-                    "tags": [],
-                    "text": ""
-                },
-                "getter": false,
-                "setter": false
-            },
-            "onBack": {
-                "type": "unknown",
-                "mutable": false,
-                "complexType": {
-                    "original": "() => void",
-                    "resolved": "() => void",
-                    "references": {}
-                },
-                "required": false,
-                "optional": false,
-                "docs": {
-                    "tags": [],
-                    "text": ""
-                },
-                "getter": false,
-                "setter": false
+    const components = ["step-plans", "ui-carousel"];
+    components.forEach(tagName => { switch (tagName) {
+        case "step-plans":
+            if (!customElements.get(transformTag(tagName))) {
+                customElements.define(transformTag(tagName), StepPlans);
             }
-        };
-    }
-    static get states() {
-        return {
-            "plans": {},
-            "selectedPlan": {},
-            "isLoading": {},
-            "error": {},
-            "isAddingToCart": {}
-        };
-    }
+            break;
+        case "ui-carousel":
+            if (!customElements.get(transformTag(tagName))) {
+                defineCustomElement$1();
+            }
+            break;
+    } });
 }
-//# sourceMappingURL=step-plans.js.map
+defineCustomElement();
+
+export { StepPlans as S, defineCustomElement as d };
+//# sourceMappingURL=p-CL4zwEGD.js.map
+
+//# sourceMappingURL=p-CL4zwEGD.js.map

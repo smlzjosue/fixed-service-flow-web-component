@@ -341,7 +341,10 @@ export class StepConfirmation {
     return (
       <div class="step-confirmation__result step-confirmation__result--success">
         <div class="step-confirmation__icon step-confirmation__icon--success">
-          <img src="/assets/images/ok-check.svg" alt="Éxito" />
+          <svg width="49" height="48" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24.4237 2C12.0492 2 2 11.8441 2 23.9661C2 36.0881 12.0492 45.9322 24.4237 45.9322C36.7983 45.9322 46.8475 36.0881 46.8475 23.9661" stroke="#0EA651" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M44.5225 4.19666L21.1852 30.8L12.3818 22.2577" stroke="#0EA651" stroke-width="4" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
         <h2 class="step-confirmation__title step-confirmation__title--success">{SUCCESS_MESSAGES.REQUEST_SUCCESS}</h2>
         <p class="step-confirmation__message">{SUCCESS_MESSAGES.REQUEST_SUCCESS_SUBTITLE}</p>
@@ -361,7 +364,9 @@ export class StepConfirmation {
     return (
       <div class="step-confirmation__result step-confirmation__result--error">
         <div class="step-confirmation__icon step-confirmation__icon--error">
-          <img src="/assets/images/error-check.svg" alt="Error" />
+          <svg width="49" height="49" viewBox="0 0 49 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24.5 0C38.0096 9.05167e-07 49 10.9899 49 24.5C49 38.0101 38.0096 49 24.5 49C10.9904 49 0 38.0101 0 24.5C0 10.9899 10.99 0 24.5 0ZM24.5 3.78516C13.0775 3.78516 3.78418 13.0774 3.78418 24.5C3.78418 35.9215 13.0774 45.2148 24.5 45.2148C35.9225 45.2148 45.2158 35.922 45.2158 24.5C45.2158 13.078 35.9225 3.78516 24.5 3.78516ZM24.5 31.8809C25.5449 31.8809 26.3915 32.7276 26.3916 33.7725V35.3486C26.3916 36.3936 25.5449 37.2412 24.5 37.2412C23.4551 37.2412 22.6084 36.3936 22.6084 35.3486V33.7725C22.6085 32.7276 23.4551 31.8809 24.5 31.8809ZM24.5 11.7588C25.5449 11.7588 26.3915 12.6055 26.3916 13.6504V27.7725C26.3916 28.8174 25.5449 29.6641 24.5 29.6641C23.4551 29.6641 22.6084 28.8174 22.6084 27.7725V13.6504C22.6085 12.6055 23.4551 11.7588 24.5 11.7588Z" fill="#B41E13"/>
+          </svg>
         </div>
         <h2 class="step-confirmation__title step-confirmation__title--error">
           ¡Lo sentimos, ha ocurrido un error en el proceso de solicitud!

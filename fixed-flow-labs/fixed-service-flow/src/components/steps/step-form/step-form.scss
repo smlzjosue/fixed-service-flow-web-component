@@ -22,7 +22,19 @@
     @include flex-between;
     margin-bottom: $spacing-4;
     padding-bottom: $spacing-4;
-    border-bottom: 1px solid $color-border-light;
+    position: relative;
+
+    // Full viewport width divider using pseudo-element
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 1px;
+      background: $color-border-light;
+    }
   }
 
   &__title {

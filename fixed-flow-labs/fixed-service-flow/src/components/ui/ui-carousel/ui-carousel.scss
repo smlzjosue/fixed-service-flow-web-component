@@ -37,6 +37,7 @@
 
   &__track {
     display: flex;
+    align-items: stretch; // Force all cards to have equal height
     transition: transform 0.3s ease-out;
     will-change: transform;
 

@@ -1,6 +1,6 @@
 import { t as transformTag, p as proxyCustomElement, H, h, d as Host } from './p-BTqKKAHI.js';
 
-const uiCarouselCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block;width:100%}.ui-carousel{position:relative;width:100%;display:flex;align-items:center}.ui-carousel__viewport{flex:1;overflow:hidden;margin:0 0.5rem}@media (min-width: 768px){.ui-carousel__viewport{margin:0 1rem}}.ui-carousel__track{display:flex;transition:transform 0.3s ease-out;will-change:transform}.ui-carousel__track--dragging{transition:none;cursor:grabbing}.ui-carousel__nav{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:#FFFFFF;border:2px solid #DA291C;color:#DA291C;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;z-index:2;box-shadow:0 2px 8px rgba(0, 0, 0, 0.1)}.ui-carousel__nav svg{width:20px;height:20px}.ui-carousel__nav:hover:not(:disabled){background:#DA291C;color:#FFFFFF}.ui-carousel__nav:active:not(:disabled){transform:scale(0.95)}.ui-carousel__nav--disabled{opacity:0.3;cursor:not-allowed;pointer-events:none}@media (max-width: 599px){.ui-carousel__nav{width:32px;height:32px}.ui-carousel__nav svg{width:16px;height:16px}}.ui-carousel__pagination{position:absolute;bottom:-2rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:2}.ui-carousel__dot{width:10px;height:10px;border-radius:50%;border:none;background:#CCCCCC;cursor:pointer;padding:0;transition:all 0.2s ease}.ui-carousel__dot:hover{background:#999999}.ui-carousel__dot--active{background:#DA291C;transform:scale(1.2)}::slotted(*){box-sizing:border-box}`;
+const uiCarouselCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block;width:100%}.ui-carousel{position:relative;width:100%;display:flex;align-items:center}.ui-carousel__viewport{flex:1;overflow:hidden;margin:0 0.5rem}@media (min-width: 768px){.ui-carousel__viewport{margin:0 1rem}}.ui-carousel__track{display:flex;align-items:stretch;transition:transform 0.3s ease-out;will-change:transform}.ui-carousel__track--dragging{transition:none;cursor:grabbing}.ui-carousel__nav{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:#FFFFFF;border:2px solid #DA291C;color:#DA291C;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;z-index:2;box-shadow:0 2px 8px rgba(0, 0, 0, 0.1)}.ui-carousel__nav svg{width:20px;height:20px}.ui-carousel__nav:hover:not(:disabled){background:#DA291C;color:#FFFFFF}.ui-carousel__nav:active:not(:disabled){transform:scale(0.95)}.ui-carousel__nav--disabled{opacity:0.3;cursor:not-allowed;pointer-events:none}@media (max-width: 599px){.ui-carousel__nav{width:32px;height:32px}.ui-carousel__nav svg{width:16px;height:16px}}.ui-carousel__pagination{position:absolute;bottom:-2rem;left:50%;transform:translateX(-50%);display:flex;gap:0.5rem;z-index:2}.ui-carousel__dot{width:10px;height:10px;border-radius:50%;border:none;background:#CCCCCC;cursor:pointer;padding:0;transition:all 0.2s ease}.ui-carousel__dot:hover{background:#999999}.ui-carousel__dot--active{background:#DA291C;transform:scale(1.2)}::slotted(*){box-sizing:border-box}`;
 
 const UiCarousel = /*@__PURE__*/ proxyCustomElement(class UiCarousel extends H {
     constructor(registerHost) {
@@ -242,6 +242,7 @@ const UiCarousel = /*@__PURE__*/ proxyCustomElement(class UiCarousel extends H {
             ::slotted(*) {
               flex: 0 0 calc(${slideWidth}% - ${this.gap * (this.currentSlidesPerView - 1) / this.currentSlidesPerView}px);
               max-width: calc(${slideWidth}% - ${this.gap * (this.currentSlidesPerView - 1) / this.currentSlidesPerView}px);
+              /* height handled by align-items: stretch on track */
             }
           `)));
     }
@@ -282,6 +283,6 @@ function defineCustomElement() {
 defineCustomElement();
 
 export { UiCarousel as U, defineCustomElement as d };
-//# sourceMappingURL=p-DL5swzyr.js.map
+//# sourceMappingURL=p-DGspzOV2.js.map
 
-//# sourceMappingURL=p-DL5swzyr.js.map
+//# sourceMappingURL=p-DGspzOV2.js.map

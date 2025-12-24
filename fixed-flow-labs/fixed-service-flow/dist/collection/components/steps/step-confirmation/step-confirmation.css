@@ -34,7 +34,17 @@
 .step-confirmation__header {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #E5E5E5;
+  position: relative;
+}
+.step-confirmation__header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 1px;
+  background: #E5E5E5;
 }
 .step-confirmation__header-title {
   font-size: 1.75rem;

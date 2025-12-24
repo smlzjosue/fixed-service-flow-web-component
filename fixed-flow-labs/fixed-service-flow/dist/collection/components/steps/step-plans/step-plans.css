@@ -44,7 +44,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.step-plans__header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 1px;
+  background: #E5E5E5;
 }
 .step-plans__title {
   font-size: 1.5rem;
@@ -252,7 +264,6 @@
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  height: 100%;
   min-height: 340px;
 }
 .plan-card:hover {
@@ -331,12 +342,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #0097A9;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #0097A9;
   border: 2px solid #0097A9;
 }
 .plan-card__btn:hover {
-  background: rgb(0, 114.5455621302, 128.2);
+  background: rgba(0, 151, 169, 0.1);
 }
 .plan-card__btn--selected {
   background: #0097A9;

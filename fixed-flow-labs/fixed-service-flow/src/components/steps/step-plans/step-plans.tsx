@@ -246,7 +246,7 @@ export class StepPlans {
               <ui-carousel
                 totalItems={this.plans.length}
                 gap={24}
-                showNavigation={true}
+                showNavigation={false}
                 showPagination={true}
                 breakpoints={[
                   { minWidth: 0, slidesPerView: 1 },

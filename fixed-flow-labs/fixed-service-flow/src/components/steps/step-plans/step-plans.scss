@@ -27,7 +27,21 @@
 
   &__header {
     @include flex-between;
-    margin-bottom: $spacing-8;
+    padding-bottom: $spacing-4;
+    margin-bottom: $spacing-6;
+    position: relative;
+
+    // Full viewport width divider using pseudo-element
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 1px;
+      background: $color-border-light;
+    }
   }
 
   &__title {
@@ -206,7 +220,7 @@
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  // height handled by carousel's align-items: stretch
   min-height: 340px;
 
   &:hover {
@@ -317,14 +331,16 @@
     font-weight: $font-weight-semibold;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: $color-secondary;
-    color: $color-white;
+    // Default: outline style (not selected)
+    background: $color-white;
+    color: $color-secondary;
     border: 2px solid $color-secondary;
 
     &:hover {
-      background: darken($color-secondary, 8%);
+      background: rgba($color-secondary, 0.1);
     }
 
+    // Selected: filled style
     &--selected {
       background: $color-secondary;
       color: $color-white;
