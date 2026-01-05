@@ -1,12 +1,25 @@
 // ============================================
-// STEP CATALOGUE - Product Catalogue for CLARO HOGAR
+// STEP CATALOGUE - Modem Selection for CLARO HOGAR
 // Fixed Service Flow Web Component
-// Design based on TEL product-list-web + filters-web
+// Design based on docs/capturas/3.png - Carousel + Summary Bar
 // ============================================
 
 import { Component, Prop, State, h, Host } from '@stencil/core';
-import { catalogueService, productService } from '../../../services';
-import { CatalogueProduct, CatalogueFilter } from '../../../store/interfaces';
+import { catalogueService, productService, cartService } from '../../../services';
+import { CatalogueProduct, ProductDetail } from '../../../store/interfaces';
+import { formatPrice } from '../../../utils/formatters';
+
+// ------------------------------------------
+// SUMMARY DATA INTERFACE
+// ------------------------------------------
+
+interface SummaryData {
+  productName: string;
+  planPrice: number;
+  svaPrice: number;
+  equipmentPrice: number;
+  payToday: number;
+}
 
 @Component({
   tag: 'step-catalogue',
@@ -25,56 +38,63 @@ export class StepCatalogue {
   // STATE
   // ------------------------------------------
 
+  // Products from catalogue
   @State() products: CatalogueProduct[] = [];
-  @State() filteredProducts: CatalogueProduct[] = [];
   @State() isLoading: boolean = true;
   @State() error: string | null = null;
-  @State() searchText: string = '';
-  @State() selectedFilter: string = '';
-  @State() showFilters: boolean = true;
-  @State() filterOptions: CatalogueFilter[] = [];
 
-  // Modal state (TEL pattern: seeMoreModal)
-  @State() showDetailModal: boolean = false;
-  @State() modalTitle: string = '';
-  @State() modalContent: string = '';
+  // Product details cache (loaded in parallel)
+  @State() productsWithDetails: Map<number, ProductDetail> = new Map();
+  @State() loadingDetails: Set<number> = new Set();
+
+  // Selection state
+  @State() selectedProduct: CatalogueProduct | null = null;
+  @State() selectedProductDetail: ProductDetail | null = null;
+  @State() isAddingToCart: boolean = false;
+
+  // Unavailable modal
+  @State() showUnavailableModal: boolean = false;
+
+  // Summary bar data
+  @State() summaryData: SummaryData | null = null;
 
   // ------------------------------------------
   // LIFECYCLE
   // ------------------------------------------
 
   componentWillLoad() {
-    // Get filter options (sync)
-    this.filterOptions = catalogueService.getProductTypeFilters();
-
-    // Set default filter to "Internet Inalámbrico" (second option)
-    this.selectedFilter = catalogueService.FILTER_INTERNET_INALAMBRICO;
-
     // isLoading is already true by default, so loader will show immediately
   }
 
   componentDidLoad() {
-    // Load products after component renders (shows loader while loading)
+    // Load products after component renders
     this.loadProducts();
   }
 
   // ------------------------------------------
-  // METHODS
+  // DATA LOADING METHODS
   // ------------------------------------------
 
+  /**
+   * Loads products from catalogue API
+   * Uses "Internet Inalámbrico" filter by default
+   */
   private async loadProducts() {
     this.isLoading = true;
     this.error = null;
 
     try {
-      const response = await catalogueService.listCatalogue(
-        this.selectedFilter,
-        1,
-        this.searchText
-      );
+      // Default to "Internet Inalámbrico" subcatalog
+      const subcatalogId = catalogueService.FILTER_INTERNET_INALAMBRICO;
+
+      const response = await catalogueService.listCatalogue(subcatalogId, 1, '');
 
       this.products = response.products || [];
-      this.filteredProducts = this.products;
+
+      // After loading products, load details for visible ones
+      if (this.products.length > 0) {
+        await this.loadProductsDetails(this.products);
+      }
     } catch (err) {
       console.error('[StepCatalogue] Error loading products:', err);
       this.error = 'Error al cargar el catálogo de productos';
@@ -83,189 +103,322 @@ export class StepCatalogue {
     }
   }
 
-  private handleFilterChange = async (filterValue: string) => {
-    this.selectedFilter = filterValue;
-    await this.loadProducts();
-  };
+  /**
+   * Loads product details in parallel for faster UX
+   * @param products - Products to load details for
+   */
+  private async loadProductsDetails(products: CatalogueProduct[]) {
+    // Load details for first 6 products in parallel
+    const productsToLoad = products.slice(0, 6);
 
-  private handleSearchInput = (e: Event) => {
-    this.searchText = (e.target as HTMLInputElement).value;
-  };
+    const detailPromises = productsToLoad.map(async (product) => {
+      // Skip if already loaded
+      if (this.productsWithDetails.has(product.productId)) {
+        return;
+      }
 
-  private handleSearch = async () => {
-    await this.loadProducts();
-  };
+      // Mark as loading
+      this.loadingDetails = new Set([...this.loadingDetails, product.productId]);
 
-  private handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      this.handleSearch();
+      try {
+        const response = await productService.getEquipmentDetail(product.productId);
+
+        if (!response.hasError && response.product) {
+          const newMap = new Map(this.productsWithDetails);
+          newMap.set(product.productId, response.product);
+          this.productsWithDetails = newMap;
+        }
+      } catch (err) {
+        console.error(`[StepCatalogue] Error loading details for ${product.productId}:`, err);
+      } finally {
+        const newSet = new Set(this.loadingDetails);
+        newSet.delete(product.productId);
+        this.loadingDetails = newSet;
+      }
+    });
+
+    await Promise.allSettled(detailPromises);
+  }
+
+  // ------------------------------------------
+  // SELECTION & CART METHODS
+  // ------------------------------------------
+
+  /**
+   * Handles product selection
+   * - Loads details if not cached
+   * - Updates summary bar
+   * - Calls addToCart API
+   */
+  private handleSelectProduct = async (product: CatalogueProduct) => {
+    // If clicking the same product, do nothing
+    if (this.selectedProduct?.productId === product.productId) {
+      return;
+    }
+
+    this.isAddingToCart = true;
+    this.error = null;
+
+    try {
+      // Get product detail (from cache or API)
+      let productDetail = this.productsWithDetails.get(product.productId);
+
+      if (!productDetail) {
+        // Load detail on demand
+        console.log('[StepCatalogue] Loading detail for:', product.productId);
+        const response = await productService.getEquipmentDetail(product.productId);
+
+        if (response.hasError || !response.product) {
+          throw new Error('Error al cargar detalles del producto');
+        }
+
+        productDetail = response.product;
+
+        // Cache it
+        const newMap = new Map(this.productsWithDetails);
+        newMap.set(product.productId, productDetail);
+        this.productsWithDetails = newMap;
+      }
+
+      // Check availability BEFORE proceeding (stock must be > 1)
+      const ENTRY_BARRIER = 1;
+      if (productDetail.stock === undefined || productDetail.stock <= ENTRY_BARRIER) {
+        console.log('[StepCatalogue] Product unavailable, stock:', productDetail.stock);
+        this.showUnavailableModal = true;
+        this.isAddingToCart = false;
+        return;
+      }
+
+      // Update selection
+      this.selectedProduct = product;
+      this.selectedProductDetail = productDetail;
+
+      // Update summary bar
+      this.updateSummaryData(product, productDetail);
+
+      // Store product in session for next steps
+      const subcatalogId = parseInt(catalogueService.FILTER_INTERNET_INALAMBRICO, 10);
+      catalogueService.storeProductInSession(product);
+      productService.storeSelectedProduct(product, subcatalogId);
+
+      // Add to cart
+      console.log('[StepCatalogue] Adding to cart:', product.productName);
+      const cartResponse = await cartService.addToCart(
+        productDetail,
+        product.installments || 24,
+        1
+      );
+
+      if (cartResponse.hasError) {
+        console.error('[StepCatalogue] Cart error:', cartResponse.message);
+        // Still allow selection even if cart fails
+      } else {
+        console.log('[StepCatalogue] Added to cart, mainId:', cartResponse.code);
+      }
+
+    } catch (err) {
+      console.error('[StepCatalogue] Selection error:', err);
+      this.error = 'Error al seleccionar el producto. Por favor intente de nuevo.';
+    } finally {
+      this.isAddingToCart = false;
     }
   };
 
-  // @ts-ignore: toggleFilters reserved for mobile filter toggle feature
-  private _toggleFilters = () => {
-    this.showFilters = !this.showFilters;
-  };
+  /**
+   * Updates the summary bar data based on selected product
+   */
+  private updateSummaryData(product: CatalogueProduct, detail: ProductDetail) {
+    // Calculate "Paga hoy" = regular_price (down payment + any initial costs)
+    const payToday = product.regular_price || detail.decDownPayment || 0;
 
-  private clearFilters = () => {
-    this.selectedFilter = catalogueService.FILTER_INTERNET_INALAMBRICO;
-    this.searchText = '';
-    this.loadProducts();
-  };
-
-  private handleViewMore = (product: CatalogueProduct) => {
-    // Store selected product and subcatalog ID for plans API
-    const subcatalogId = parseInt(this.selectedFilter, 10);
-    catalogueService.storeProductInSession(product);
-    productService.storeSelectedProduct(product, subcatalogId);
-    console.log('[StepCatalogue] Product selected:', product.productName, 'subcatalogId:', subcatalogId);
-    this.onNext?.();
-  };
-
-  private cleanHTML(html: string): string {
-    return catalogueService.cleanDescription(html);
-  }
-
-  private getSelectedFilterCount(): number {
-    return this.selectedFilter ? 1 : 0;
+    this.summaryData = {
+      productName: product.productName,
+      planPrice: 0, // Will be set in step-plans
+      svaPrice: 0,  // No SVA at this point
+      equipmentPrice: product.update_price || 0, // Monthly equipment payment
+      payToday: payToday,
+    };
   }
 
   /**
-   * Opens the detail modal with product description
-   * TEL pattern: seeMore() -> modalProvider.seeMoreModal()
+   * Handles continue button click
+   * Proceeds to step-plans
    */
-  private handleSeeDetail = (product: CatalogueProduct) => {
-    const fullDescription = this.cleanHTML(product.shortDescription || '');
-    this.modalTitle = product.productName;
-    this.modalContent = fullDescription;
-    this.showDetailModal = true;
+  private handleContinue = () => {
+    if (this.selectedProduct && !this.isAddingToCart) {
+      this.onNext?.();
+    }
   };
 
   /**
-   * Closes the detail modal
-   * TEL pattern: closeModal() -> modalController.dismiss()
+   * Closes the unavailable product modal
    */
-  private closeDetailModal = () => {
-    this.showDetailModal = false;
-    this.modalTitle = '';
-    this.modalContent = '';
+  private handleCloseUnavailableModal = () => {
+    this.showUnavailableModal = false;
   };
 
   // ------------------------------------------
   // RENDER HELPERS
   // ------------------------------------------
 
-  private renderFilterSidebar() {
-    const filterCount = this.getSelectedFilterCount();
+  /**
+   * Renders the unavailable product modal
+   */
+  private renderUnavailableModal() {
+    if (!this.showUnavailableModal) {
+      return null;
+    }
 
     return (
-      <aside class="filter-container" style={{ display: this.showFilters ? 'block' : 'none' }}>
-        {/* Filter Header */}
-        <div class="filter-header">
-          <span class="filter-title">Filtrar por:</span>
-          <a class="reset-filter" onClick={this.clearFilters}>
-            Limpiar filtros
-          </a>
-        </div>
-
-        {/* Filter Count */}
-        <div class="filter-result">
-          <p class="result">
-            {filterCount > 0
-              ? `filtros seleccionados (${filterCount})`
-              : 'Ningún filtro seleccionado'}
-          </p>
-        </div>
-
-        {/* Product Type Filter */}
-        <div class="filter-type-product">
-          <div class="filter-type-title">
-            <h4 class="filter-title-section">Tipo de producto</h4>
-            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"></polyline>
+      <div class="unavailable-modal-overlay" onClick={this.handleCloseUnavailableModal}>
+        <div class="unavailable-modal" onClick={(e) => e.stopPropagation()}>
+          <div class="unavailable-modal__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
           </div>
-          <div class="slot-radio">
-            <div class="radio-group">
-              {this.filterOptions.map((option) => (
-                <label class="radio-button">
-                  <input
-                    type="radio"
-                    name="productType"
-                    value={option.value}
-                    checked={this.selectedFilter === option.value}
-                    onChange={() => this.handleFilterChange(option.value)}
-                  />
-                  <span class="radio-label">{option.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      </aside>
-    );
-  }
-
-  private renderProductCard(product: CatalogueProduct) {
-    const description = this.cleanHTML(product.shortDescription || '');
-    const truncatedDesc = catalogueService.truncateText(description, 80);
-
-    return (
-      <div class="new-product-item">
-        {/* Top section: Image + Info */}
-        <div class="new-product-item__top">
-          <div class="new-product-item__img">
-            <img src={product.imgUrl} alt={product.productName} loading="lazy" />
-          </div>
-          <div class="new-product-item__info">
-            <div class="title">{product.productName}</div>
-            {product.installments > 0 && (
-              <div class="financed-price">
-                <div class="financed-price-text">Financiado</div>
-                <div class="financed-price__value">
-                  ${product.update_price?.toFixed(2) || '0.00'}/mes
-                </div>
-                <div class="installments-text">{product.installments} Plazos</div>
-              </div>
-            )}
-            <div class="regular-price">
-              Precio regular: ${product.regular_price?.toFixed(2) || '0.00'}
-            </div>
-          </div>
-        </div>
-
-        {/* Color dots */}
-        {product.colors && product.colors.length > 0 && (
-          <div class="container-colors">
-            {product.colors.map((color) => (
-              <div class="color-dot" style={{ backgroundColor: color.webColor }}></div>
-            ))}
-          </div>
-        )}
-
-        {/* Middle section: Description (always render for consistent card height) */}
-        <div class="new-product-item__middle">
-          {description ? (
-            <span class="description-text">
-              {truncatedDesc}
-              {description.length > 80 && (
-                <a class="see-detail" onClick={(e) => { e.stopPropagation(); this.handleSeeDetail(product); }}>
-                  Ver detalle
-                </a>
-              )}
-            </span>
-          ) : (
-            <span class="description-text">&nbsp;</span>
-          )}
-        </div>
-
-        {/* Bottom section: Actions */}
-        <div class="new-product-item__bottom">
-          <button class="action-button" onClick={() => this.handleViewMore(product)}>
-            Ver más
+          <h3 class="unavailable-modal__title">Producto no disponible</h3>
+          <p class="unavailable-modal__message">
+            Lo sentimos, este producto no está disponible en este momento.
+            Por favor, seleccione otro equipo.
+          </p>
+          <button class="unavailable-modal__button" onClick={this.handleCloseUnavailableModal}>
+            Entendido
           </button>
         </div>
       </div>
+    );
+  }
+
+  /**
+   * Renders a product card for the carousel
+   */
+  private renderProductCard(product: CatalogueProduct) {
+    const isSelected = this.selectedProduct?.productId === product.productId;
+    const isLoadingDetail = this.loadingDetails.has(product.productId);
+    const isProcessing = this.isAddingToCart && isSelected;
+
+    return (
+      <div
+        class={{
+          'product-card': true,
+          'product-card--selected': isSelected,
+          'product-card--loading': isLoadingDetail,
+        }}
+        onClick={() => !this.isAddingToCart && this.handleSelectProduct(product)}
+      >
+        {/* Card content: Image | Info */}
+        <div class="product-card__content">
+          {/* Left: Image */}
+          <div class="product-card__image">
+            <img src={product.imgUrl} alt={product.productName} loading="lazy" />
+          </div>
+
+          {/* Right: Info */}
+          <div class="product-card__info">
+            <h3 class="product-card__name">{product.productName}</h3>
+
+            {/* Financed price */}
+            {product.installments > 0 && (
+              <div class="product-card__financed">
+                <span class="product-card__financed-label">Financiado</span>
+                <span class="product-card__financed-price">
+                  {formatPrice(product.update_price || 0)}/mes
+                </span>
+                <span class="product-card__installments">
+                  {product.installments} plazos
+                </span>
+              </div>
+            )}
+
+            {/* Regular price */}
+            <p class="product-card__regular-price">
+              Precio regular: {formatPrice(product.regular_price || 0)}
+            </p>
+          </div>
+        </div>
+
+        {/* Card footer with message */}
+        <div class="product-card__footer">
+          <p class="product-card__footer-text">¡Mantente conectado en todo momento!</p>
+        </div>
+
+        {/* Loading indicator for detail fetch */}
+        {isProcessing && (
+          <div class="product-card__processing">
+            <div class="product-card__spinner"></div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  /**
+   * Renders the summary bar footer
+   */
+  private renderSummaryBar() {
+    const productName = this.summaryData?.productName || '-';
+    const planPrice = this.summaryData?.planPrice || 0;
+    const svaPrice = this.summaryData?.svaPrice || 0;
+    const equipmentPrice = this.summaryData?.equipmentPrice || 0;
+    const payToday = this.summaryData?.payToday || 0;
+
+    return (
+      <footer class="step-catalogue__summary-bar">
+        <div class="step-catalogue__summary-content">
+          {/* PCD */}
+          <div class="step-catalogue__summary-item">
+            <span class="step-catalogue__summary-label">PCD</span>
+            <span class="step-catalogue__summary-value">{productName}</span>
+          </div>
+
+          {/* Plan */}
+          <div class="step-catalogue__summary-item">
+            <span class="step-catalogue__summary-label">Plan</span>
+            <span class="step-catalogue__summary-value">
+              {formatPrice(planPrice)} / mes
+            </span>
+          </div>
+
+          {/* SVA */}
+          <div class="step-catalogue__summary-item">
+            <span class="step-catalogue__summary-label">SVA</span>
+            <span class="step-catalogue__summary-value">
+              {formatPrice(svaPrice)} / mes
+            </span>
+          </div>
+
+          {/* Equipo / Accesorio */}
+          <div class="step-catalogue__summary-item">
+            <span class="step-catalogue__summary-label">Equipo / Accesorio</span>
+            <span class="step-catalogue__summary-value">
+              {formatPrice(equipmentPrice)} / mes
+            </span>
+          </div>
+
+          {/* Paga hoy */}
+          <div class="step-catalogue__summary-item step-catalogue__summary-item--highlight">
+            <span class="step-catalogue__summary-label">Paga hoy</span>
+            <span class="step-catalogue__summary-value step-catalogue__summary-value--red">
+              {formatPrice(payToday)} + IVU
+            </span>
+          </div>
+        </div>
+
+        {/* Continue button */}
+        <button
+          class={{
+            'step-catalogue__continue-btn': true,
+            'step-catalogue__continue-btn--disabled': !this.selectedProduct || this.isAddingToCart,
+          }}
+          onClick={this.handleContinue}
+          disabled={!this.selectedProduct || this.isAddingToCart}
+        >
+          {this.isAddingToCart ? 'Procesando...' : 'Continuar'}
+        </button>
+      </footer>
     );
   }
 
@@ -274,114 +427,69 @@ export class StepCatalogue {
   // ------------------------------------------
 
   render() {
-    // Get title based on selected filter
-    const title = this.selectedFilter === catalogueService.FILTER_INTERNET_INALAMBRICO
-      ? 'Internet Inalámbrico'
-      : 'Internet + Telefonía';
-
     return (
       <Host>
         <div class="step-catalogue">
-          {/* Search Header */}
-          <div class="container-filter">
-            <h1 class="filter-title-main">{title}</h1>
-
-            <div class="filter-content">
-              <div class="input-filter-wrapper">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-                <input
-                  type="text"
-                  class="input-filter"
-                  placeholder="Buscar articulo"
-                  value={this.searchText}
-                  onInput={this.handleSearchInput}
-                  onKeyPress={this.handleKeyPress}
-                />
-              </div>
-              <button class="btn-search" onClick={this.handleSearch}>
-                Buscar
-              </button>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div class="catalogue-content">
-            {/* Filter Sidebar */}
-            {this.renderFilterSidebar()}
-
-            {/* Products Grid */}
-            <div class="products-section">
-              {/* Loading */}
-              {this.isLoading && (
-                <div class="loading-container">
-                  <div class="spinner"></div>
-                  <p>Cargando productos...</p>
-                </div>
-              )}
-
-              {/* Error */}
-              {this.error && !this.isLoading && (
-                <div class="error-container">
-                  <p>{this.error}</p>
-                  <button onClick={() => this.loadProducts()}>Reintentar</button>
-                </div>
-              )}
-
-              {/* Products Grid */}
-              {!this.isLoading && !this.error && (
-                <div class={{
-                  'container-product': true,
-                  'container-product-filter-off': !this.showFilters,
-                }}>
-                  {this.filteredProducts.map((product) => this.renderProductCard(product))}
-                </div>
-              )}
-
-              {/* Empty State */}
-              {!this.isLoading && !this.error && this.filteredProducts.length === 0 && (
-                <div class="empty-container">
-                  <p>No hay productos disponibles para esta categoría</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Back Button */}
-          <div class="back-button-container">
-            <button class="btn-back" onClick={this.onBack}>
-              Regresar
+          {/* Header */}
+          <header class="step-catalogue__header">
+            <button class="step-catalogue__back-link" onClick={this.onBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Regresar</span>
             </button>
-          </div>
-        </div>
+            <h1 class="step-catalogue__title">Escoger modem para servicio fijo</h1>
+            <div class="step-catalogue__divider"></div>
+          </header>
 
-        {/* Detail Modal (TEL pattern: see-more-modal) */}
-        {this.showDetailModal && (
-          <div class="modal-overlay" onClick={this.closeDetailModal}>
-            <div class="modal-content" onClick={(e) => e.stopPropagation()}>
-              {/* Close Button */}
-              <button class="modal-close" onClick={this.closeDetailModal}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-
-              {/* Modal Title */}
-              <div class="modal-title">
-                <div class="modal-subtitle">Descripción completa</div>
-                {this.modalTitle}
-              </div>
-
-              {/* Modal Content */}
-              <div class="modal-body">
-                <p class="modal-text">{this.modalContent}</p>
-              </div>
+          {/* Loading state */}
+          {this.isLoading && (
+            <div class="step-catalogue__loading">
+              <div class="step-catalogue__spinner"></div>
+              <p>Cargando productos...</p>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Error state */}
+          {this.error && !this.isLoading && (
+            <div class="step-catalogue__error">
+              <p>{this.error}</p>
+              <button onClick={() => this.loadProducts()}>Reintentar</button>
+            </div>
+          )}
+
+          {/* Products carousel */}
+          {!this.isLoading && !this.error && this.products.length > 0 && (
+            <div class="step-catalogue__carousel-container">
+              <ui-carousel
+                totalItems={this.products.length}
+                gap={24}
+                showNavigation={false}
+                showPagination={true}
+                breakpoints={[
+                  { minWidth: 0, slidesPerView: 1 },
+                  { minWidth: 600, slidesPerView: 2 },
+                  { minWidth: 900, slidesPerView: 3 },
+                ]}
+              >
+                {this.products.map((product) => this.renderProductCard(product))}
+              </ui-carousel>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!this.isLoading && !this.error && this.products.length === 0 && (
+            <div class="step-catalogue__empty">
+              <p>No hay productos disponibles en este momento.</p>
+            </div>
+          )}
+
+          {/* Summary bar */}
+          {this.renderSummaryBar()}
+
+          {/* Unavailable product modal */}
+          {this.renderUnavailableModal()}
+        </div>
       </Host>
     );
   }
