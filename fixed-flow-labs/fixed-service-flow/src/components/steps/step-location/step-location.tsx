@@ -226,68 +226,161 @@ export class StepLocation {
   };
 
   /**
-   * Shows coverage result in InfoWindow on the marker (like TEL pattern)
-   * Styles match TEL: .info, .infoOn, .infoOff, .continue-map, .continue-button
+   * Shows coverage result in InfoWindow on the marker
+   * New design based on capturas 1.png and 2.png
    */
   private showCoverageInfoWindow(message: string, isSuccess: boolean): void {
-    // TEL-style InfoWindow content - width auto to fill parent container (600px set by maps.service)
+    // Determine if we should show "options" for no coverage (CLARO HOGAR alternative)
+    const hasAlternativeOptions = !isSuccess;
+
+    const displayMessage = isSuccess
+      ? message
+      : 'Escoge entre nuestra selección de modems.';
+
+    const buttonText = isSuccess ? '¡Lo quiero!' : 'Ver opciones';
+
+    // SVG icon from covertura.svg (torre de transmisión con señal WiFi) - only for success
+    const coverageIcon = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4.58325 19.5815L10.9873 4.5376" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M17.875 19.582L11.4707 4.53809" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M7.06067 14.8589L16.9086 18.3631" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M15.3981 14.8547L5.55017 18.3589" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M8.31006 11.8936L15.1257 14.3188" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M9.56519 8.60864L13.8695 11.4782" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M14.0804 11.8904L7.26477 14.3156" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M12.913 8.60864L8.60864 11.4782" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
+      <path d="M11.2291 4.67082C11.8228 4.67082 12.3041 4.18951 12.3041 3.59579C12.3041 3.00206 11.8228 2.52075 11.2291 2.52075C10.6354 2.52075 10.1541 3.00206 10.1541 3.59579C10.1541 4.18951 10.6354 4.67082 11.2291 4.67082Z" fill="#FC4646" stroke="black" stroke-width="0.956522"/>
+      <path d="M15.5457 5.24186C16.2939 4.22535 16.2939 2.70912 15.5457 1.69263" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+      <path d="M17.1342 6.11041C18.2923 4.62825 18.2923 2.32834 17.1342 0.846191" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+      <path d="M13.9615 4.3841C14.3 3.84461 14.3 3.10638 13.9615 2.56689" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+      <path d="M6.68811 5.24186C5.93984 4.22535 5.93984 2.70912 6.68811 1.69263" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+      <path d="M5.09949 6.11041C3.94132 4.62825 3.94132 2.32834 5.09949 0.846191" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+      <path d="M8.27209 4.3841C7.93361 3.84461 7.93361 3.10638 8.27209 2.56689" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
+    </svg>`;
+
+    // Different title HTML for success vs no coverage
+    const titleHtml = isSuccess
+      ? `<span style="flex-shrink: 0; margin-top: 2px;">${coverageIcon}</span>
+         <span>¡Tu área posee nuestro servicio!</span>`
+      : `<span><span style="color: #DA291C; font-weight: 700;">Fuera de área</span> <span style="font-weight: 400;">¡Pero tienes opciones!</span></span>`;
+
     const infoWindowContent = `
-      <div class="general-container" style="font-family: 'Open Sans', Arial, sans-serif; width: 100%; box-sizing: border-box;">
-        <div class="info ${isSuccess ? 'infoOn' : 'infoOff'}" style="
-          padding: ${isSuccess ? '20px' : '15px 20px'};
-          width: 100%;
-          height: auto;
-          box-sizing: border-box;
-          background: ${isSuccess ? '#1F97AF' : '#EE122C'};
-          color: #ffffff;
-          font-size: 14px;
-          line-height: 1.5;
-          white-space: normal;
+      <div style="
+        font-family: 'Open Sans', Arial, sans-serif;
+        width: 100%;
+        min-width: 340px;
+        box-sizing: border-box;
+        background: #ffffff;
+        padding: 16px 20px 20px 20px;
+        text-align: center;
+        position: relative;
+        border-radius: 16px;
+      ">
+        <!-- Close button -->
+        <button
+          onclick="if(window.__infoWindowCloseCallback) window.__infoWindowCloseCallback();"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+          "
+        >×</button>
+
+        <!-- Title: with icon for success, without icon for no coverage -->
+        <div style="
+          margin: 0 0 10px 0;
+          padding-right: 20px;
+          font-size: 15px;
+          font-weight: 700;
+          color: #333;
+          line-height: 1.4;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 6px;
         ">
-          ${message}
+          ${titleHtml}
         </div>
-        <div class="continue-map" style="
-          width: 100%;
-          height: auto;
-          padding: 20px;
-          font-size: 16px;
-          text-align: center;
-          background: #ffffff;
-          color: #1F97AF;
-          cursor: pointer;
-          box-sizing: border-box;
-        ">
-          ${!isSuccess ? `
-            <div style="color: #333; margin-bottom: 8px;">
-              Actualmente usted se encuentra fuera del rango de cobertura.
-            </div>
-          ` : ''}
-          <div
-            id="infowindow-continue-btn"
-            class="no-link continue-button"
-            onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
-            style="
-              text-decoration: none;
-              color: #1F97AF;
-              font-size: 16px;
-              cursor: pointer;
-              font-weight: 600;
-            "
-          >
-            ${isSuccess ? 'Continuar' : 'Cerrar'}
-          </div>
-        </div>
+
+        <!-- Message -->
+        <p style="
+          margin: 0 0 16px 0;
+          font-size: 13px;
+          color: #666;
+          line-height: 1.4;
+        ">${displayMessage}</p>
+
+        <!-- Action button with pill style -->
+        <button
+          onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
+          style="
+            background: #DA291C;
+            color: #ffffff;
+            border: none;
+            padding: 12px 36px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            min-width: 150px;
+          "
+        >${buttonText}</button>
       </div>
     `;
+
+    // Set up close callback
+    (window as any).__infoWindowCloseCallback = () => {
+      mapsService.closeInfoWindow();
+    };
 
     mapsService.showInfoWindow(infoWindowContent, () => {
       if (isSuccess && this.locationData && this.locationData.isValid) {
         this.handleInfoWindowContinue();
+      } else if (hasAlternativeOptions) {
+        // For "Ver opciones" - set CLARO HOGAR and continue to catalogue
+        this.handleNoConverageWithOptions();
       } else {
         mapsService.closeInfoWindow();
       }
     });
   }
+
+  /**
+   * Handles "Ver opciones" action when no coverage but CLARO HOGAR is available
+   */
+  private handleNoConverageWithOptions = () => {
+    mapsService.closeInfoWindow();
+
+    // Create location data for CLARO HOGAR flow
+    if (this.currentCoordinates) {
+      const claroHogarLocation: LocationData = {
+        latitude: this.currentCoordinates.lat,
+        longitude: this.currentCoordinates.lng,
+        address: this.address || this.geocodeResult?.address || '',
+        city: this.geocodeResult?.city || '',
+        zipCode: this.geocodeResult?.zipCode || '',
+        serviceType: 'CLARO HOGAR',
+        serviceMessage: 'Tenemos un poderoso servicio de internet inalámbrico en tu área que tú mismo instalas.',
+        isValid: true,
+      };
+
+      // Store in session and state
+      this.storeLocationInSession(claroHogarLocation);
+      flowActions.setLocation(claroHogarLocation);
+
+      // Navigate to next step (catalogue)
+      this.onNext?.();
+    }
+  };
 
   /**
    * Handles continue from InfoWindow (like TEL: goToRouter method)
@@ -411,6 +504,7 @@ export class StepLocation {
           <div class="step-location__map-container">
             {/* Map controls */}
             <div class="step-location__controls">
+              {/* Search bar */}
               <div class="step-location__input-group">
                 <span class="step-location__input-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -445,21 +539,20 @@ export class StepLocation {
                   )}
                 </button>
               </div>
-              <button
-                class="step-location__btn-location"
-                onClick={this.handleUseCurrentLocation}
-                disabled={this.isGettingLocation || this.isLoadingMap}
-              >
-                <svg class="step-location__btn-location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <line x1="12" y1="2" x2="12" y2="6"></line>
-                  <line x1="12" y1="18" x2="12" y2="22"></line>
-                  <line x1="2" y1="12" x2="6" y2="12"></line>
-                  <line x1="18" y1="12" x2="22" y2="12"></line>
-                </svg>
-                {this.isGettingLocation ? 'Obteniendo ubicación...' : 'Utilizar Ubicación Actual'}
-              </button>
+
+              {/* Location button container */}
+              <div class="step-location__location-container">
+                <button
+                  class="step-location__btn-location"
+                  onClick={this.handleUseCurrentLocation}
+                  disabled={this.isGettingLocation || this.isLoadingMap}
+                >
+                  <svg class="step-location__btn-location-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  {this.isGettingLocation ? 'Obteniendo ubicación...' : 'Utilizar Ubicación Actual'}
+                </button>
+              </div>
             </div>
 
             {/* Map */}
