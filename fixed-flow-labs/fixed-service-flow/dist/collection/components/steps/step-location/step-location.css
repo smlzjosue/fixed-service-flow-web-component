@@ -98,7 +98,7 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0;
 }
 @media (min-width: 576px) {
   .step-location__controls {
@@ -117,10 +117,18 @@
   display: flex;
   align-items: center;
   background: #FFFFFF;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 10px 10px 0 0;
   overflow: hidden;
   border: 1px solid #E5E5E5;
+  border-bottom: none;
+}
+.step-location__location-container {
+  background: #FFFFFF;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 0.2rem 0.75rem;
+  border: 1px solid #E5E5E5;
+  border-top: 1px solid #E5E5E5;
 }
 .step-location__input-icon {
   display: flex;
@@ -189,30 +197,30 @@
 .step-location__btn-location {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: #0097A9;
-  color: #FFFFFF;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
+  background: transparent;
+  color: #0097A9;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: 0;
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  transition: background-color 150ms ease;
+  box-shadow: none;
+  transition: opacity 150ms ease;
   white-space: nowrap;
   align-self: flex-start;
 }
 .step-location__btn-location:hover:not(:disabled) {
-  background: rgb(0, 114.5455621302, 128.2);
+  opacity: 0.8;
 }
 .step-location__btn-location:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 .step-location__btn-location-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 .step-location__map {
   position: relative;

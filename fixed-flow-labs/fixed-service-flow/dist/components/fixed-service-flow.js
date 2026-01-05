@@ -1,38 +1,33 @@
 import { t as transformTag, p as proxyCustomElement, H, c as createEvent, h, d as Host } from './p-BTqKKAHI.js';
 import { f as flowActions, s as state } from './p-1rCYjdXc.js';
 import { h as httpService, t as tokenService } from './p-De3C6PL0.js';
-import { d as defineCustomElement$e } from './p-DCDxWAtB.js';
-import { d as defineCustomElement$d } from './p-DoNrGL--.js';
-import { d as defineCustomElement$c } from './p-CTQsV_JX.js';
-import { d as defineCustomElement$b } from './p-B7SupC7R.js';
-import { d as defineCustomElement$a } from './p-D48B0Fxl.js';
-import { d as defineCustomElement$9 } from './p-BKZPLXRT.js';
-import { d as defineCustomElement$8 } from './p-BYqHZtCN.js';
-import { d as defineCustomElement$7 } from './p-CL4zwEGD.js';
-import { d as defineCustomElement$6 } from './p-BD1RYLUu.js';
-import { d as defineCustomElement$5 } from './p-BuVoDvJ6.js';
-import { d as defineCustomElement$4 } from './p-DGspzOV2.js';
-import { d as defineCustomElement$3 } from './p-BaH52zdS.js';
+import { d as defineCustomElement$9 } from './p-DMGv_13C.js';
+import { d as defineCustomElement$8 } from './p-CAVblgO7.js';
+import { d as defineCustomElement$7 } from './p-Wkc9NWXf.js';
+import { d as defineCustomElement$6 } from './p-BsylxSJD.js';
+import { d as defineCustomElement$5 } from './p-b6i1OMTv.js';
+import { d as defineCustomElement$4 } from './p-C7_93vaw.js';
+import { d as defineCustomElement$3 } from './p-DGspzOV2.js';
 import { d as defineCustomElement$2 } from './p-BvJldjx0.js';
 
-const fixedServiceFlowCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block;width:100%;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;color:#333333;line-height:1.5}.fsf-container{width:100%;max-width:1200px;margin:0 auto;padding:1rem}@media (min-width: 768px){.fsf-container{padding:1.5rem}}.fsf-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:2rem}.fsf-loading__spinner{width:48px;height:48px;border:4px solid #E5E5E5;border-top-color:#0097A9;border-radius:50%;animation:spin 1s linear infinite}.fsf-loading__text{margin-top:1rem;font-size:1rem;font-weight:400;line-height:1.5;color:#666666}.fsf-error{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:2rem;text-align:center}.fsf-error__icon{display:flex;align-items:center;justify-content:center;width:64px;height:64px;font-size:1.75rem;font-weight:700;color:#FFFFFF;background-color:#DA291C;border-radius:50%}.fsf-error__title{margin-top:1rem;font-size:1.5rem;font-weight:600;line-height:1.35;color:#333333}.fsf-error__message{margin-top:0.5rem;font-size:1rem;font-weight:400;line-height:1.5;color:#666666;max-width:400px}.fsf-error__button{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.fsf-error__button:disabled{opacity:0.5;cursor:not-allowed}.fsf-error__button{height:48px;background-color:#DA291C;color:#FFFFFF}.fsf-error__button:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.fsf-error__button:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}.fsf-error__button{margin-top:1.5rem}.step-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;padding:2rem;text-align:center;background:#FFFFFF;border-radius:0.75rem;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);margin:1rem}.step-placeholder h2{font-size:1.75rem;font-weight:700;line-height:1.2;color:#333333;margin-bottom:1rem}.step-placeholder p{font-size:1rem;font-weight:400;line-height:1.5;color:#666666;margin-bottom:1.5rem}.step-placeholder button{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-placeholder button:disabled{opacity:0.5;cursor:not-allowed}.step-placeholder button{height:48px;background-color:#DA291C;color:#FFFFFF}.step-placeholder button:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.step-placeholder button:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}.step-placeholder button{margin:0.5rem}.step-placeholder button:last-child{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-placeholder button:last-child:disabled{opacity:0.5;cursor:not-allowed}.step-placeholder button:last-child{height:48px;background-color:#0097A9;color:#FFFFFF}.step-placeholder button:last-child:hover:not(:disabled){background-color:rgb(0, 114.5455621302, 128.2)}.step-placeholder button:last-child:active:not(:disabled){background-color:rgb(0, 96.3183431953, 107.8)}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`;
+const fixedServiceFlowCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block;width:100%;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;color:#333333;line-height:1.5}.fsf-container{width:100%}.fsf-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:2rem}.fsf-loading__spinner{width:48px;height:48px;border:4px solid #E5E5E5;border-top-color:#0097A9;border-radius:50%;animation:spin 1s linear infinite}.fsf-loading__text{margin-top:1rem;font-size:1rem;font-weight:400;line-height:1.5;color:#666666}.fsf-error{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;padding:2rem;text-align:center}.fsf-error__icon{display:flex;align-items:center;justify-content:center;width:64px;height:64px;font-size:1.75rem;font-weight:700;color:#FFFFFF;background-color:#DA291C;border-radius:50%}.fsf-error__title{margin-top:1rem;font-size:1.5rem;font-weight:600;line-height:1.35;color:#333333}.fsf-error__message{margin-top:0.5rem;font-size:1rem;font-weight:400;line-height:1.5;color:#666666;max-width:400px}.fsf-error__button{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.fsf-error__button:disabled{opacity:0.5;cursor:not-allowed}.fsf-error__button{height:48px;background-color:#DA291C;color:#FFFFFF}.fsf-error__button:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.fsf-error__button:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}.fsf-error__button{margin-top:1.5rem}.step-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;padding:2rem;text-align:center;background:#FFFFFF;border-radius:0.75rem;box-shadow:0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);margin:1rem}.step-placeholder h2{font-size:1.75rem;font-weight:700;line-height:1.2;color:#333333;margin-bottom:1rem}.step-placeholder p{font-size:1rem;font-weight:400;line-height:1.5;color:#666666;margin-bottom:1.5rem}.step-placeholder button{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-placeholder button:disabled{opacity:0.5;cursor:not-allowed}.step-placeholder button{height:48px;background-color:#DA291C;color:#FFFFFF}.step-placeholder button:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.step-placeholder button:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}.step-placeholder button{margin:0.5rem}.step-placeholder button:last-child{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-placeholder button:last-child:disabled{opacity:0.5;cursor:not-allowed}.step-placeholder button:last-child{height:48px;background-color:#0097A9;color:#FFFFFF}.step-placeholder button:last-child:hover:not(:disabled){background-color:rgb(0, 114.5455621302, 128.2)}.step-placeholder button:last-child:active:not(:disabled){background-color:rgb(0, 96.3183431953, 107.8)}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`;
 
 /**
  * CLARO HOGAR step names for clarity
+ * New simplified flow: Location → Catalogue → Plans → Contract → Form → Confirmation
+ * (step-product-detail eliminated - products shown in carousel with summary bar)
  */
 const CLARO_HOGAR_STEPS = {
     LOCATION: 1, // Ubicación/Cobertura
-    CATALOGUE: 2, // Catálogo de productos
-    PRODUCT_DETAIL: 3, // Detalle del producto
-    PLANS: 4, // Planes de internet
-    ORDER_SUMMARY: 5, // Resumen de orden
-    SHIPPING: 6, // Dirección de envío
-    PAYMENT: 7, // Pago
-    CONFIRMATION: 8, // Confirmación
+    CATALOGUE: 2, // Catálogo de productos (carrusel + summary bar)
+    PLANS: 3, // Planes de internet
+    CONTRACT: 4, // Tipo de contrato
+    FORM: 5, // Formulario de datos
+    CONFIRMATION: 6, // Confirmación
 };
 // Max step per flow type
 const MAX_STEP_STANDARD = 5;
-const MAX_STEP_CLARO_HOGAR = 8;
+const MAX_STEP_CLARO_HOGAR = 6;
 const FixedServiceFlow$1 = /*@__PURE__*/ proxyCustomElement(class FixedServiceFlow extends H {
     constructor(registerHost) {
         super();
@@ -255,27 +250,25 @@ const FixedServiceFlow$1 = /*@__PURE__*/ proxyCustomElement(class FixedServiceFl
         }
     }
     /**
-     * Renders steps for CLARO HOGAR Flow (e-commerce)
-     * Steps: 1.Location -> 2.Catalogue -> 3.ProductDetail -> 4.Plans ->
-     *        5.OrderSummary -> 6.Shipping -> 7.Payment -> 8.Confirmation
+     * Renders steps for CLARO HOGAR Flow (simplified)
+     * Steps: 1.Location -> 2.Catalogue (carousel+summary) -> 3.Plans ->
+     *        4.Contract -> 5.Form -> 6.Confirmation
+     * Note: step-product-detail was eliminated - products now in carousel with inline selection
      */
     renderClaroHogarStep(stepProps) {
         switch (this.currentStep) {
             case CLARO_HOGAR_STEPS.LOCATION:
                 return h("step-location", { ...stepProps });
             case CLARO_HOGAR_STEPS.CATALOGUE:
+                // Carousel with product cards + summary bar (new design)
                 return h("step-catalogue", { ...stepProps });
-            case CLARO_HOGAR_STEPS.PRODUCT_DETAIL:
-                return h("step-product-detail", { ...stepProps });
             case CLARO_HOGAR_STEPS.PLANS:
-                // Plans for the selected product
+                // Plans for the selected modem/product
                 return h("step-plans", { ...stepProps });
-            case CLARO_HOGAR_STEPS.ORDER_SUMMARY:
-                return h("step-order-summary", { ...stepProps });
-            case CLARO_HOGAR_STEPS.SHIPPING:
-                return h("step-shipping", { ...stepProps });
-            case CLARO_HOGAR_STEPS.PAYMENT:
-                return h("step-payment", { ...stepProps });
+            case CLARO_HOGAR_STEPS.CONTRACT:
+                return h("step-contract", { ...stepProps });
+            case CLARO_HOGAR_STEPS.FORM:
+                return h("step-form", { ...stepProps });
             case CLARO_HOGAR_STEPS.CONFIRMATION:
                 return h("step-confirmation", { ...stepProps, onCancel: this.handleFlowCancel });
             default:
@@ -321,7 +314,7 @@ function defineCustomElement$1() {
     if (typeof customElements === "undefined") {
         return;
     }
-    const components = ["fixed-service-flow", "step-catalogue", "step-confirmation", "step-contract", "step-form", "step-location", "step-order-summary", "step-payment", "step-plans", "step-product-detail", "step-shipping", "ui-carousel", "ui-image-carousel", "ui-stepper"];
+    const components = ["fixed-service-flow", "step-catalogue", "step-confirmation", "step-contract", "step-form", "step-location", "step-plans", "ui-carousel", "ui-stepper"];
     components.forEach(tagName => { switch (tagName) {
         case "fixed-service-flow":
             if (!customElements.get(transformTag(tagName))) {
@@ -330,60 +323,35 @@ function defineCustomElement$1() {
             break;
         case "step-catalogue":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$e();
+                defineCustomElement$9();
             }
             break;
         case "step-confirmation":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$d();
+                defineCustomElement$8();
             }
             break;
         case "step-contract":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$c();
+                defineCustomElement$7();
             }
             break;
         case "step-form":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$b();
+                defineCustomElement$6();
             }
             break;
         case "step-location":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$a();
-            }
-            break;
-        case "step-order-summary":
-            if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$9();
-            }
-            break;
-        case "step-payment":
-            if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$8();
+                defineCustomElement$5();
             }
             break;
         case "step-plans":
             if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$7();
-            }
-            break;
-        case "step-product-detail":
-            if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$6();
-            }
-            break;
-        case "step-shipping":
-            if (!customElements.get(transformTag(tagName))) {
-                defineCustomElement$5();
-            }
-            break;
-        case "ui-carousel":
-            if (!customElements.get(transformTag(tagName))) {
                 defineCustomElement$4();
             }
             break;
-        case "ui-image-carousel":
+        case "ui-carousel":
             if (!customElements.get(transformTag(tagName))) {
                 defineCustomElement$3();
             }

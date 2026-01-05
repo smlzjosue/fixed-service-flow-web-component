@@ -1,41 +1,68 @@
-import { CatalogueProduct, CatalogueFilter } from '../../../store/interfaces';
+import { CatalogueProduct, ProductDetail } from '../../../store/interfaces';
+interface SummaryData {
+    productName: string;
+    planPrice: number;
+    svaPrice: number;
+    equipmentPrice: number;
+    payToday: number;
+}
 export declare class StepCatalogue {
     onNext: () => void;
     onBack: () => void;
     products: CatalogueProduct[];
-    filteredProducts: CatalogueProduct[];
     isLoading: boolean;
     error: string | null;
-    searchText: string;
-    selectedFilter: string;
-    showFilters: boolean;
-    filterOptions: CatalogueFilter[];
-    showDetailModal: boolean;
-    modalTitle: string;
-    modalContent: string;
+    productsWithDetails: Map<number, ProductDetail>;
+    loadingDetails: Set<number>;
+    selectedProduct: CatalogueProduct | null;
+    selectedProductDetail: ProductDetail | null;
+    isAddingToCart: boolean;
+    showUnavailableModal: boolean;
+    summaryData: SummaryData | null;
     componentWillLoad(): void;
     componentDidLoad(): void;
+    /**
+     * Loads products from catalogue API
+     * Uses "Internet Inalámbrico" filter by default
+     */
     private loadProducts;
-    private handleFilterChange;
-    private handleSearchInput;
-    private handleSearch;
-    private handleKeyPress;
-    private _toggleFilters;
-    private clearFilters;
-    private handleViewMore;
-    private cleanHTML;
-    private getSelectedFilterCount;
     /**
-     * Opens the detail modal with product description
-     * TEL pattern: seeMore() -> modalProvider.seeMoreModal()
+     * Loads product details in parallel for faster UX
+     * @param products - Products to load details for
      */
-    private handleSeeDetail;
+    private loadProductsDetails;
     /**
-     * Closes the detail modal
-     * TEL pattern: closeModal() -> modalController.dismiss()
+     * Handles product selection
+     * - Loads details if not cached
+     * - Updates summary bar
+     * - Calls addToCart API
      */
-    private closeDetailModal;
-    private renderFilterSidebar;
+    private handleSelectProduct;
+    /**
+     * Updates the summary bar data based on selected product
+     */
+    private updateSummaryData;
+    /**
+     * Handles continue button click
+     * Proceeds to step-plans
+     */
+    private handleContinue;
+    /**
+     * Closes the unavailable product modal
+     */
+    private handleCloseUnavailableModal;
+    /**
+     * Renders the unavailable product modal
+     */
+    private renderUnavailableModal;
+    /**
+     * Renders a product card for the carousel
+     */
     private renderProductCard;
+    /**
+     * Renders the summary bar footer
+     */
+    private renderSummaryBar;
     render(): any;
 }
+export {};

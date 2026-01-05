@@ -34,11 +34,11 @@ export class UiCheckbox {
         this.checkboxChange.emit(this.checked);
     };
     render() {
-        return (h(Host, { key: 'ff5968bb6e59836932b8204b034937339d9b6b6b' }, h("label", { key: 'c32b386ccee6f0e87f7fdabcdd5a5c5c49426018', class: {
+        return (h(Host, { key: '2258b4edfcf378772d54c145030bd69d2625c3af' }, h("label", { key: '3ea89aa5c086347916ab6cb628e9172f1cf171f6', class: {
                 'checkbox-container': true,
                 'checkbox-container--disabled': this.disabled,
                 'checkbox-container--error': this.hasError,
-            } }, h("input", { key: '815aa71c5b0f684bb5486883183da9c18b34aa7a', type: "checkbox", name: this.name, checked: this.checked, disabled: this.disabled, onChange: this.handleChange, class: "checkbox-input" }), h("span", { key: 'b6cc09e864d6f7deb1c2ed54c3b3ab7586436466', class: "checkbox-checkmark" }, h("svg", { key: '441e30e7177119c46852af30e889b30148b90b53', class: "checkbox-icon", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "3", "stroke-linecap": "round", "stroke-linejoin": "round" }, h("polyline", { key: '220e428b4f0558fd407037cae97df00ba4fdee5c', points: "20 6 9 17 4 12" }))), this.label && h("span", { key: '5602fd774fbb215629363528499db3e8f201249b', class: "checkbox-label" }, this.label)), this.hasError && this.errorMessage && (h("span", { key: 'f76c3e7ca98aa262b05ca29bbf100e04d3af5dfd', class: "checkbox-error" }, this.errorMessage))));
+            } }, h("input", { key: 'ddca360cc6b052af7af15a085a508c291edd234c', type: "checkbox", name: this.name, checked: this.checked, disabled: this.disabled, onChange: this.handleChange, class: "checkbox-input" }), h("span", { key: '2bf9142189948c9a8e5a189869d5c249638feb1e', class: "checkbox-checkmark" }, h("svg", { key: '4e8c45e916e6db1ef84c19db45f95f67076ecb3b', class: "checkbox-icon", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "3", "stroke-linecap": "round", "stroke-linejoin": "round" }, h("polyline", { key: 'd28b87e70f7a05cd4627d6b44b33f5820b0e761f', points: "20 6 9 17 4 12" }))), this.label && h("span", { key: '70d19cba208f02e86d0303cf13eecb8607a2c555', class: "checkbox-label" }, this.label)), this.hasError && this.errorMessage && (h("span", { key: '19d7da4c07feb0f80281779226b77ba603e75b88', class: "checkbox-error" }, this.errorMessage))));
     }
     static get is() { return "ui-checkbox"; }
     static get encapsulation() { return "shadow"; }

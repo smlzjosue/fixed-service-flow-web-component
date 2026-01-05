@@ -63,9 +63,10 @@ export declare class FixedServiceFlow {
      */
     private renderStandardStep;
     /**
-     * Renders steps for CLARO HOGAR Flow (e-commerce)
-     * Steps: 1.Location -> 2.Catalogue -> 3.ProductDetail -> 4.Plans ->
-     *        5.OrderSummary -> 6.Shipping -> 7.Payment -> 8.Confirmation
+     * Renders steps for CLARO HOGAR Flow (simplified)
+     * Steps: 1.Location -> 2.Catalogue (carousel+summary) -> 3.Plans ->
+     *        4.Contract -> 5.Form -> 6.Confirmation
+     * Note: step-product-detail was eliminated - products now in carousel with inline selection
      */
     private renderClaroHogarStep;
     private renderLoading;

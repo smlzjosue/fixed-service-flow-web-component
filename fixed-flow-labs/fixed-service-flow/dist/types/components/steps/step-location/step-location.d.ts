@@ -34,10 +34,14 @@ export declare class StepLocation {
     private handlePlaceSelected;
     private handleValidate;
     /**
-     * Shows coverage result in InfoWindow on the marker (like TEL pattern)
-     * Styles match TEL: .info, .infoOn, .infoOff, .continue-map, .continue-button
+     * Shows coverage result in InfoWindow on the marker
+     * New design based on capturas 1.png and 2.png
      */
     private showCoverageInfoWindow;
+    /**
+     * Handles "Ver opciones" action when no coverage but CLARO HOGAR is available
+     */
+    private handleNoConverageWithOptions;
     /**
      * Handles continue from InfoWindow (like TEL: goToRouter method)
      */

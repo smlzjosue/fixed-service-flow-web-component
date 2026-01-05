@@ -201,52 +201,46 @@ class MapsService {
         }
         // Close existing InfoWindow
         this.closeInfoWindow();
-        // Override Google Maps InfoWindow styles - force wider width
+        // Override Google Maps InfoWindow styles - wider modal with rounded corners
         const popStyle = `<style>
       .gm-ui-hover-effect { display: none !important; }
-      .gm-style .gm-style-iw-c { padding: 0px !important; width: 600px !important; max-width: none !important; }
-      .gm-style .gm-style-iw-d { padding: 0px !important; overflow: unset !important; width: 100% !important; max-width: none !important; }
+      .gm-style .gm-style-iw-c { padding: 0px !important; max-width: 400px !important; border-radius: 16px !important; overflow: visible !important; max-height: none !important; }
+      .gm-style .gm-style-iw-d { padding: 0px !important; overflow: visible !important; max-width: 400px !important; max-height: none !important; overflow-y: visible !important; }
+      .gm-style .gm-style-iw-d > div { overflow: visible !important; }
       .gm-style .gm-style-iw-tc { display: none !important; }
-      .gm-style-iw { width: 600px !important; max-width: none !important; }
+      .gm-style-iw { max-width: 400px !important; overflow: visible !important; max-height: none !important; }
+      .gm-style-iw-chr { display: none !important; }
+      .gm-style .gm-style-iw-d::-webkit-scrollbar { display: none !important; }
     </style>`;
-        // Create InfoWindow with TEL config: maxWidth: 600
+        // Create InfoWindow with wider design
         this.infoWindow = new google.maps.InfoWindow({
             content: popStyle + content,
-            maxWidth: 600,
+            maxWidth: 400,
         });
         // Open InfoWindow at marker position
         this.infoWindow.open({
             anchor: this.marker,
             map: this.map,
         });
-        // Force wider InfoWindow after DOM is ready
+        // Adjust InfoWindow styles after DOM is ready
         this.infoWindow.addListener('domready', () => {
-            // Use setTimeout to ensure Google Maps has finished applying its styles
             setTimeout(() => {
-                // Target the main InfoWindow container and set explicit width
                 const iwc = document.querySelector('.gm-style-iw-c');
                 const iwd = document.querySelector('.gm-style-iw-d');
                 if (iwc) {
-                    iwc.style.setProperty('width', '600px', 'important');
-                    iwc.style.setProperty('max-width', 'none', 'important');
+                    iwc.style.setProperty('max-width', '400px', 'important');
                     iwc.style.setProperty('padding', '0', 'important');
+                    iwc.style.setProperty('border-radius', '16px', 'important');
+                    iwc.style.setProperty('box-shadow', '0 4px 20px rgba(0,0,0,0.15)', 'important');
                 }
                 if (iwd) {
-                    iwd.style.setProperty('width', '100%', 'important');
-                    iwd.style.setProperty('max-width', 'none', 'important');
+                    iwd.style.setProperty('max-width', '400px', 'important');
                     iwd.style.setProperty('overflow', 'visible', 'important');
-                }
-                // Also target the general container
-                const gmiw = document.querySelector('.gm-style-iw');
-                if (gmiw) {
-                    gmiw.style.setProperty('width', '600px', 'important');
-                    gmiw.style.setProperty('max-width', 'none', 'important');
                 }
             }, 50);
         });
         // Store callback reference for external access
         if (onContinueClick) {
-            // Use a global callback that can be accessed from the InfoWindow content
             window.__infoWindowContinueCallback = onContinueClick;
         }
     }

@@ -7,20 +7,20 @@ import { flowState, flowActions } from "../../store/flow.store";
 import { httpService, tokenService } from "../../services";
 /**
  * CLARO HOGAR step names for clarity
+ * New simplified flow: Location → Catalogue → Plans → Contract → Form → Confirmation
+ * (step-product-detail eliminated - products shown in carousel with summary bar)
  */
 const CLARO_HOGAR_STEPS = {
     LOCATION: 1, // Ubicación/Cobertura
-    CATALOGUE: 2, // Catálogo de productos
-    PRODUCT_DETAIL: 3, // Detalle del producto
-    PLANS: 4, // Planes de internet
-    ORDER_SUMMARY: 5, // Resumen de orden
-    SHIPPING: 6, // Dirección de envío
-    PAYMENT: 7, // Pago
-    CONFIRMATION: 8, // Confirmación
+    CATALOGUE: 2, // Catálogo de productos (carrusel + summary bar)
+    PLANS: 3, // Planes de internet
+    CONTRACT: 4, // Tipo de contrato
+    FORM: 5, // Formulario de datos
+    CONFIRMATION: 6, // Confirmación
 };
 // Max step per flow type
 const MAX_STEP_STANDARD = 5;
-const MAX_STEP_CLARO_HOGAR = 8;
+const MAX_STEP_CLARO_HOGAR = 6;
 export class FixedServiceFlow {
     // ------------------------------------------
     // PROPS
@@ -232,27 +232,25 @@ export class FixedServiceFlow {
         }
     }
     /**
-     * Renders steps for CLARO HOGAR Flow (e-commerce)
-     * Steps: 1.Location -> 2.Catalogue -> 3.ProductDetail -> 4.Plans ->
-     *        5.OrderSummary -> 6.Shipping -> 7.Payment -> 8.Confirmation
+     * Renders steps for CLARO HOGAR Flow (simplified)
+     * Steps: 1.Location -> 2.Catalogue (carousel+summary) -> 3.Plans ->
+     *        4.Contract -> 5.Form -> 6.Confirmation
+     * Note: step-product-detail was eliminated - products now in carousel with inline selection
      */
     renderClaroHogarStep(stepProps) {
         switch (this.currentStep) {
             case CLARO_HOGAR_STEPS.LOCATION:
                 return h("step-location", { ...stepProps });
             case CLARO_HOGAR_STEPS.CATALOGUE:
+                // Carousel with product cards + summary bar (new design)
                 return h("step-catalogue", { ...stepProps });
-            case CLARO_HOGAR_STEPS.PRODUCT_DETAIL:
-                return h("step-product-detail", { ...stepProps });
             case CLARO_HOGAR_STEPS.PLANS:
-                // Plans for the selected product
+                // Plans for the selected modem/product
                 return h("step-plans", { ...stepProps });
-            case CLARO_HOGAR_STEPS.ORDER_SUMMARY:
-                return h("step-order-summary", { ...stepProps });
-            case CLARO_HOGAR_STEPS.SHIPPING:
-                return h("step-shipping", { ...stepProps });
-            case CLARO_HOGAR_STEPS.PAYMENT:
-                return h("step-payment", { ...stepProps });
+            case CLARO_HOGAR_STEPS.CONTRACT:
+                return h("step-contract", { ...stepProps });
+            case CLARO_HOGAR_STEPS.FORM:
+                return h("step-form", { ...stepProps });
             case CLARO_HOGAR_STEPS.CONFIRMATION:
                 return h("step-confirmation", { ...stepProps, onCancel: this.handleFlowCancel });
             default:

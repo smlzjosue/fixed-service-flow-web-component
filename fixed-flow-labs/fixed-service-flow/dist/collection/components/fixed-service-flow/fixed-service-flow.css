@@ -34,14 +34,6 @@
 
 .fsf-container {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-@media (min-width: 768px) {
-  .fsf-container {
-    padding: 1.5rem;
-  }
 }
 
 .fsf-loading {
