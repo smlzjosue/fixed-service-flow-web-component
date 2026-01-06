@@ -1,0 +1,53 @@
+interface FormErrors {
+    name?: string;
+    secondName?: string;
+    lastname?: string;
+    secondLastname?: string;
+    idType?: string;
+    idNumber?: string;
+    expirationDate?: string;
+    phone?: string;
+    phone2?: string;
+    businessName?: string;
+    position?: string;
+    address?: string;
+    city?: string;
+    zipcode?: string;
+    email?: string;
+    existingCustomer?: string;
+}
+export declare class StepShipping {
+    onNext: () => void;
+    onBack: () => void;
+    isLoading: boolean;
+    error: string | null;
+    name: string;
+    secondName: string;
+    lastname: string;
+    secondLastname: string;
+    idType: 'license' | 'passport' | '';
+    idNumber: string;
+    expirationDate: string;
+    phone: string;
+    phone2: string;
+    businessName: string;
+    position: string;
+    address: string;
+    city: string;
+    zipcode: string;
+    email: string;
+    existingCustomer: 'yes' | 'no' | '';
+    formErrors: FormErrors;
+    touched: Record<string, boolean>;
+    componentWillLoad(): void;
+    private loadStoredData;
+    private formatPhoneDisplay;
+    private handleInputChange;
+    private formatPhoneInput;
+    private handleRadioChange;
+    private validateField;
+    private validateForm;
+    private handleSubmit;
+    render(): any;
+}
+export {};

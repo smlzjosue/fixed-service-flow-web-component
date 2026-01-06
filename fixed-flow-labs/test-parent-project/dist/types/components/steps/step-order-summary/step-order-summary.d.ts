@@ -1,0 +1,32 @@
+import { CartResponse } from '../../../store/interfaces';
+export declare class StepOrderSummary {
+    onNext: () => void;
+    onBack: () => void;
+    cart: CartResponse | null;
+    isLoading: boolean;
+    error: string | null;
+    promoCode: string;
+    isApplyingPromo: boolean;
+    promoError: string | null;
+    promoSuccess: boolean;
+    termsAccepted: boolean;
+    deletingItemId: number | null;
+    componentWillLoad(): void;
+    private loadCart;
+    private handlePromoCodeChange;
+    private handleApplyPromo;
+    private handleRemoveItem;
+    private handleTermsChange;
+    private handleProceed;
+    private formatPrice;
+    private getItemCount;
+    private getEquipmentItems;
+    private getPlanItems;
+    private renderEquipmentItem;
+    private renderAssociatedPlan;
+    private renderStandalonePlan;
+    private renderPromoCode;
+    private renderPaymentSummary;
+    private renderTermsCheckbox;
+    render(): any;
+}
