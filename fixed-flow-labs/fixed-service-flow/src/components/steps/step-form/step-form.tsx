@@ -577,10 +577,14 @@ export class StepForm {
         <div class="step-form">
           {/* Header */}
           <header class="step-form__header">
-            <h1 class="step-form__title">Formulario de solicitud de servicio fijo</h1>
-            <button type="button" class="step-form__btn-back" onClick={this.handleBack}>
-              Regresar
+            <button type="button" class="step-form__back-link" onClick={this.handleBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Regresar</span>
             </button>
+            <h1 class="step-form__title">Formulario de solicitud de servicio fijo</h1>
+            <div class="step-form__divider"></div>
           </header>
 
           {/* Stepper - Only visible on mobile */}
@@ -623,13 +627,6 @@ export class StepForm {
                 disabled={!this.isCurrentSectionValid()}
               >
                 Continuar
-              </button>
-              <button
-                type="button"
-                class="step-form__btn-back-mobile"
-                onClick={this.handleBack}
-              >
-                Regresar
               </button>
             </div>
           </form>

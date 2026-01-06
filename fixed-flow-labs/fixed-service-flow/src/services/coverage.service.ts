@@ -76,8 +76,38 @@ class CoverageService {
       }
     }
 
-    // Validate that we have a valid service type
-    const validServiceTypes = ['GPON', 'VRAD', 'CLARO HOGAR'];
+    // Check for PR LIMIT (out of coverage range)
+    if (serviceType === 'PR LIMIT') {
+      console.log('[CoverageService] PR LIMIT detected - out of coverage range');
+      return {
+        latitude,
+        longitude,
+        address,
+        city,
+        zipCode,
+        serviceType: 'PR LIMIT',
+        serviceMessage: SERVICE_MESSAGES.PR_LIMIT,
+        isValid: false,
+      };
+    }
+
+    // Check for CLARO HOGAR (wireless internet option)
+    if (serviceType.toUpperCase() === 'CLARO HOGAR') {
+      console.log('[CoverageService] CLARO HOGAR detected - wireless internet option');
+      return {
+        latitude,
+        longitude,
+        address,
+        city,
+        zipCode,
+        serviceType: 'CLARO HOGAR',
+        serviceMessage: serviceMessage || SERVICE_MESSAGES.CLARO_HOGAR,
+        isValid: true, // Valid but different flow (catalogue)
+      };
+    }
+
+    // Validate that we have a valid fiber/DSL service type
+    const validServiceTypes = ['GPON', 'VRAD'];
     const isValid = validServiceTypes.includes(serviceType);
 
     if (!isValid) {
@@ -93,7 +123,7 @@ class CoverageService {
       };
     }
 
-    console.log('[CoverageService] Returning valid coverage');
+    console.log('[CoverageService] Returning valid coverage:', serviceType);
     return {
       latitude,
       longitude,

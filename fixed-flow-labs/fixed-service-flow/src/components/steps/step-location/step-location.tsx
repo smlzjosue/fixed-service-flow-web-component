@@ -209,12 +209,21 @@ export class StepLocation {
 
       this.locationData = location;
 
+      // Determine coverage result type
       if (location.isValid) {
-        // Show InfoWindow on marker (like TEL)
-        this.showCoverageInfoWindow(location.serviceMessage, true);
+        if (location.serviceType.toUpperCase() === 'CLARO HOGAR') {
+          // CLARO HOGAR - show "Fuera de área" with options
+          this.showCoverageInfoWindow(location.serviceMessage, 'claro-hogar');
+        } else {
+          // GPON/VRAD - show success
+          this.showCoverageInfoWindow(location.serviceMessage, 'success');
+        }
+      } else if (location.serviceType === 'PR LIMIT') {
+        // PR LIMIT - show out of range message (no continue option)
+        this.showCoverageInfoWindow(location.serviceMessage, 'pr-limit');
       } else {
-        // Show error InfoWindow
-        this.showCoverageInfoWindow(ERROR_MESSAGES.NO_COVERAGE, false);
+        // Generic no coverage error
+        this.showCoverageInfoWindow(ERROR_MESSAGES.NO_COVERAGE, 'no-coverage');
       }
     } catch (error) {
       console.error('Coverage validation error:', error);
@@ -228,17 +237,10 @@ export class StepLocation {
   /**
    * Shows coverage result in InfoWindow on the marker
    * New design based on capturas 1.png and 2.png
+   * @param message - The message to display
+   * @param resultType - 'success' | 'claro-hogar' | 'pr-limit' | 'no-coverage'
    */
-  private showCoverageInfoWindow(message: string, isSuccess: boolean): void {
-    // Determine if we should show "options" for no coverage (CLARO HOGAR alternative)
-    const hasAlternativeOptions = !isSuccess;
-
-    const displayMessage = isSuccess
-      ? message
-      : 'Escoge entre nuestra selección de modems.';
-
-    const buttonText = isSuccess ? '¡Lo quiero!' : 'Ver opciones';
-
+  private showCoverageInfoWindow(message: string, resultType: 'success' | 'claro-hogar' | 'pr-limit' | 'no-coverage'): void {
     // SVG icon from covertura.svg (torre de transmisión con señal WiFi) - only for success
     const coverageIcon = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4.58325 19.5815L10.9873 4.5376" stroke="black" stroke-width="0.956522" stroke-linecap="round"/>
@@ -258,11 +260,68 @@ export class StepLocation {
       <path d="M8.27209 4.3841C7.93361 3.84461 7.93361 3.10638 8.27209 2.56689" stroke="#FC4646" stroke-width="0.840492" stroke-linecap="round"/>
     </svg>`;
 
-    // Different title HTML for success vs no coverage
-    const titleHtml = isSuccess
-      ? `<span style="flex-shrink: 0; margin-top: 2px;">${coverageIcon}</span>
-         <span>¡Tu área posee nuestro servicio!</span>`
-      : `<span><span style="color: #DA291C; font-weight: 700;">Fuera de área</span> <span style="font-weight: 400;">¡Pero tienes opciones!</span></span>`;
+    // Configure content based on result type
+    let titleHtml: string;
+    let displayMessage: string;
+    let buttonHtml: string;
+
+    switch (resultType) {
+      case 'success':
+        // GPON/VRAD - Full coverage
+        titleHtml = `<span style="flex-shrink: 0; margin-top: 2px;">${coverageIcon}</span>
+           <span>¡Tu área posee nuestro servicio!</span>`;
+        displayMessage = message;
+        buttonHtml = `<button
+          onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
+          style="
+            background: #DA291C;
+            color: #ffffff;
+            border: none;
+            padding: 12px 36px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            min-width: 150px;
+          "
+        >¡Lo quiero!</button>`;
+        break;
+
+      case 'claro-hogar':
+        // CLARO HOGAR - Wireless internet option
+        titleHtml = `<span><span style="color: #DA291C; font-weight: 700;">Fuera de área</span> <span style="font-weight: 400;">¡Pero tienes opciones!</span></span>`;
+        displayMessage = 'Escoge entre nuestra selección de modems.';
+        buttonHtml = `<button
+          onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
+          style="
+            background: #DA291C;
+            color: #ffffff;
+            border: none;
+            padding: 12px 36px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            min-width: 150px;
+          "
+        >Ver opciones</button>`;
+        break;
+
+      case 'pr-limit':
+        // PR LIMIT - Out of coverage range (no continue option)
+        titleHtml = `<span style="color: #DA291C; font-weight: 700;">¡Fuera de área!</span>`;
+        displayMessage = message;
+        buttonHtml = ''; // No action button for PR LIMIT
+        break;
+
+      case 'no-coverage':
+      default:
+        // Generic no coverage
+        titleHtml = `<span style="color: #DA291C; font-weight: 700;">¡Fuera de área!</span>`;
+        displayMessage = message;
+        buttonHtml = ''; // No action button
+        break;
+    }
 
     const infoWindowContent = `
       <div style="
@@ -295,7 +354,7 @@ export class StepLocation {
           "
         >×</button>
 
-        <!-- Title: with icon for success, without icon for no coverage -->
+        <!-- Title -->
         <div style="
           margin: 0 0 10px 0;
           padding-right: 20px;
@@ -313,27 +372,13 @@ export class StepLocation {
 
         <!-- Message -->
         <p style="
-          margin: 0 0 16px 0;
+          margin: 0 ${buttonHtml ? '0 16px 0' : '0 0 0'};
           font-size: 13px;
           color: #666;
           line-height: 1.4;
         ">${displayMessage}</p>
 
-        <!-- Action button with pill style -->
-        <button
-          onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
-          style="
-            background: #DA291C;
-            color: #ffffff;
-            border: none;
-            padding: 12px 36px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            min-width: 150px;
-          "
-        >${buttonText}</button>
+        ${buttonHtml}
       </div>
     `;
 
@@ -343,13 +388,17 @@ export class StepLocation {
     };
 
     mapsService.showInfoWindow(infoWindowContent, () => {
-      if (isSuccess && this.locationData && this.locationData.isValid) {
-        this.handleInfoWindowContinue();
-      } else if (hasAlternativeOptions) {
-        // For "Ver opciones" - set CLARO HOGAR and continue to catalogue
-        this.handleNoConverageWithOptions();
-      } else {
-        mapsService.closeInfoWindow();
+      switch (resultType) {
+        case 'success':
+          this.handleInfoWindowContinue();
+          break;
+        case 'claro-hogar':
+          this.handleNoConverageWithOptions();
+          break;
+        default:
+          // PR LIMIT and no-coverage - just close
+          mapsService.closeInfoWindow();
+          break;
       }
     });
   }

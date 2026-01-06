@@ -406,7 +406,9 @@ export const SERVICE_MESSAGES: Record<string, string> = {
   GPON: 'Tenemos fibra óptica en tu área y podrás navegar con velocidades de hasta 1,000 megas.',
   VRAD: 'Tenemos servicio de internet DSL disponible en tu área.',
   'CLARO HOGAR': 'Tenemos un poderoso servicio de internet inalámbrico en tu área que tú mismo instalas.',
+  CLARO_HOGAR: 'Tenemos un poderoso servicio de internet inalámbrico en tu área que tú mismo instalas.',
   NO_COVERAGE: '¡Fuera de área! Por el momento no contamos con cobertura en tu zona.',
+  PR_LIMIT: 'Actualmente usted se encuentra fuera del rango de cobertura, si usted desea contratar el servicio para otra locación utilice la barra de dirección.',
 };
 
 // ------------------------------------------

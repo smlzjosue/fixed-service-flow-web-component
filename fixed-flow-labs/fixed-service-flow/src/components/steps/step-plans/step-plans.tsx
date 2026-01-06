@@ -218,10 +218,14 @@ export class StepPlans {
         <div class="step-plans">
           {/* Header */}
           <header class="step-plans__header">
-            <h1 class="step-plans__title">Elige tu plan</h1>
-            <button class="step-plans__btn-back" onClick={this.onBack}>
-              Regresar
+            <button class="step-plans__back-link" onClick={this.onBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Regresar</span>
             </button>
+            <h1 class="step-plans__title">Elige tu plan</h1>
+            <div class="step-plans__divider"></div>
           </header>
 
           {/* Loading */}

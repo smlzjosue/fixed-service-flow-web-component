@@ -1871,4 +1871,158 @@ private renderError() {
 
 ---
 
-*Última actualización: 2025-12-12 (Sesión 7)*
+### Ubicaciones de prueba
+
+16 C. Ruiz Belvis, Caguas, 00725, Puerto Rico --> claro Hogar (compra de modems)
+
+Urb bosques de la sierra calle coqui grillo --> Direcccio valida para planes de internet
+
+53RR+4VV, CL Tacarigua, Los Guayos 2011, Carabobo, Venezuela --> PR Limit (fuera de covertura)
+
+---
+
+## Fecha: 2026-01-06 (Sesión 11)
+
+---
+
+## 41. Mensajes de InfoWindow según Tipo de Servicio
+
+### 41.1 Implementación de Estados Diferenciados
+
+**Solicitud del usuario:** Mostrar mensajes diferenciados en el InfoWindow del mapa según el tipo de cobertura detectado.
+
+**Casos implementados:**
+
+| Tipo de Servicio | Título | Mensaje | Botón |
+|-----------------|--------|---------|-------|
+| GPON/VRAD | "¡Tu área posee nuestro servicio!" | Fibra óptica con velocidades hasta 1,000 megas | "¡Lo quiero!" |
+| CLARO HOGAR | "Fuera de área ¡Pero tienes opciones!" | Internet inalámbrico Claro Hogar disponible | "Ver opciones" |
+| PR LIMIT | "¡Fuera de área!" | Actualmente usted se encuentra fuera del rango de cobertura... | Sin botón |
+| NO_COVERAGE | "Sin Cobertura" | No hay servicio disponible | "Entendido" |
+
+**Archivos modificados:**
+- `coverage.service.ts` - Detección de PR LIMIT y CLARO HOGAR
+- `interfaces.ts` - Nuevas constantes SERVICE_MESSAGES.PR_LIMIT y SERVICE_MESSAGES.CLARO_HOGAR
+- `step-location.tsx` - Método `showCoverageInfoWindow()` con 4 estados diferenciados
+
+---
+
+## 42. Actualización de Headers - Patrón Unificado
+
+### 42.1 Nuevo Formato de Header
+
+**Solicitud del usuario:** Actualizar el header de todas las vistas con botón "Regresar" para que coincida con el diseño de step-catalogue (captura 3):
+- Botón "Regresar" con icono de flecha arriba
+- Título de sección debajo
+- Línea divisoria (divider) horizontal
+
+### 42.2 Componentes Actualizados
+
+| Componente | Antes | Después |
+|------------|-------|---------|
+| step-plans | Título y botón lado a lado (flex-between) | back-link → título → divider |
+| step-contract | Título y botón lado a lado (flex-between) | back-link → título → divider |
+| step-form | Título y botón lado a lado (flex-between) | back-link → título → divider |
+| step-catalogue | ✅ Ya tenía el formato correcto | Sin cambios |
+| step-confirmation | Sin botón regresar | Sin cambios |
+
+### 42.3 Estructura HTML del Nuevo Header
+
+```tsx
+<header class="step-X__header">
+  <button class="step-X__back-link" onClick={this.onBack}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+    <span>Regresar</span>
+  </button>
+  <h1 class="step-X__title">Título de la Sección</h1>
+  <div class="step-X__divider"></div>
+</header>
+```
+
+### 42.4 Estilos SCSS del Nuevo Header
+
+```scss
+&__header {
+  width: 100%;
+  background: $color-white;
+  padding: $spacing-4 0;
+  box-sizing: border-box;
+}
+
+&__back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-2 0;
+  background: transparent;
+  border: none;
+  color: $color-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+&__title {
+  margin: $spacing-3 0 $spacing-4;
+  font-size: 24px;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  line-height: 1.2;
+}
+
+&__divider {
+  height: 1px;
+  background: $color-gray-200;
+  margin: 0 (-$spacing-6);
+}
+```
+
+### 42.5 Cambios Adicionales
+
+**Eliminación de botones "Regresar" redundantes:**
+- Removido `btn-back-mobile` de step-contract.tsx
+- Removido `btn-back-mobile` de step-form.tsx
+- Los estilos de `btn-back-mobile` marcados como `display: none` (no necesarios)
+
+---
+
+## 43. Archivos Modificados (Sesión 11)
+
+| Archivo | Cambios |
+|---------|---------|
+| `coverage.service.ts` | Detección PR LIMIT y CLARO HOGAR |
+| `interfaces.ts` | SERVICE_MESSAGES.PR_LIMIT, SERVICE_MESSAGES.CLARO_HOGAR |
+| `step-location.tsx` | 4 estados de InfoWindow |
+| `step-plans.tsx` | Nuevo header con back-link |
+| `step-plans.scss` | Estilos __back-link, __divider |
+| `step-contract.tsx` | Nuevo header con back-link, removido btn-back-mobile |
+| `step-contract.scss` | Estilos __back-link, __divider |
+| `step-form.tsx` | Nuevo header con back-link, removido btn-back-mobile |
+| `step-form.scss` | Estilos __back-link, __divider |
+
+---
+
+## 44. Verificación con Playwright
+
+Se verificó el funcionamiento correcto de los nuevos headers navegando por el flujo completo:
+
+1. ✅ step-location → InfoWindow con GPON "¡Tu área posee nuestro servicio!"
+2. ✅ step-plans → Header con "Regresar" arriba, "Elige tu plan" abajo
+3. ✅ step-contract → Header con "Regresar" arriba, "Selecciona un tipo de contrato" abajo
+4. ✅ step-form → Header con "Regresar" arriba, "Formulario de solicitud de servicio fijo" abajo
+
+---
+
+*Última actualización: 2026-01-06 (Sesión 11)*
+

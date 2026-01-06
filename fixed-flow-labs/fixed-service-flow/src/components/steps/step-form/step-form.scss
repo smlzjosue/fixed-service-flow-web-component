@@ -24,32 +24,60 @@
   // ------------------------------------------
 
   &__header {
-    @include flex-between;
-    margin-bottom: $spacing-4;
-    padding-bottom: $spacing-4;
-    position: relative;
+    width: 100%;
+    background: $color-white;
+    padding: $spacing-4 0;
+    box-sizing: border-box;
 
-    // Full viewport width divider using pseudo-element
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100vw;
-      height: 1px;
-      background: $color-border-light;
+    @include breakpoint-down(sm) {
+      padding: $spacing-3 0;
+    }
+  }
+
+  &__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    padding: $spacing-2 0;
+    background: transparent;
+    border: none;
+    color: $color-secondary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: opacity $transition-fast;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 
   &__title {
-    @include font-heading-2;
+    margin: $spacing-3 0 $spacing-4;
+    font-size: 24px;
+    font-weight: $font-weight-bold;
     color: $color-text-primary;
+    line-height: 1.2;
+
+    @include breakpoint-down(sm) {
+      font-size: 20px;
+      margin: $spacing-2 0 $spacing-3;
+    }
   }
 
-  &__btn-back {
-    @include button-outline;
-    height: $button-height-md;
+  &__divider {
+    height: 1px;
+    background: $color-gray-200;
+    margin: 0 (-$spacing-6);
+
+    @include breakpoint-down(sm) {
+      margin: 0 (-$spacing-4);
+    }
   }
 
   // ------------------------------------------
@@ -307,33 +335,6 @@
 
 @media (max-width: $breakpoint-md - 1) {
   .step-form {
-    &__header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: $spacing-3;
-
-      .step-form__title {
-        font-size: $font-size-lg;
-        order: 1;
-      }
-
-      .step-form__btn-back {
-        order: 2;
-        align-self: flex-start;
-        height: auto;
-        padding: $spacing-2 0;
-        border: none;
-        background: transparent;
-        color: $color-secondary;
-        font-size: $font-size-sm;
-
-        &:hover {
-          background: transparent;
-          text-decoration: underline;
-        }
-      }
-    }
-
     form {
       padding: $spacing-4;
     }
@@ -363,12 +364,7 @@
     }
 
     &__btn-back-mobile {
-      display: block;
-    }
-
-    // Hide header back button on mobile (use bottom one instead)
-    &__btn-back {
-      display: none;
+      display: none; // Ya no necesario, usamos back-link en header
     }
   }
 }

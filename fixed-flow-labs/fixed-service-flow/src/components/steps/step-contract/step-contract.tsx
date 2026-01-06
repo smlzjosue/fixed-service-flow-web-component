@@ -138,10 +138,14 @@ export class StepContract {
         <div class="step-contract">
           {/* Header */}
           <header class="step-contract__header">
-            <h1 class="step-contract__title">Selecciona un tipo de contrato</h1>
-            <button class="step-contract__btn-back" onClick={this.onBack}>
-              Regresar
+            <button class="step-contract__back-link" onClick={this.onBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <span>Regresar</span>
             </button>
+            <h1 class="step-contract__title">Selecciona un tipo de contrato</h1>
+            <div class="step-contract__divider"></div>
           </header>
 
           {/* Tabs */}
@@ -245,13 +249,6 @@ export class StepContract {
               disabled={!this.selectedOption}
             >
               Continuar
-            </button>
-            <button
-              type="button"
-              class="step-contract__btn-back-mobile"
-              onClick={this.onBack}
-            >
-              Regresar
             </button>
           </div>
         </div>

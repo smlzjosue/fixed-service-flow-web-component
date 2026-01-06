@@ -26,49 +26,59 @@
   // ------------------------------------------
 
   &__header {
-    @include flex-between;
-    padding-bottom: $spacing-4;
-    margin-bottom: $spacing-6;
-    position: relative;
+    width: 100%;
+    background: $color-white;
+    padding: $spacing-4 0;
+    box-sizing: border-box;
 
-    // Full viewport width divider using pseudo-element
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100vw;
-      height: 1px;
-      background: $color-border-light;
+    @include breakpoint-down(sm) {
+      padding: $spacing-3 0;
+    }
+  }
+
+  &__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-1;
+    padding: $spacing-2 0;
+    background: transparent;
+    border: none;
+    color: $color-secondary;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: opacity $transition-fast;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 
   &__title {
-    font-size: 1.5rem;
+    margin: $spacing-3 0 $spacing-4;
+    font-size: 24px;
     font-weight: $font-weight-bold;
     color: $color-text-primary;
-    margin: 0;
+    line-height: 1.2;
 
-    @include breakpoint-up(md) {
-      font-size: 1.75rem;
+    @include breakpoint-down(sm) {
+      font-size: 20px;
+      margin: $spacing-2 0 $spacing-3;
     }
   }
 
-  &__btn-back {
-    background: $color-white;
-    border: 2px solid $color-secondary;
-    color: $color-secondary;
-    padding: $spacing-2 $spacing-6;
-    border-radius: $border-radius-full;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-semibold;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  &__divider {
+    height: 1px;
+    background: $color-gray-200;
+    margin: 0 (-$spacing-6);
 
-    &:hover {
-      background: $color-secondary;
-      color: $color-white;
+    @include breakpoint-down(sm) {
+      margin: 0 (-$spacing-4);
     }
   }
 
