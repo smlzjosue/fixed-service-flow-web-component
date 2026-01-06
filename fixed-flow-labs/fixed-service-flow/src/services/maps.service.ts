@@ -177,8 +177,10 @@ class MapsService {
 
   /**
    * Adds or updates a marker on the map
+   * @param coordinates - The marker position
+   * @param verticalOffset - Pixels to shift the view up (positive = marker appears lower)
    */
-  async setMarker(coordinates: Coordinates): Promise<void> {
+  async setMarker(coordinates: Coordinates, verticalOffset: number = 0): Promise<void> {
     if (!this.map) {
       throw new Error('Map not initialized');
     }
@@ -199,6 +201,12 @@ class MapsService {
 
     // Center map on marker
     this.map.setCenter(coordinates);
+
+    // Apply vertical offset to make marker appear lower on screen
+    // Negative y value pans the map up, making the marker appear lower
+    if (verticalOffset > 0) {
+      this.map.panBy(0, -verticalOffset);
+    }
   }
 
   /**

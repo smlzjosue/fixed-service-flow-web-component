@@ -10,6 +10,9 @@ import { LocationData } from '../../../store/interfaces';
 import { ERROR_MESSAGES } from '../../../utils/constants';
 import type { Coordinates, GeocodeResult } from '../../../services/maps.service';
 
+// Offset to shift the map view so marker appears lower (InfoWindow visible above search bar)
+const MAP_VERTICAL_OFFSET = 150;
+
 @Component({
   tag: 'step-location',
   styleUrl: 'step-location.scss',
@@ -136,12 +139,12 @@ export class StepLocation {
       this.address = result.formattedAddress || result.address;
       this.currentCoordinates = result.coordinates;
 
-      // Update map marker
-      mapsService.setMarker(result.coordinates);
+      // Update map marker with offset so InfoWindow appears below search bar
+      mapsService.setMarker(result.coordinates, MAP_VERTICAL_OFFSET);
     } else {
       // If reverse geocode fails, still set coordinates
       this.currentCoordinates = coordinates;
-      mapsService.setMarker(coordinates);
+      mapsService.setMarker(coordinates, MAP_VERTICAL_OFFSET);
     }
 
     // Auto-validate coverage (like TEL does on map click)
@@ -180,9 +183,8 @@ export class StepLocation {
           this.currentCoordinates = coords;
           this.geocodeResult = geocoded;
 
-          // Update map
-          mapsService.setMarker(coords);
-          mapsService.centerMap(coords);
+          // Update map with offset so InfoWindow appears below search bar
+          mapsService.setMarker(coords, MAP_VERTICAL_OFFSET);
         } else {
           this.errorMessage = 'No se pudo encontrar la dirección. Por favor, intenta con otra dirección.';
           this.showErrorModal = true;
