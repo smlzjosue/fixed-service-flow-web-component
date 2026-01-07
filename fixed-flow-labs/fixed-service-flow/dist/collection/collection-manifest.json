@@ -1,0 +1,32 @@
+{
+  "entries": [
+    "components/ui/ui-button/ui-button.js",
+    "components/ui/ui-carousel/ui-carousel.js",
+    "components/ui/ui-input/ui-input.js",
+    "components/ui/ui-select/ui-select.js",
+    "components/ui/ui-stepper/ui-stepper.js",
+    "components/fixed-service-flow/fixed-service-flow.js",
+    "components/steps/step-catalogue/step-catalogue.js",
+    "components/steps/step-confirmation/step-confirmation.js",
+    "components/steps/step-contract/step-contract.js",
+    "components/steps/step-form/step-form.js",
+    "components/steps/step-location/step-location.js",
+    "components/steps/step-order-summary/step-order-summary.js",
+    "components/steps/step-payment/step-payment.js",
+    "components/steps/step-plans/step-plans.js",
+    "components/steps/step-product-detail/step-product-detail.js",
+    "components/steps/step-shipping/step-shipping.js",
+    "components/ui/ui-checkbox/ui-checkbox.js",
+    "components/ui/ui-date-picker/ui-date-picker.js",
+    "components/ui/ui-image-carousel/ui-image-carousel.js",
+    "components/ui/ui-radio/ui-radio.js",
+    "components/ui/ui-radio-card/ui-radio-card.js"
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "4.39.0",
+    "typescriptVersion": "5.8.3"
+  },
+  "collections": [],
+  "bundles": []
+}
