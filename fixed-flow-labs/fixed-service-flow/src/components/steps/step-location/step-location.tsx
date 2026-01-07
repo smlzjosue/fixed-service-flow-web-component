@@ -291,8 +291,12 @@ export class StepLocation {
 
       case 'claro-hogar':
         // CLARO HOGAR - Wireless internet option
-        titleHtml = `<span><span style="color: #DA291C; font-weight: 700;">Fuera de área</span> <span style="font-weight: 400;">¡Pero tienes opciones!</span></span>`;
-        displayMessage = 'Escoge entre nuestra selección de modems.';
+        // TODO: Flujo CLARO HOGAR deshabilitado temporalmente. Restaurar cuando se habilite.
+        titleHtml = `<span style="color: #DA291C; font-weight: 700;">¡Fuera de área!</span>`;
+        // displayMessage = 'Escoge entre nuestra selección de modems.'; // Original - restaurar cuando se habilite
+        displayMessage = 'No poseemos servicios en tu área'; // Provisional
+        // TODO: Restaurar botón cuando se habilite el flujo CLARO HOGAR
+        /*
         buttonHtml = `<button
           onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
           style="
@@ -307,6 +311,8 @@ export class StepLocation {
             min-width: 150px;
           "
         >Ver opciones</button>`;
+        */
+        buttonHtml = ''; // Botón oculto temporalmente
         break;
 
       case 'pr-limit':
