@@ -36,7 +36,7 @@ npm install @smlzjosue/fixed-service-flow
 Agregar en el `index.html` de tu proyecto Angular:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/smlzjosue/fixed-service-flow-web-component@v1.2.8/fixed-flow-labs/fixed-service-flow/dist/fixed-service-flow/fixed-service-flow.esm.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/smlzjosue/fixed-service-flow-web-component@v1.2.9/fixed-flow-labs/fixed-service-flow/dist/fixed-service-flow/fixed-service-flow.esm.js"></script>
 ```
 
 ---
@@ -479,4 +479,4 @@ Para reportar bugs o solicitar nuevas funcionalidades:
 
 ---
 
-*Ultima actualizacion: v1.2.8*
+*Ultima actualizacion: v1.2.9*
