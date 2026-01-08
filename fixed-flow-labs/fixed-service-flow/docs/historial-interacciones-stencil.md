@@ -2024,5 +2024,158 @@ Se verificó el funcionamiento correcto de los nuevos headers navegando por el f
 
 ---
 
-*Última actualización: 2026-01-06 (Sesión 11)*
+## Fecha: 2026-01-08 (Sesión 12)
+
+---
+
+## 45. Corrección de Loaders en Transiciones de Pasos
+
+### 45.1 Problema Identificado
+
+**Síntoma:** Al navegar entre pasos, la pantalla se quedaba en blanco durante 1-3 segundos mientras se cargaban los datos de la API.
+
+**Casos afectados:**
+1. `step-location` → `step-plans` (flujo GPON/VRAD)
+2. `step-form` → `step-confirmation` (envío de solicitud)
+
+**Causa raíz técnica:**
+
+En Stencil.js, cuando `componentWillLoad()` es `async` y usa `await`, el primer render se **bloquea** hasta que la promesa se resuelve:
+
+```typescript
+// PROBLEMA: Bloquea el primer render
+async componentWillLoad() {
+  await this.loadPlans();  // ← El loader NUNCA se muestra
+}
+```
+
+**Secuencia del problema:**
+1. Componente inicia carga
+2. `componentWillLoad()` ejecuta `await loadPlans()`
+3. `isLoading = true` se establece, pero render NO ocurre (bloqueado)
+4. API responde (1-3 segundos)
+5. `isLoading = false`
+6. `componentWillLoad()` termina
+7. **AHORA** ocurre el primer render, pero `isLoading` ya es `false`
+
+### 45.2 Solución Aplicada
+
+Mover las operaciones async de `componentWillLoad()` a `componentDidLoad()`:
+
+```typescript
+// SOLUCIÓN: Permite que el primer render ocurra con loader visible
+componentWillLoad() {
+  // Sync - no bloquea render
+}
+
+componentDidLoad() {
+  this.initializePlans();  // Async después del render
+}
+
+private async initializePlans() {
+  await this.loadPlans();
+  // ... restaurar estado
+}
+```
+
+**Secuencia corregida:**
+1. Componente inicia carga
+2. `componentWillLoad()` termina inmediatamente (sync)
+3. **Primer render con `isLoading = true`** → Loader visible
+4. `componentDidLoad()` ejecuta `initializePlans()`
+5. API responde
+6. `isLoading = false` → Re-render con datos
+
+### 45.3 Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `step-plans.tsx` | `componentWillLoad` → sync, nueva `componentDidLoad` + `initializePlans()` |
+| `step-confirmation.tsx` | `componentWillLoad` → sync, nueva `componentDidLoad` + `initializeConfirmation()` |
+
+---
+
+## 46. Label de Tipo de Servicio en step-plans
+
+### 46.1 Requerimiento
+
+Mostrar el tipo de servicio (GPON o VRAD) en el header de step-plans entre paréntesis.
+
+### 46.2 Implementación
+
+```typescript
+private getServiceTypeLabel(): string {
+  const serviceType = flowState.location?.serviceType?.toUpperCase();
+  if (serviceType === 'GPON' || serviceType === 'VRAD') {
+    return ` (${serviceType})`;
+  }
+  return '';
+}
+```
+
+**Resultado visual:**
+- GPON: `Elige tu plan (GPON)`
+- VRAD: `Elige tu plan (VRAD)`
+- CLARO HOGAR: `Elige tu plan` (sin paréntesis)
+
+---
+
+## 47. Mensaje de Error de Cobertura Actualizado
+
+### 47.1 Requerimiento
+
+Actualizar el mensaje de error cuando falla la carga del módulo de cobertura (Google Maps).
+
+### 47.2 Cambio Realizado
+
+**Archivo:** `step-location.tsx`
+
+**Antes:**
+```
+Error al cargar Google Maps
+```
+
+**Después:**
+```
+No podemos abrir la validación de cobertura en este momento. Intenta nuevamente más tarde.
+```
+
+---
+
+## 48. Resumen de Commits (Sesión 12)
+
+| Commit | Descripción |
+|--------|-------------|
+| `107b3ef` | fix(ux): show loader during async data loading in step transitions |
+
+**Archivos en el commit:**
+- `src/components/steps/step-plans/step-plans.tsx`
+- `src/components/steps/step-confirmation/step-confirmation.tsx`
+- `src/components/steps/step-location/step-location.tsx`
+- `docs/PLAN-LOADER-STEP-PLANS.md`
+- `dist/*` (build actualizado)
+
+---
+
+## 49. Documentación Creada
+
+Se creó el archivo `docs/PLAN-LOADER-STEP-PLANS.md` con:
+- Análisis detallado del problema
+- Explicación técnica del lifecycle de Stencil.js
+- Checklist de implementación
+- Código de referencia
+
+---
+
+## 50. Direcciones de Prueba
+
+| Dirección | Tipo de Servicio | Flujo |
+|-----------|------------------|-------|
+| `Urb bosques de la sierra calle coqui grillo` | GPON | Location → Plans → Contract → Form → Confirmation |
+| `16 C. Ruiz Belvis, Caguas, 00725, Puerto Rico` | CLARO HOGAR | Location → Catalogue → Plans → ... |
+| `53RR+4VV, CL Tacarigua, Los Guayos 2011, Carabobo, Venezuela` | PR LIMIT | Location (sin continuar) |
+
+---
+
+*Última actualización: 2026-01-08 (Sesión 12)*
 
