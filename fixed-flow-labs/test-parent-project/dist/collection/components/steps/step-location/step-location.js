@@ -73,7 +73,7 @@ export class StepLocation {
         }
         catch (error) {
             console.error('Error initializing map:', error);
-            this.mapError = 'Error al cargar Google Maps';
+            this.mapError = 'No podemos abrir la validación de cobertura en este momento. Intenta nuevamente más tarde.';
             this.isLoadingMap = false;
         }
     }
@@ -243,22 +243,28 @@ export class StepLocation {
                 break;
             case 'claro-hogar':
                 // CLARO HOGAR - Wireless internet option
-                titleHtml = `<span><span style="color: #DA291C; font-weight: 700;">Fuera de área</span> <span style="font-weight: 400;">¡Pero tienes opciones!</span></span>`;
-                displayMessage = 'Escoge entre nuestra selección de modems.';
+                // TODO: Flujo CLARO HOGAR deshabilitado temporalmente. Restaurar cuando se habilite.
+                titleHtml = `<span style="color: #DA291C; font-weight: 700;">¡Fuera de área!</span>`;
+                // displayMessage = 'Escoge entre nuestra selección de modems.'; // Original - restaurar cuando se habilite
+                displayMessage = 'No poseemos servicios en tu área'; // Provisional
+                // TODO: Restaurar botón cuando se habilite el flujo CLARO HOGAR
+                /*
                 buttonHtml = `<button
-          onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
-          style="
-            background: #DA291C;
-            color: #ffffff;
-            border: none;
-            padding: 12px 36px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            min-width: 150px;
-          "
-        >Ver opciones</button>`;
+                  onclick="if(window.__infoWindowContinueCallback) window.__infoWindowContinueCallback();"
+                  style="
+                    background: #DA291C;
+                    color: #ffffff;
+                    border: none;
+                    padding: 12px 36px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    min-width: 150px;
+                  "
+                >Ver opciones</button>`;
+                */
+                buttonHtml = ''; // Botón oculto temporalmente
                 break;
             case 'pr-limit':
                 // PR LIMIT - Out of coverage range (no continue option)
@@ -465,10 +471,10 @@ export class StepLocation {
     // RENDER
     // ------------------------------------------
     render() {
-        return (h(Host, { key: '9f00def9ccc346b50dd0092b34d33d0afc7d4272' }, h("div", { key: '43c8a619905081a65d3c67b8b6663ed28259feb3', class: "step-location" }, this.isValidating && (h("div", { key: '0195458030f10d73d5cef3a963aed32da7386665', class: "step-location__validating-overlay" }, h("div", { key: '665fe951b2d78542afbce22bc1b2f19add1f446c', class: "step-location__validating-content" }, h("div", { key: 'f5504f2ebb709665259abedad0fc5d0ae9b0044a', class: "step-location__validating-spinner" }), h("p", { key: '9652b97b4f7b9f8d464a426bcd421eb213bbab69', class: "step-location__validating-text" }, "Validando cobertura...")))), h("header", { key: 'f78638177af520939d36b1f70314df4a6f596810', class: "step-location__header" }, h("h1", { key: '87bc6ffcdd7e7daccb547ee30c8e4a855e054a26', class: "step-location__title" }, h("span", { key: 'a021255a23f70de52af5b353018da87ebf6393da', class: "step-location__title--highlight" }, "Servicio fijo empresarial"), ' ', "en tu \u00E1rea")), h("div", { key: 'eaf39af8b1dd929bf0b813b81cfcff7e0876b0c8', class: "step-location__map-container" }, h("div", { key: '59848c139c6faec39804d81f285a8865608f0a5f', class: "step-location__controls" }, h("div", { key: '67f5f4153d6466392853b94c4e2c262566f34efe', class: "step-location__input-group" }, h("span", { key: '30afbcbc962a7a35a66151d0c2a2d39ade23a5eb', class: "step-location__input-icon" }, h("svg", { key: '2240de42e3fdcde78accf64c6be949a49121b2da', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, h("path", { key: '91a969294f1682a4f89c06fdf28ad17efeb5c707', d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" }), h("circle", { key: '90bd9b6df6c45741d665e877173fd763dfbb5c7b', cx: "12", cy: "10", r: "3" }))), h("input", { key: 'aaeeb190efb97d1d482456c72162833866553e7f', type: "text", class: "step-location__input", placeholder: "Ingrese su direcci\u00F3n", value: this.address, onInput: this.handleAddressChange, onKeyPress: this.handleKeyPress, ref: (el) => this.addressInput = el }), h("button", { key: 'dd78c6832ca5f10716c46acde8a74f75b9048576', class: {
+        return (h(Host, { key: '54a5ff3c6b523ad147b00cf7f09faefce5d22732' }, h("div", { key: '2588e009a859cd86e9008ae92f99645b761faf9b', class: "step-location" }, this.isValidating && (h("div", { key: '66813c5424a489dc74e715fe92e564ceac3230ed', class: "step-location__validating-overlay" }, h("div", { key: '6d328683e83fdc8c1fd568d927f186138c086ce7', class: "step-location__validating-content" }, h("div", { key: '724fd2eefa12c952fc7bdd60f6939695334cb2bf', class: "step-location__validating-spinner" }), h("p", { key: '5f4c8f9b5a73643485768a4ce5c71f5d4900517d', class: "step-location__validating-text" }, "Validando cobertura...")))), h("header", { key: 'ca7063473ec212c22a0a7ce44f1e52b7751437bd', class: "step-location__header" }, h("h1", { key: '259333f3ec56803c44af276b1c6a8ce129ffbe09', class: "step-location__title" }, h("span", { key: '0fdfaa401f5a4e5fa1aeb8efd20a0f06d91e7d99', class: "step-location__title--highlight" }, "Servicio fijo empresarial"), ' ', "en tu \u00E1rea")), h("div", { key: '7ebe784ede8e29933eb6d2a2765a4cb87207a040', class: "step-location__map-container" }, h("div", { key: '8e6869f818f168c562aba6eb8bb66c19aa1667a6', class: "step-location__controls" }, h("div", { key: '6dfcc99a743689d4579f295914dd3acdde56fbf0', class: "step-location__input-group" }, h("span", { key: 'b216766b8fb6a0f5bc8920e17ef62d5a271d7cd3', class: "step-location__input-icon" }, h("svg", { key: '967f57b0aea6dce6eaa56ee3027a4978dbfdfb5c', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, h("path", { key: 'e85148c10010909a6671af1efdefb48402a81ef9', d: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" }), h("circle", { key: '3e5776cd19a8015c80c2f5c12ef4c23bc242a18c', cx: "12", cy: "10", r: "3" }))), h("input", { key: 'd5e90625538b6391c191b8b9aa49d8d708d8d067', type: "text", class: "step-location__input", placeholder: "Ingrese su direcci\u00F3n", value: this.address, onInput: this.handleAddressChange, onKeyPress: this.handleKeyPress, ref: (el) => this.addressInput = el }), h("button", { key: 'c117e64a77c858d525f221dd17cd5bc5ab443ccd', class: {
                 'step-location__btn-validate': true,
                 'step-location__btn-validate--loading': this.isValidating,
-            }, onClick: this.handleValidate, disabled: this.isValidating || (!this.address.trim() && !this.currentCoordinates) }, this.isValidating ? (h("span", { class: "step-location__btn-validate-content" }, h("span", { class: "step-location__btn-spinner" }), "Validando...")) : ('Validar'))), h("div", { key: '8e9b6b132633af9aff0f1a837582c42a7a0d7ccb', class: "step-location__location-container" }, h("button", { key: 'a00bc9825e8fc1ac58d5fa28648a0940b733de88', class: "step-location__btn-location", onClick: this.handleUseCurrentLocation, disabled: this.isGettingLocation || this.isLoadingMap }, h("svg", { key: 'e5af86f3be07afc4f97712929ca380fea34091c7', class: "step-location__btn-location-icon", viewBox: "0 0 24 24", fill: "currentColor", stroke: "none" }, h("path", { key: '2eb697175b76a087b3e5e12f8048a449517c3ea1', d: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" })), this.isGettingLocation ? 'Obteniendo ubicación...' : 'Utilizar Ubicación Actual'))), h("div", { key: 'b4b08d3fe6cc830ddfab4aa1789d7a1a05901d2e', class: "step-location__map" }, this.isLoadingMap && !this.mapError && (h("div", { key: '2659f19175fb0d23ae1e267b751bde41ad5aa800', class: "step-location__map-loading" }, h("div", { key: '429a190be63c7b3c6cbd3f1be6ab99914da0e06c', class: "step-location__spinner" }), h("p", { key: 'ffc6ab435a50c7f0678c54ea3a2b20a69bf87cd2' }, "Cargando mapa..."))), this.mapError && (h("div", { key: 'd25ed7b6f0292bf85c979c43683c60d7aba954cb', class: "step-location__map-error" }, h("p", { key: '944f5296e4a0770a6f111da14a54053d184971b5' }, this.mapError), !this.googleMapsKey && (h("small", { key: '274ba996d5e94834368836bbb7817475c5aa64ee' }, "Configura la prop google-maps-key en el componente")))), h("div", { key: '288374c3ccab67a4ad9b0c46ea20aeb71835adf8', class: "step-location__map-canvas", ref: (el) => this.mapContainer = el, style: { display: this.mapError ? 'none' : 'block' } }))), this.showErrorModal && (h("div", { key: 'f0a9869b42a1efce9f2758814a30c320a3260e48', class: "step-location__modal-backdrop" }, h("div", { key: '5ae852cb63dd660c4175a11718b3847d458ece2c', class: "step-location__modal step-location__modal--error" }, h("button", { key: 'ee317e1a56f6583f6e789eda000a170248dd6b84', class: "step-location__modal-close", onClick: () => this.showErrorModal = false }, "\u00D7"), h("div", { key: '72dde675ffb4cb725bae7184388bb24641bad286', class: "step-location__modal-error-bar" }, "Error"), h("p", { key: 'c653f42dd5c63fd6b9b193c4f2424f011e6d2c34', class: "step-location__modal-message" }, this.errorMessage), h("button", { key: '4eb8f7a55456e4e944498152b6500f0d03394311', class: "step-location__modal-btn", onClick: () => this.showErrorModal = false }, "Cerrar")))))));
+            }, onClick: this.handleValidate, disabled: this.isValidating || (!this.address.trim() && !this.currentCoordinates) }, this.isValidating ? (h("span", { class: "step-location__btn-validate-content" }, h("span", { class: "step-location__btn-spinner" }), "Validando...")) : ('Validar'))), h("div", { key: '98c6078e1e59c0250ccc27198a9f5da9c2da021b', class: "step-location__location-container" }, h("button", { key: 'c6a8d4d359e76cd76603b04d5fbe5d8078347188', class: "step-location__btn-location", onClick: this.handleUseCurrentLocation, disabled: this.isGettingLocation || this.isLoadingMap }, h("svg", { key: '9cfad9417379b945beb476a1f136aedfd1672302', class: "step-location__btn-location-icon", viewBox: "0 0 24 24", fill: "currentColor", stroke: "none" }, h("path", { key: '8dafe163a8a5ceaf212c9028b10ae819808a705a', d: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" })), this.isGettingLocation ? 'Obteniendo ubicación...' : 'Utilizar Ubicación Actual'))), h("div", { key: 'ce81d999669f9426744b88a38ad03dac577cef0b', class: "step-location__map" }, this.isLoadingMap && !this.mapError && (h("div", { key: '90e445d02b25fbc1a33ed9e0339bc8e4b0b5202e', class: "step-location__map-loading" }, h("div", { key: '610fbf68fd393efb694b2b28ca1a60348c8ea6b8', class: "step-location__spinner" }), h("p", { key: '6e576450a8025066bb3abc29095e38e1b864016b' }, "Cargando mapa..."))), this.mapError && (h("div", { key: '7730c5ff6fd176b918900bc325dfb16e7f80794d', class: "step-location__map-error" }, h("p", { key: '5035e4d530ad61b40234c4938e21cc620b97623e' }, this.mapError), !this.googleMapsKey && (h("small", { key: '56425e22f8b070245c138d0b1e00bf21ce96464f' }, "Configura la prop google-maps-key en el componente")))), h("div", { key: '84d175c59110d08c73a5daedbfbc82ac8608d407', class: "step-location__map-canvas", ref: (el) => this.mapContainer = el, style: { display: this.mapError ? 'none' : 'block' } }))), this.showErrorModal && (h("div", { key: '3da65c36d312d597a6f2e16b697f7cf43ed194aa', class: "step-location__modal-backdrop" }, h("div", { key: 'fc6c6738e7924d840ce6e78ff67c382f96a9b00d', class: "step-location__modal step-location__modal--error" }, h("button", { key: 'd68d55262d914412254a16fa7676972183e6f84d', class: "step-location__modal-close", onClick: () => this.showErrorModal = false }, "\u00D7"), h("div", { key: 'cd1acaf7ff3d9c221a6137ea8b4108b57205258b', class: "step-location__modal-error-bar" }, "Error"), h("p", { key: 'a3978ce5f0da0fb7ad0fadaeef15ded0fa6e4350', class: "step-location__modal-message" }, this.errorMessage), h("button", { key: '1a06f5385b6d04caa1737e21ee34c9c3927820fa', class: "step-location__modal-btn", onClick: () => this.showErrorModal = false }, "Cerrar")))))));
     }
     static get is() { return "step-location"; }
     static get encapsulation() { return "shadow"; }

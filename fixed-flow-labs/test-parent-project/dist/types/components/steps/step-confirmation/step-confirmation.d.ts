@@ -8,7 +8,21 @@ export declare class StepConfirmation {
     orderNumber: string | null;
     confirmationSent: boolean;
     errorMessage: string;
-    componentWillLoad(): Promise<void>;
+    /**
+     * Sync lifecycle - No async operations here
+     * This allows the first render to happen immediately with status = 'loading'
+     * showing the loader to the user
+     */
+    componentWillLoad(): void;
+    /**
+     * Called after first render - Safe to do async operations
+     * The loader is already visible at this point
+     */
+    componentDidLoad(): void;
+    /**
+     * Initialize confirmation - async operations after component is mounted
+     */
+    private initializeConfirmation;
     /**
      * Determines if this is a catalogue/equipment flow (CLARO HOGAR)
      * vs an internet service flow

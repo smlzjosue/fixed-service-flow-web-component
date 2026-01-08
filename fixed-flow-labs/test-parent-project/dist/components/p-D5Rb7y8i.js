@@ -1,13 +1,196 @@
+import { t as transformTag, p as proxyCustomElement, H, h, d as Host } from './p-BTqKKAHI.js';
+import { f as flowActions, s as state } from './p-1rCYjdXc.js';
+import { p as plansService } from './p-BnwnDOjS.js';
+import { t as tokenService, h as httpService } from './p-De3C6PL0.js';
+import { E as ERROR_MESSAGES, S as SUCCESS_MESSAGES } from './p-yvVRTe7W.js';
+import { c as cartService } from './p-TkjnQ7KS.js';
+import { p as productService } from './p-CDUi1inA.js';
+import { s as shippingService } from './p-Wsxu9H2a.js';
+import { p as paymentService } from './p-Dyr6R7kX.js';
+
 // ============================================
-// STEP CONFIRMATION - Confirmation/Result Step
+// REQUEST SERVICE - Service Request Submission
 // Fixed Service Flow Web Component
-// Supports both Internet and CLARO HOGAR catalogue flows
 // ============================================
-import { h, Host } from "@stencil/core";
-import { flowState, flowActions } from "../../../store/flow.store";
-import { requestService, paymentService, cartService, productService, shippingService, plansService } from "../../../services";
-import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "../../../utils/constants";
-export class StepConfirmation {
+// ------------------------------------------
+// REQUEST SERVICE CLASS
+// ------------------------------------------
+class RequestService {
+    // ------------------------------------------
+    // SUBMIT REQUEST
+    // ------------------------------------------
+    /**
+     * Submits the service request
+     * Endpoint: POST api/Orders/internetServiceRequest
+     */
+    async submitRequest(payload) {
+        // Ensure token exists before making the call
+        await tokenService.ensureToken();
+        // Build FormData
+        const formData = new FormData();
+        // Add all fields to FormData
+        Object.entries(payload).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                formData.append(key, String(value));
+            }
+        });
+        const response = await httpService.postFormData('api/Orders/internetServiceRequest', formData);
+        return response;
+    }
+    // ------------------------------------------
+    // GET ORDER DETAILS
+    // ------------------------------------------
+    /**
+     * Gets order details after successful submission
+     * Endpoint: GET api/Orders/getOrder?orderId={orderId}
+     * Source: TEL - frontend/src/app/internet/services/plans.service.ts
+     */
+    async getOrder(orderId) {
+        await tokenService.ensureToken();
+        const response = await httpService.get(`api/Orders/getOrder?orderId=${encodeURIComponent(orderId)}`);
+        return response;
+    }
+    // ------------------------------------------
+    // SEND CONFIRMATION EMAIL
+    // ------------------------------------------
+    /**
+     * Sends confirmation email to customer
+     * Endpoint: POST api/Orders/sendConfirmation
+     * Source: TEL - frontend/src/app/internet/services/plans.service.ts
+     */
+    async sendConfirmation(orderId, email) {
+        await tokenService.ensureToken();
+        const formData = new FormData();
+        formData.append('orderId', orderId);
+        formData.append('email', email);
+        const response = await httpService.postFormData('api/Orders/sendConfirmation', formData);
+        return response;
+    }
+    // ------------------------------------------
+    // BUILD PAYLOAD
+    // ------------------------------------------
+    /**
+     * Builds the request payload from flow data
+     */
+    buildPayload(formData, contract, plan, location) {
+        return {
+            // Contract type
+            type: contract.typeId,
+            // Personal data
+            name: formData.personal.firstName,
+            second_name: formData.personal.secondName || '',
+            last_name: formData.personal.lastName,
+            second_surname: formData.personal.secondLastName,
+            // date_birth: Campo requerido por el backend pero no recolectado en el formulario empresarial.
+            // Se envía fecha por defecto. TODO: Discutir con backend si es necesario para flujo empresarial.
+            date_birth: formData.personal.birthDate || '1990-01-01',
+            email: formData.personal.email,
+            telephone1: formData.personal.phone1,
+            telephone2: formData.personal.phone2 || '',
+            // Address
+            zipCode: formData.address.zipCode,
+            address: formData.address.address,
+            city: formData.address.city,
+            // Identification
+            id_type: formData.personal.identificationType === 'license' ? '1' : '2',
+            id: formData.personal.identificationNumber,
+            identification_expiration: formData.personal.identificationExpiration,
+            // Flow tracking
+            frontFlowId: this.generateFlowId(),
+            // Plan details
+            plan_id: String(plan.planId),
+            plan_name: plan.planName,
+            // Contract details
+            deadlines: String(contract.deadlines),
+            installation: String(contract.installation),
+            activation: String(contract.activation),
+            moden: String(contract.modem),
+            // Customer status - Backend espera booleano, no string
+            claro_customer: formData.isExistingCustomer,
+            // Location
+            latitud: String(location.latitude),
+            longitud: String(location.longitude),
+            // Business data (optional)
+            business_name: formData.business.businessName,
+            business_position: formData.business.position,
+        };
+    }
+    // ------------------------------------------
+    // HELPER METHODS
+    // ------------------------------------------
+    /**
+     * Generates a unique flow ID for tracking
+     */
+    generateFlowId() {
+        return `FSF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    }
+    /**
+     * Validates that all required data is present before submission
+     */
+    validateSubmissionData(formData, contract, plan, location) {
+        const missingFields = [];
+        if (!location) {
+            missingFields.push('location');
+        }
+        if (!plan) {
+            missingFields.push('plan');
+        }
+        if (!contract) {
+            missingFields.push('contract');
+        }
+        if (!formData) {
+            missingFields.push('formData');
+        }
+        else {
+            // Validate personal data
+            if (!formData.personal.firstName)
+                missingFields.push('firstName');
+            if (!formData.personal.lastName)
+                missingFields.push('lastName');
+            if (!formData.personal.secondLastName)
+                missingFields.push('secondLastName');
+            if (!formData.personal.identificationNumber)
+                missingFields.push('identificationNumber');
+            if (!formData.personal.identificationExpiration)
+                missingFields.push('identificationExpiration');
+            if (!formData.personal.phone1)
+                missingFields.push('phone1');
+            if (!formData.personal.email)
+                missingFields.push('email');
+            // Validate business data
+            if (!formData.business.businessName)
+                missingFields.push('businessName');
+            if (!formData.business.position)
+                missingFields.push('position');
+            // Validate address
+            if (!formData.address.address)
+                missingFields.push('address');
+            if (!formData.address.city)
+                missingFields.push('city');
+            if (!formData.address.zipCode)
+                missingFields.push('zipCode');
+        }
+        return {
+            isValid: missingFields.length === 0,
+            missingFields,
+        };
+    }
+}
+// ------------------------------------------
+// SINGLETON EXPORT
+// ------------------------------------------
+const requestService = new RequestService();
+
+const stepConfirmationCss = () => `@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}:host{display:block}.step-confirmation{width:100%}.step-confirmation__header{margin-bottom:1.5rem;padding-bottom:1rem;position:relative}.step-confirmation__header::after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100vw;height:1px;background:#E5E5E5}.step-confirmation__header-title{font-size:1.75rem;font-weight:700;line-height:1.2;color:#333333}.step-confirmation__content{background-color:#FFFFFF;border:1px solid #E5E5E5;border-radius:0.75rem;box-shadow:0 2px 8px rgba(0, 0, 0, 0.08);transition:box-shadow 150ms ease, border-color 150ms ease;padding:3rem 2rem;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}.step-confirmation__loading{display:flex;flex-direction:column;align-items:center;justify-content:center}.step-confirmation__loading p{margin-top:1rem;font-size:1rem;font-weight:400;line-height:1.5;color:#666666}.step-confirmation__spinner{width:48px;height:48px;border:4px solid #E5E5E5;border-top-color:#0097A9;border-radius:50%;animation:spin 1s linear infinite}.step-confirmation__result{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:500px}.step-confirmation__icon{display:flex;align-items:center;justify-content:center;margin-bottom:1rem}.step-confirmation__icon img{width:48px;height:48px}.step-confirmation__icon svg{width:40px;height:40px}.step-confirmation__title{font-size:1.5rem;font-weight:600;line-height:1.35;color:#333333;margin-bottom:0.5rem}.step-confirmation__title--success{color:#15A045}.step-confirmation__title--error{color:#E00814}.step-confirmation__message{font-size:1rem;font-weight:400;line-height:1.5;color:#666666;margin-bottom:1.5rem}.step-confirmation__order-id{font-size:0.875rem;font-weight:400;line-height:1.5;color:#666666;margin-bottom:1.5rem;padding:0.5rem 1rem;background:#FAFAFA;border-radius:0.5rem}.step-confirmation__actions{margin-top:1.5rem;text-align:center}.step-confirmation__btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-confirmation__btn:disabled{opacity:0.5;cursor:not-allowed}.step-confirmation__btn{height:48px;background-color:transparent;color:#0097A9;border:2px solid #0097A9}.step-confirmation__btn:hover:not(:disabled){background-color:rgba(0, 151, 169, 0.1)}.step-confirmation__btn:active:not(:disabled){background-color:rgba(0, 151, 169, 0.2)}.step-confirmation__btn{min-width:180px}.step-confirmation__btn--error{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0 1.5rem;font-family:"AMX", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;font-size:1rem;font-weight:600;line-height:1;text-decoration:none;border:none;border-radius:9999px;cursor:pointer;transition:all 150ms ease}.step-confirmation__btn--error:disabled{opacity:0.5;cursor:not-allowed}.step-confirmation__btn--error{height:48px;background-color:#DA291C;color:#FFFFFF}.step-confirmation__btn--error:hover:not(:disabled){background-color:rgb(181.843902439, 34.2, 23.356097561)}.step-confirmation__btn--error:active:not(:disabled){background-color:rgb(163.7658536585, 30.8, 21.0341463415)}@keyframes spin{to{transform:rotate(360deg)}}`;
+
+const StepConfirmation = /*@__PURE__*/ proxyCustomElement(class StepConfirmation extends H {
+    constructor(registerHost) {
+        super();
+        if (registerHost !== false) {
+            this.__registerHost();
+        }
+        this.__attachShadow();
+    }
     // ------------------------------------------
     // PROPS
     // ------------------------------------------
@@ -65,8 +248,8 @@ export class StepConfirmation {
     isCatalogueFlow() {
         // Catalogue flow has payment result stored but no contract/formData
         const paymentResult = paymentService.getPaymentResult();
-        const hasContract = !!flowState.selectedContract;
-        const hasFormData = !!flowState.formData;
+        const hasContract = !!state.selectedContract;
+        const hasFormData = !!state.formData;
         // If we have payment result but no contract/formData, it's catalogue flow
         return !!paymentResult && !hasContract && !hasFormData;
     }
@@ -97,10 +280,10 @@ export class StepConfirmation {
             // Emit complete event with available data
             this.onComplete?.({
                 orderId: this.orderId,
-                plan: flowState.selectedPlan,
+                plan: state.selectedPlan,
                 contract: null, // Not applicable for catalogue flow
                 customer: null, // Customer data came from shipping form
-                location: flowState.location,
+                location: state.location,
             });
         }
         catch (error) {
@@ -117,10 +300,10 @@ export class StepConfirmation {
         this.status = 'loading';
         try {
             const { location, plan, contract, formData } = {
-                location: flowState.location,
-                plan: flowState.selectedPlan,
-                contract: flowState.selectedContract,
-                formData: flowState.formData,
+                location: state.location,
+                plan: state.selectedPlan,
+                contract: state.selectedContract,
+                formData: state.formData,
             };
             // Validate all data exists
             const validation = requestService.validateSubmissionData(formData, contract, plan, location);
@@ -314,87 +497,33 @@ export class StepConfirmation {
     render() {
         return (h(Host, { key: 'c9a55cce3d45179061635122b27e6f8383b06c28' }, h("div", { key: '6d38397a35a4e1577c6e04b63bf723a833f3c2db', class: "step-confirmation" }, h("header", { key: 'fc538465205df4823a6f982ceb4ac077a1e9b7fc', class: "step-confirmation__header" }, h("h1", { key: 'e35f03a038c0b20308c23f02f7b9722ef35c088a', class: "step-confirmation__header-title" }, "Confirmaci\u00F3n de Solicitud")), h("div", { key: '829ec1fe2b5eb1d9d9ffa5c5b0888c1879f55ab1', class: "step-confirmation__content" }, this.status === 'loading' && this.renderLoading(), this.status === 'success' && this.renderSuccess(), this.status === 'error' && this.renderError()), this.status === 'success' && (h("div", { key: 'a9b7287c01ae9c3c8de2d910861366af5eb8dbdc', class: "step-confirmation__actions" }, h("button", { key: 'dc2f1935dabdb795e7d89779b956a4d4a3c9d69d', class: "step-confirmation__btn", onClick: this.handleClose }, "Cerrar"))), this.status === 'error' && (h("div", { key: 'c563a79251066406241d0995a4e9cdcef1e6fefc', class: "step-confirmation__actions" }, h("button", { key: '8d73ee00927aa6a2fc80bb2c0f210babb4a02d4f', class: "step-confirmation__btn step-confirmation__btn--error", onClick: this.handleRetry }, "Volver a intentar"))))));
     }
-    static get is() { return "step-confirmation"; }
-    static get encapsulation() { return "shadow"; }
-    static get originalStyleUrls() {
-        return {
-            "$": ["step-confirmation.scss"]
-        };
+    static get style() { return stepConfirmationCss(); }
+}, [769, "step-confirmation", {
+        "onComplete": [16],
+        "onCancel": [16],
+        "onBack": [16],
+        "status": [32],
+        "orderId": [32],
+        "orderNumber": [32],
+        "confirmationSent": [32],
+        "errorMessage": [32]
+    }]);
+function defineCustomElement() {
+    if (typeof customElements === "undefined") {
+        return;
     }
-    static get styleUrls() {
-        return {
-            "$": ["step-confirmation.css"]
-        };
-    }
-    static get properties() {
-        return {
-            "onComplete": {
-                "type": "unknown",
-                "mutable": false,
-                "complexType": {
-                    "original": "(event: FlowCompleteEvent) => void",
-                    "resolved": "(event: FlowCompleteEvent) => void",
-                    "references": {
-                        "FlowCompleteEvent": {
-                            "location": "import",
-                            "path": "../../../store/interfaces",
-                            "id": "src/store/interfaces.ts::FlowCompleteEvent"
-                        }
-                    }
-                },
-                "required": false,
-                "optional": false,
-                "docs": {
-                    "tags": [],
-                    "text": ""
-                },
-                "getter": false,
-                "setter": false
-            },
-            "onCancel": {
-                "type": "unknown",
-                "mutable": false,
-                "complexType": {
-                    "original": "() => void",
-                    "resolved": "() => void",
-                    "references": {}
-                },
-                "required": false,
-                "optional": false,
-                "docs": {
-                    "tags": [],
-                    "text": ""
-                },
-                "getter": false,
-                "setter": false
-            },
-            "onBack": {
-                "type": "unknown",
-                "mutable": false,
-                "complexType": {
-                    "original": "() => void",
-                    "resolved": "() => void",
-                    "references": {}
-                },
-                "required": false,
-                "optional": false,
-                "docs": {
-                    "tags": [],
-                    "text": ""
-                },
-                "getter": false,
-                "setter": false
+    const components = ["step-confirmation"];
+    components.forEach(tagName => { switch (tagName) {
+        case "step-confirmation":
+            if (!customElements.get(transformTag(tagName))) {
+                customElements.define(transformTag(tagName), StepConfirmation);
             }
-        };
-    }
-    static get states() {
-        return {
-            "status": {},
-            "orderId": {},
-            "orderNumber": {},
-            "confirmationSent": {},
-            "errorMessage": {}
-        };
-    }
+            break;
+    } });
 }
-//# sourceMappingURL=step-confirmation.js.map
+defineCustomElement();
+
+export { StepConfirmation as S, defineCustomElement as d };
+//# sourceMappingURL=p-D5Rb7y8i.js.map
+
+//# sourceMappingURL=p-D5Rb7y8i.js.map
