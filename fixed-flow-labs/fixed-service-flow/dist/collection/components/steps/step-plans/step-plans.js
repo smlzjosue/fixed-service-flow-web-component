@@ -24,7 +24,28 @@ export class StepPlans {
     // ------------------------------------------
     // LIFECYCLE
     // ------------------------------------------
-    async componentWillLoad() {
+    /**
+     * Sync lifecycle - No async operations here
+     * This allows the first render to happen immediately with isLoading = true
+     * showing the loader to the user
+     */
+    componentWillLoad() {
+        // El loader ya se muestra porque isLoading = true por defecto
+        // No hacer operaciones async aqui para que el render ocurra inmediatamente
+    }
+    /**
+     * Called after first render - Safe to do async operations
+     * The loader is already visible at this point
+     */
+    componentDidLoad() {
+        // Ahora que el componente esta montado y el loader visible,
+        // iniciar la carga de datos
+        this.initializePlans();
+    }
+    /**
+     * Initialize plans data - async operations after component is mounted
+     */
+    async initializePlans() {
         await this.loadPlans();
         // Check if there's a previously selected plan in session
         const storedPlanId = plansService.getStoredPlanId();
@@ -134,15 +155,27 @@ export class StepPlans {
     // ------------------------------------------
     // RENDER
     // ------------------------------------------
+    /**
+     * Gets the service type label for display in header
+     * Shows (GPON) or (VRAD) for standard flows
+     */
+    getServiceTypeLabel() {
+        const serviceType = flowState.location?.serviceType?.toUpperCase();
+        if (serviceType === 'GPON' || serviceType === 'VRAD') {
+            return ` (${serviceType})`;
+        }
+        return '';
+    }
     render() {
         const monthlyPayment = this.selectedPlan ? this.selectedPlan.decPrice : 0;
         const totalToday = 0;
-        return (h(Host, { key: '71c916044e88e63578e0093f15ddcbe0287a0449' }, h("div", { key: 'b451804ab60176a01dbe351e61a4d6699936ffba', class: "step-plans" }, h("header", { key: '3a9885fb7071d80ee8f6f60cce18c3bd67dc6fef', class: "step-plans__header" }, h("button", { key: 'ddfa2321981cd0a4468d1a5a7fa7345139ec342c', class: "step-plans__back-link", onClick: this.onBack }, h("svg", { key: 'd7b8ef58798169dea02f7ffa16085761713d60c6', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, h("polyline", { key: 'fecc51fcec60640d6d0133cd6511a85420290544', points: "15 18 9 12 15 6" })), h("span", { key: '71e56cec810389d4c8dc6020ef018f15d9082696' }, "Regresar")), h("h1", { key: 'ff70c76faf831a80dce5e844e556614d00d8f720', class: "step-plans__title" }, "Elige tu plan"), h("div", { key: '89c8c48112081ae1cfdc1b7ac38ad08bef23ec91', class: "step-plans__divider" })), this.isLoading && (h("div", { key: 'dd3ee1883c99148424a4afb47b186d5f0c26a9cd', class: "step-plans__loading" }, h("div", { key: '1b85359c971e156c68c6ae6a26a2a0e7af96e901', class: "step-plans__spinner" }), h("p", { key: 'ed08b8a31592da0bcdf3ae373373d4c7b44977f2' }, "Cargando planes..."))), this.error && (h("div", { key: '860ef48d0c1b48b8be08565c3d3c3e166fe17bc8', class: "step-plans__error" }, h("p", { key: 'd4819934b6a45838e8112c1bcd20496554b247a4' }, this.error), h("button", { key: '85f71600e4dab0a8e29514360867aee5395a8a79', onClick: () => this.loadPlans() }, "Reintentar"))), !this.isLoading && !this.error && this.plans.length > 0 && (h("div", { key: '92528629d3d40596f32e9c0099e7ce26f1723cb9', class: "step-plans__carousel-container" }, h("ui-carousel", { key: 'd3f02d81bd4faa661ef52ec4f098e9ed1db82775', totalItems: this.plans.length, gap: 24, showNavigation: false, showPagination: true, breakpoints: [
+        const serviceTypeLabel = this.getServiceTypeLabel();
+        return (h(Host, { key: 'ecf1db1ef3f9e81483495c3b9586de14f222d94a' }, h("div", { key: '560163fc6f813e3147089c3bdfd288f731ab14c7', class: "step-plans" }, h("header", { key: '1384894370294a3da5ff3acac72ec92f852f318c', class: "step-plans__header" }, h("button", { key: '247577020dd526f44fd70333500847d336dc9345', class: "step-plans__back-link", onClick: this.onBack }, h("svg", { key: '0cea3cb99542bd6e2de88b42c0b5addeb1399110', viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": "2" }, h("polyline", { key: '0b8e1b8328600521193fb20d77a81c85a3aba7ee', points: "15 18 9 12 15 6" })), h("span", { key: '0aa9cf6a73d66fd469ce5e29d0fcf38cff649a6d' }, "Regresar")), h("h1", { key: 'd6a5dcc67d70e97944649e7ad420aedec00cf3f2', class: "step-plans__title" }, "Elige tu plan", serviceTypeLabel), h("div", { key: 'd3e74037bc3014ed6b86c266a203bdf17e2a127a', class: "step-plans__divider" })), this.isLoading && (h("div", { key: 'f8edc947d6635d4af2e743da6a7c963edd187b1e', class: "step-plans__loading" }, h("div", { key: '5997bcd4384af0b61953c8fd9332e99d884f4687', class: "step-plans__spinner" }), h("p", { key: '779b7f43edd0df3f701742469c6ba837072cac5d' }, "Cargando planes..."))), this.error && (h("div", { key: 'ce1f9b224afaca66c1b88c5607962f78872c391c', class: "step-plans__error" }, h("p", { key: '399d3b32d21951f8610efa22de9fe1216b6cda1e' }, this.error), h("button", { key: 'c4d64e3869742b9acf717d803c8fa430d0359bf1', onClick: () => this.loadPlans() }, "Reintentar"))), !this.isLoading && !this.error && this.plans.length > 0 && (h("div", { key: '2876b099529efb6ca0d43e8c5152d9e126f7616e', class: "step-plans__carousel-container" }, h("ui-carousel", { key: '3c26ef5d1ea9803471dfa789583ab1e7a386c3a9', totalItems: this.plans.length, gap: 24, showNavigation: false, showPagination: true, breakpoints: [
                 { minWidth: 0, slidesPerView: 1 },
                 { minWidth: 500, slidesPerView: 2 },
                 { minWidth: 800, slidesPerView: 3 },
                 { minWidth: 1100, slidesPerView: 4 },
-            ] }, this.plans.map((plan) => this.renderPlanCard(plan))))), !this.isLoading && !this.error && this.plans.length === 0 && (h("div", { key: '2e0947419e26a6d5b662fa234e1874df48a75120', class: "step-plans__empty" }, h("p", { key: 'bbe9e5d84363c6ae3ab81dc34d43d1b82b34a46b' }, "No hay planes disponibles para tu \u00E1rea."))), h("footer", { key: 'b14a72d1ac25fee9325801f2019f05a5c370dd63', class: "step-plans__footer" }, h("div", { key: '1aa9e2de4ccff26772475de2478772f759b48558', class: "step-plans__footer-left" }, h("div", { key: 'b317441bffd781f7bb2ce96598615f9b2def1c44', class: "step-plans__footer-info" }, h("div", { key: 'c2bd471a1c366ea382ada43b342963c0ce226302', class: "step-plans__footer-item" }, h("span", { key: '8131b6c6794d88b03e9b18811bae54fe1d1043b1', class: "step-plans__footer-label" }, "Pago mensual"), h("span", { key: 'f2a7817042d267aba146d281d871123939506e84', class: "step-plans__footer-value" }, formatPrice(monthlyPayment))), h("div", { key: '679047174259006b71821fcc208521224ef0127e', class: "step-plans__footer-item step-plans__footer-item--separator" }, h("span", { key: '32deed61a01762e549679834564a3d3baafc18ae', class: "step-plans__footer-label" }, "Paga hoy"), h("span", { key: '5a5a62b56fc9bedacb36865cb3a4a169b2ca4415', class: "step-plans__footer-value step-plans__footer-value--highlight" }, formatPrice(totalToday)))), h("p", { key: '7c10e8cbcbcc334d8ae9ede73b00d9cb47212b45', class: "step-plans__footer-note" }, "Renta mensual aproximada no incluye cargos estatales, federales, ni otros impuestos.")), h("button", { key: 'd772ec9082de9536b94c7609f04e7299d2d87a17', class: "step-plans__footer-btn", onClick: this.handleContinue, disabled: !this.selectedPlan || this.isAddingToCart }, this.isAddingToCart ? 'Procesando...' : 'Continuar')))));
+            ] }, this.plans.map((plan) => this.renderPlanCard(plan))))), !this.isLoading && !this.error && this.plans.length === 0 && (h("div", { key: 'c21ad5352e2e72c48c45417119448485fade5805', class: "step-plans__empty" }, h("p", { key: 'e01ee7e722da8f17b698a207233ff266655aa71e' }, "No hay planes disponibles para tu \u00E1rea."))), h("footer", { key: '88ea2f234ae81f589a8a65b66cc38cb37b702958', class: "step-plans__footer" }, h("div", { key: '21ac08d1ab7404d1e1addb7f699eb89398b49ad8', class: "step-plans__footer-left" }, h("div", { key: 'de693a69cbb99c1bae6529706ed1ce4f5cdd443d', class: "step-plans__footer-info" }, h("div", { key: 'd397c01d84893b21cbd4e880ce22101ee7528367', class: "step-plans__footer-item" }, h("span", { key: '9f18194ace853d93f3df83cdb3188b0f68d3fbf4', class: "step-plans__footer-label" }, "Pago mensual"), h("span", { key: 'b76fafaf7757922d9ee12ddddfce63d5a8ec3e4b', class: "step-plans__footer-value" }, formatPrice(monthlyPayment))), h("div", { key: '862fd05d830e166d049f53ea9be07245f9ea63c7', class: "step-plans__footer-item step-plans__footer-item--separator" }, h("span", { key: 'b349c8b75b287a3ed30ac0a26293b744107e30de', class: "step-plans__footer-label" }, "Paga hoy"), h("span", { key: '3f195a59422154fb605d8d45b5ddcc47c071762d', class: "step-plans__footer-value step-plans__footer-value--highlight" }, formatPrice(totalToday)))), h("p", { key: 'f91b9b15bbba0adadbeed0a6e4c0c23222f4a10f', class: "step-plans__footer-note" }, "Renta mensual aproximada no incluye cargos estatales, federales, ni otros impuestos.")), h("button", { key: '0411a1ddc40dfbf1d9f08aa3bb4aad1bdd973e38', class: "step-plans__footer-btn", onClick: this.handleContinue, disabled: !this.selectedPlan || this.isAddingToCart }, this.isAddingToCart ? 'Procesando...' : 'Continuar')))));
     }
     static get is() { return "step-plans"; }
     static get encapsulation() { return "shadow"; }

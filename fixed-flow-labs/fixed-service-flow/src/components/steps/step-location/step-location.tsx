@@ -99,7 +99,7 @@ export class StepLocation {
       this.isLoadingMap = false;
     } catch (error) {
       console.error('Error initializing map:', error);
-      this.mapError = 'Error al cargar Google Maps';
+      this.mapError = 'No podemos abrir la validación de cobertura en este momento. Intenta nuevamente más tarde.';
       this.isLoadingMap = false;
     }
   }

@@ -37,7 +37,30 @@ export class StepPlans {
   // LIFECYCLE
   // ------------------------------------------
 
-  async componentWillLoad() {
+  /**
+   * Sync lifecycle - No async operations here
+   * This allows the first render to happen immediately with isLoading = true
+   * showing the loader to the user
+   */
+  componentWillLoad() {
+    // El loader ya se muestra porque isLoading = true por defecto
+    // No hacer operaciones async aqui para que el render ocurra inmediatamente
+  }
+
+  /**
+   * Called after first render - Safe to do async operations
+   * The loader is already visible at this point
+   */
+  componentDidLoad() {
+    // Ahora que el componente esta montado y el loader visible,
+    // iniciar la carga de datos
+    this.initializePlans();
+  }
+
+  /**
+   * Initialize plans data - async operations after component is mounted
+   */
+  private async initializePlans() {
     await this.loadPlans();
 
     // Check if there's a previously selected plan in session
@@ -209,9 +232,22 @@ export class StepPlans {
   // RENDER
   // ------------------------------------------
 
+  /**
+   * Gets the service type label for display in header
+   * Shows (GPON) or (VRAD) for standard flows
+   */
+  private getServiceTypeLabel(): string {
+    const serviceType = flowState.location?.serviceType?.toUpperCase();
+    if (serviceType === 'GPON' || serviceType === 'VRAD') {
+      return ` (${serviceType})`;
+    }
+    return '';
+  }
+
   render() {
     const monthlyPayment = this.selectedPlan ? this.selectedPlan.decPrice : 0;
     const totalToday = 0;
+    const serviceTypeLabel = this.getServiceTypeLabel();
 
     return (
       <Host>
@@ -224,7 +260,7 @@ export class StepPlans {
               </svg>
               <span>Regresar</span>
             </button>
-            <h1 class="step-plans__title">Elige tu plan</h1>
+            <h1 class="step-plans__title">Elige tu plan{serviceTypeLabel}</h1>
             <div class="step-plans__divider"></div>
           </header>
 

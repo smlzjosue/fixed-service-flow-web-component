@@ -38,7 +38,30 @@ export class StepConfirmation {
   // LIFECYCLE
   // ------------------------------------------
 
-  async componentWillLoad() {
+  /**
+   * Sync lifecycle - No async operations here
+   * This allows the first render to happen immediately with status = 'loading'
+   * showing the loader to the user
+   */
+  componentWillLoad() {
+    // El loader ya se muestra porque status = 'loading' por defecto
+    // No hacer operaciones async aqui para que el render ocurra inmediatamente
+  }
+
+  /**
+   * Called after first render - Safe to do async operations
+   * The loader is already visible at this point
+   */
+  componentDidLoad() {
+    // Ahora que el componente esta montado y el loader visible,
+    // iniciar el procesamiento de la solicitud
+    this.initializeConfirmation();
+  }
+
+  /**
+   * Initialize confirmation - async operations after component is mounted
+   */
+  private async initializeConfirmation() {
     // Check if this is a catalogue flow (CLARO HOGAR) or internet flow
     // Catalogue flow: has payment result but no contract/formData
     // Internet flow: has contract and formData

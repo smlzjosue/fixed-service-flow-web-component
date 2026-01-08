@@ -208,7 +208,28 @@ const StepConfirmation = /*@__PURE__*/ proxyCustomElement(class StepConfirmation
     // ------------------------------------------
     // LIFECYCLE
     // ------------------------------------------
-    async componentWillLoad() {
+    /**
+     * Sync lifecycle - No async operations here
+     * This allows the first render to happen immediately with status = 'loading'
+     * showing the loader to the user
+     */
+    componentWillLoad() {
+        // El loader ya se muestra porque status = 'loading' por defecto
+        // No hacer operaciones async aqui para que el render ocurra inmediatamente
+    }
+    /**
+     * Called after first render - Safe to do async operations
+     * The loader is already visible at this point
+     */
+    componentDidLoad() {
+        // Ahora que el componente esta montado y el loader visible,
+        // iniciar el procesamiento de la solicitud
+        this.initializeConfirmation();
+    }
+    /**
+     * Initialize confirmation - async operations after component is mounted
+     */
+    async initializeConfirmation() {
         // Check if this is a catalogue flow (CLARO HOGAR) or internet flow
         // Catalogue flow: has payment result but no contract/formData
         // Internet flow: has contract and formData
@@ -474,7 +495,7 @@ const StepConfirmation = /*@__PURE__*/ proxyCustomElement(class StepConfirmation
         return (h("div", { class: "step-confirmation__result step-confirmation__result--error" }, h("div", { class: "step-confirmation__icon step-confirmation__icon--error" }, h("svg", { width: "49", height: "49", viewBox: "0 0 49 49", fill: "none", xmlns: "http://www.w3.org/2000/svg" }, h("path", { d: "M24.5 0C38.0096 9.05167e-07 49 10.9899 49 24.5C49 38.0101 38.0096 49 24.5 49C10.9904 49 0 38.0101 0 24.5C0 10.9899 10.99 0 24.5 0ZM24.5 3.78516C13.0775 3.78516 3.78418 13.0774 3.78418 24.5C3.78418 35.9215 13.0774 45.2148 24.5 45.2148C35.9225 45.2148 45.2158 35.922 45.2158 24.5C45.2158 13.078 35.9225 3.78516 24.5 3.78516ZM24.5 31.8809C25.5449 31.8809 26.3915 32.7276 26.3916 33.7725V35.3486C26.3916 36.3936 25.5449 37.2412 24.5 37.2412C23.4551 37.2412 22.6084 36.3936 22.6084 35.3486V33.7725C22.6085 32.7276 23.4551 31.8809 24.5 31.8809ZM24.5 11.7588C25.5449 11.7588 26.3915 12.6055 26.3916 13.6504V27.7725C26.3916 28.8174 25.5449 29.6641 24.5 29.6641C23.4551 29.6641 22.6084 28.8174 22.6084 27.7725V13.6504C22.6085 12.6055 23.4551 11.7588 24.5 11.7588Z", fill: "#B41E13" }))), h("h2", { class: "step-confirmation__title step-confirmation__title--error" }, "\u00A1Lo sentimos, ha ocurrido un error en el proceso de solicitud!"), h("p", { class: "step-confirmation__message" }, "En este momento estamos presentando inconvenientes en nuestro sistema.", h("br", null), "Por favor, int\u00E9ntalo nuevamente.")));
     }
     render() {
-        return (h(Host, { key: '449778ed0f375ee034a3df3b8b6e8f533f8cb0db' }, h("div", { key: 'a1bdb548476effe70f6f35b72fe1b6e5b8d1baf3', class: "step-confirmation" }, h("header", { key: '45ea030ea6ed2731d6c4b9e6f5da0f6396a77740', class: "step-confirmation__header" }, h("h1", { key: '1c79e21c0f27fc6bdd26f107a6f8a40956804b68', class: "step-confirmation__header-title" }, "Confirmaci\u00F3n de Solicitud")), h("div", { key: 'd772325d6bb91350a9004def2044985a9c222ca9', class: "step-confirmation__content" }, this.status === 'loading' && this.renderLoading(), this.status === 'success' && this.renderSuccess(), this.status === 'error' && this.renderError()), this.status === 'success' && (h("div", { key: '723bb7a27e30753b5b886630094e0bc9524d69fa', class: "step-confirmation__actions" }, h("button", { key: '49ddcbb3a848dc86c575bc58f16570fede2dd478', class: "step-confirmation__btn", onClick: this.handleClose }, "Cerrar"))), this.status === 'error' && (h("div", { key: '8660a2a85187276b0b530844bf96d03c3b6e6414', class: "step-confirmation__actions" }, h("button", { key: '633987a833750a44047650b84c47168cfbad0a04', class: "step-confirmation__btn step-confirmation__btn--error", onClick: this.handleRetry }, "Volver a intentar"))))));
+        return (h(Host, { key: 'c9a55cce3d45179061635122b27e6f8383b06c28' }, h("div", { key: '6d38397a35a4e1577c6e04b63bf723a833f3c2db', class: "step-confirmation" }, h("header", { key: 'fc538465205df4823a6f982ceb4ac077a1e9b7fc', class: "step-confirmation__header" }, h("h1", { key: 'e35f03a038c0b20308c23f02f7b9722ef35c088a', class: "step-confirmation__header-title" }, "Confirmaci\u00F3n de Solicitud")), h("div", { key: '829ec1fe2b5eb1d9d9ffa5c5b0888c1879f55ab1', class: "step-confirmation__content" }, this.status === 'loading' && this.renderLoading(), this.status === 'success' && this.renderSuccess(), this.status === 'error' && this.renderError()), this.status === 'success' && (h("div", { key: 'a9b7287c01ae9c3c8de2d910861366af5eb8dbdc', class: "step-confirmation__actions" }, h("button", { key: 'dc2f1935dabdb795e7d89779b956a4d4a3c9d69d', class: "step-confirmation__btn", onClick: this.handleClose }, "Cerrar"))), this.status === 'error' && (h("div", { key: 'c563a79251066406241d0995a4e9cdcef1e6fefc', class: "step-confirmation__actions" }, h("button", { key: '8d73ee00927aa6a2fc80bb2c0f210babb4a02d4f', class: "step-confirmation__btn step-confirmation__btn--error", onClick: this.handleRetry }, "Volver a intentar"))))));
     }
     static get style() { return stepConfirmationCss(); }
 }, [769, "step-confirmation", {
@@ -503,6 +524,6 @@ function defineCustomElement() {
 defineCustomElement();
 
 export { StepConfirmation as S, defineCustomElement as d };
-//# sourceMappingURL=p-CAVblgO7.js.map
+//# sourceMappingURL=p-D5Rb7y8i.js.map
 
-//# sourceMappingURL=p-CAVblgO7.js.map
+//# sourceMappingURL=p-D5Rb7y8i.js.map
